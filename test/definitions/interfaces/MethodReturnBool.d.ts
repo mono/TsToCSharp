@@ -1,0 +1,3 @@
+interface Node {
+    hasAttributes(): boolean;
+}

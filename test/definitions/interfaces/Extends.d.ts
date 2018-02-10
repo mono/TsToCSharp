@@ -1,0 +1,1 @@
+interface Node extends EventTarget {}

@@ -1,0 +1,31 @@
+{
+  "name": "tstocsharp",
+  "version": "1.0.0",
+  "description": "Emit C# code from TypeScrypt definition files",
+  "main": "index.js",
+  "directories": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "change-case": "^3.0.1",
+    "ts-simple-ast": "^6.12.0",
+    "typescript": "^2.7.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.2",
+    "@types/mocha": "^2.2.48",
+    "@types/node": "^9.4.0",
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0",
+    "tslint": "^5.9.1"
+  },
+  "scripts": {
+    "start": "node ./dist/TStoCSharp.js",
+    "test": "npm run lint && mocha  ./dist/TsToCSharpTests.js",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
+    "lint": "tslint test/**/*.d.ts -t verbose"
+  },
+  "author": "Kenneth J. Pouncey",
+  "license": "MIT"
+}

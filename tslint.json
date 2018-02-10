@@ -1,0 +1,59 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended"
+    ],
+    "jsRules": {},
+    "rules": {
+        "align": [
+            true,
+            "parameters",
+            "statements"
+        ],
+        "interface-name": [ false ],
+        "max-line-length": [ false ],
+        "member-access": false,
+        "member-ordering": [
+            false,
+            "variables-before-functions"
+        ],
+        "no-bitwise": false,
+        "no-empty": false,
+        "no-string-literal": false,
+        "ordered-imports": false,
+        "arrow-parens": [ true, "ban-single-arg-parens" ],
+        "unified-signatures": false,
+        "array-type": [ "array-simple" ],
+        "ban-types": false,
+        "max-classes-per-file": [ false ],
+        "no-unused-expression": false,
+        "one-line": [
+            true,
+            "check-catch",
+            "check-whitespace"
+        ],
+        "object-literal-sort-keys": false,
+        "trailing-comma": [
+            true,
+            {
+                "singleline": "never",
+                "multiline": "never"
+            }
+        ],
+        "variable-name": false,
+        "no-reference": false,
+        "curly": false,
+        "no-console": [ false ],
+        "prefer-conditional-expression": false,
+        "no-empty-interface": false,
+        "no-object-literal-type-assertion": false,
+        "no-this-assignment": false,
+        "prefer-object-spread": false,
+        "no-unnecessary-initializer": false,
+        "prefer-for-of": false,
+        "no-implicit-dependencies": [ "dev" ],
+        "typeof-compare": false,
+        "no-invalid-template-strings": false
+    },
+    "rulesDirectory": []
+}

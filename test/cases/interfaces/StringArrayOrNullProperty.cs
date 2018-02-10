@@ -1,0 +1,3 @@
+interface WebGLRenderingContext {
+    string[] getSupportedExtensions();
+}

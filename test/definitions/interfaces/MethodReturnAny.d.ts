@@ -1,0 +1,3 @@
+interface PaymentAddress {
+    toJSON(): any;
+}

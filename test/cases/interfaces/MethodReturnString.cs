@@ -1,0 +1,3 @@
+interface DOMError {
+    string toString();
+}
