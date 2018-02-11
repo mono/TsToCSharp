@@ -17,7 +17,7 @@ Only the very basic TypeScript AST parsing is present at this time.  Mostly the 
 2. [Usage](./docs/Usage.md)
 3. [TypeScript to C# mapping](./docs/Mapping.md)
 4. [Examples](./docs/Examples.md)
-5. [Unit Tests](.docs/UnitTests.md)
+5. [Unit Tests](./docs/UnitTests.md)
 
 ## Obtaining Definition files
 
