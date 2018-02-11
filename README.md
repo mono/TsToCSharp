@@ -11,10 +11,10 @@ This is a work in progress, and we are only getting started.
 
 ## Getting Started
 
-1. [Installing]()
-2. [Usage]()
-3. [TypeScript to C# mapping]()
-4. [Examples]()
+1. [Installing](./docs/Installing.md)
+2. [Usage](./docs/Usage.md)
+3. [TypeScript to C# mapping](./docs/Mapping.md)
+4. [Examples](./docs/Examples.md)
 
 ## Obtaining Definition files
 
