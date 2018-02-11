@@ -8,6 +8,8 @@ This project is intended to read in TypeScript (.d.ts) defintions files and gene
 
 This is a work in progress, and we are only getting started.
 
+Only the very basic TypeScript AST parsing is present at this time.  Mostly the basic types like `interface`, `boolean`, `number`, `arrays`, `properties`, `methods` and a handful of there associated complex types like `string | null`, `number | null`, `boolean | null` etc.
+
 
 ## Getting Started
 
@@ -15,6 +17,7 @@ This is a work in progress, and we are only getting started.
 2. [Usage](./docs/Usage.md)
 3. [TypeScript to C# mapping](./docs/Mapping.md)
 4. [Examples](./docs/Examples.md)
+5. [Unit Tests](.docs/UnitTests.md)
 
 ## Obtaining Definition files
 
