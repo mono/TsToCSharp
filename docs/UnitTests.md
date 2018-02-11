@@ -2,7 +2,7 @@
 
 Right now the project is taking a Test Driven Development (TDD) approach.  What this basically means is that as each TypeScript AST spec is implemented there will be a test setup for verifying the correct C# mapping.  That way we can guarantee that any modifications to the C# code emitted from the TypeScript AST parsing can be verified to produce the expected result as the project advances.
 
-The unit tests are setup with predefined input [TypeScript definitions](./test/definitions) and a corresponding expected [C# result case](./test/cases).
+The unit tests are setup with predefined input [TypeScript definitions](/test/definitions) and a corresponding expected [C# result case](/test/cases).
 
 ## Current Work
 
@@ -12,7 +12,7 @@ A lot more work is required.
 
 ## Test directory structure
 
-The test files can be found in the (Test)[./test] directory.
+The test files can be found in the [Test](/test) directory.
 
 ```
 .
