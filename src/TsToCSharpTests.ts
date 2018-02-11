@@ -34,16 +34,16 @@ const interfaceCases = [
     {should: "should generate interface with number or null property", file: "NumberOrNullProperty"},
     {should: "should generate interface with boolean or null property", file: "BooleanOrNullProperty"},
     {should: "should generate interface with object or null property", file: "ObjOrNullProperty"},
-    {should: "should generate interface with indexer", file: "IndexerProperty"},
-    {should: "should generate interface with readonly indexer", file: "ReadOnlyIndexerProperty"},
-    {should: "should generate interface with string indexer", file: "StringIndexerProperty"},
-    {should: "should generate interface with string indexer", file: "StringIndexerProperty"},
+    {should: "should generate interface with indexer property", file: "IndexerProperty"},
+    {should: "should generate interface with readonly indexer property", file: "ReadOnlyIndexerProperty"},
+    {should: "should generate interface with string indexer property", file: "StringIndexerProperty"},
     {should: "should generate interface with indexer property with leading and trailing comments", file: "IndexerPropertyComments"},
-    {should: "should generate interface with number and object array", file: "ArrayProperty2"},
-    {should: "should generate interface with nullable number array", file: "NumberArrayOrNullProperty"},    
-    {should: "should generate interface with nullable boolean array", file: "BooleanArrayOrNullProperty"},
-    {should: "should generate interface with nullable object array", file: "ObjArrayOrNullProperty"},            
-    {should: "should generate interface with nullable string array", file: "StringArrayOrNullProperty"},            
+    {should: "should generate interface with string array property", file: "ArrayProperty"},
+    {should: "should generate interface with number and object array property", file: "ArrayProperty2"},
+    {should: "should generate interface with nullable number array property", file: "NumberArrayOrNullProperty"},    
+    {should: "should generate interface with nullable boolean array property", file: "BooleanArrayOrNullProperty"},
+    {should: "should generate interface with nullable object array property", file: "ObjArrayOrNullProperty"},            
+    {should: "should generate interface with nullable string array property", file: "StringArrayOrNullProperty"},            
 
     
     
@@ -76,7 +76,7 @@ describe("TsToCSharpGenerator", () => {
                             offset: 0,
                         indent: 0
                     })
-                    //fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
+                    fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
                     var genCase = fs.readFileSync(path.join(casesPath,testPath,testFile + ".cs")).toString();
                     expect(sourceCode).to.equal(genCase);
                 });

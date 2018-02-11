@@ -3,20 +3,22 @@ import * as sast from "ts-simple-ast";
 import { TypeGuards } from 'ts-simple-ast';
 
 import * as emitter from "./CSharpEmitter";
-import {Stack} from "./DataStructures";
 import {Context} from "./Context";
 
 import {
   addWhitespace,
+  getWhitespace,
   emitStatic,
   addLeadingComment,
   addTrailingComment,
   addSemicolon,
   addComma,
   endNode,
+  generateExportForInterface,
+  pushContext,
+  swapContext,
+  popContext,
 } from './GeneratorHelpers';
-
-const ContextStack = new Stack<number>();
 
 export function TsToCSharpGenerator(node: sast.SourceFile, context: Context): string {
     const source: string[] = [];
@@ -191,6 +193,7 @@ function visitHeritageClauses(source: string[],
   function visitInterfaceDeclaration(node: sast.InterfaceDeclaration, context: Context): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
+
     addWhitespace(source, node, context);
 
     visitModifiers(source, node, context);
@@ -280,26 +283,6 @@ function visitTypeNode(node: sast.Node,
   }
   return clone;
 }
-
- function pushContext(context: Context): void
- {
-    // save off our original context
-    ContextStack.push(context.offset);
- }
-
- function swapContext(context: Context)
- {
-
-    // save off our original context
-    var swap:number = ContextStack.pop();
-    pushContext(context);
-    context.offset = swap;
- }
-
- function popContext(context: Context)
- {
-   context.offset = ContextStack.pop();
- }
 
  function visitParameter(source: string[], node: sast.ParameterDeclaration, context: Context): void {
 

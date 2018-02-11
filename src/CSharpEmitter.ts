@@ -6,6 +6,7 @@ import {Context} from "./Context";
 
 import {
   addWhitespace,
+  getWhitespace,
   emitStatic,
   addLeadingComment,
   addTrailingComment,
