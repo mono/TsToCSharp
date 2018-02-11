@@ -76,7 +76,7 @@ describe("TsToCSharpGenerator", () => {
                             offset: 0,
                         indent: 0
                     })
-                    fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
+                    //fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
                     var genCase = fs.readFileSync(path.join(casesPath,testPath,testFile + ".cs")).toString();
                     expect(sourceCode).to.equal(genCase);
                 });
