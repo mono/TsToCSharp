@@ -29,7 +29,7 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "args": [
-                "./test/definitions/interfaces/MethodReturnObjArray.d.ts"
+                "./test/definitions/interfaces/MethodReturnAnyArray.d.ts"
                 
             ]
         }
