@@ -1,4 +1,3 @@
-[Export("ServiceWorkerMessageEventInit")]
 interface ServiceWorkerMessageEventInit :  EventInit {
     [Export("data")]
     Object data { get; set; }

@@ -1,3 +1,2 @@
-[Export("EventTarget")]
 interface EventTarget
 {}

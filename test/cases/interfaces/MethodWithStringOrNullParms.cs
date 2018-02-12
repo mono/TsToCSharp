@@ -1,4 +1,3 @@
-[Export("NamedNodeMap")]
 interface NamedNodeMap {
     [Export("length")]
     double length { get; }

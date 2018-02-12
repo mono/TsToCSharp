@@ -1,4 +1,3 @@
-[Export("HTMLFormElement")]
 interface HTMLFormElement :  HTMLElement {
     /**
      * Sets or retrieves a list of character encodings for input data that must be accepted by the server processing the form.

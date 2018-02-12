@@ -1,5 +1,4 @@
 
-[Export("DeviceAcceleration")]
 interface DeviceAcceleration {
     [Export("x")]
     double? x { get; }
@@ -9,7 +8,6 @@ interface DeviceAcceleration {
     double? z { get; }
 }
 
-[Export("DeviceRotationRate")]
 interface DeviceRotationRate {
     [Export("alpha")]
     double? alpha { get; }
@@ -19,7 +17,6 @@ interface DeviceRotationRate {
     double? gamma { get; }
 }
 
-[Export("DeviceMotionEvent")]
 interface DeviceMotionEvent :  Event {
     [Export("acceleration")]
     DeviceAcceleration acceleration { get; }

@@ -1,4 +1,3 @@
-[Export("Node")]
 interface Node :  EventTarget {
     [Export("baseURIFoo")]
     string baseURIFoo { get; }

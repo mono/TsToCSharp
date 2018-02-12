@@ -1,4 +1,3 @@
-[Export("Coordinates")]
 interface Coordinates {
     [Export("accuracy")]
     double accuracy { get; }

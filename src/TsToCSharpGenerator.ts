@@ -14,7 +14,7 @@ import {
   addSemicolon,
   addComma,
   endNode,
-  generateExportForInterface,
+  generateExportForClass,
   generateExportForProperty,
   generateExportForMethod,
   pushContext,
@@ -195,9 +195,7 @@ function visitHeritageClauses(source: string[],
   function visitInterfaceDeclaration(node: sast.InterfaceDeclaration, context: Context): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
-
-    // This will generate an Export attribute as well as takes into account whitespace
-    source.push(generateExportForInterface(node, context));
+    addWhitespace(source, node, context);
 
     visitModifiers(source, node, context);
 
@@ -339,8 +337,6 @@ function visitHeritageClauses(source: string[],
 
     // This will generate an Export attribute as well as takes into account whitespace
     source.push(generateExportForMethod(node, context));
-
-    //addWhitespace(source, node, context);
 
     // let's push the name node offset so spacing will be ok.
     // Modifiers seem to mess the spacing up with whitespace

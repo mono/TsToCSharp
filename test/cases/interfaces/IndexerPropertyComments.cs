@@ -1,4 +1,3 @@
-[Export("ClientRectList")]
 interface ClientRectList {
     // This is the length
     [Export("length")]

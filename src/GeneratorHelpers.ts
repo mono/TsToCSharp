@@ -145,14 +145,14 @@ export function endNode(node: sast.Node, context: Context): void {
   }
 }
 
-export function generateExportForInterface(node: sast.InterfaceDeclaration, context: Context): string {
+export function generateExportForClass(node: sast.ClassDeclaration, context: Context): string {
   const source: string[] = [];
   pushContext(context);
   addWhitespace(source, node, context);
-  const exportInterface = emitPropertyName(node.getNameNode(), context);
+  const exportClass = emitPropertyName(node.getNameNode(), context);
   popContext(context);
 
-  source.push("[Export(\"",exportInterface.trim(),"\")]\n");
+  source.push("[Export(\"",exportClass.trim(),"\")]\n");
   var len = source.length;
   addWhitespace(source, node, context);
 
@@ -189,10 +189,10 @@ export function generateExportForMethod(node: sast.MethodSignature, context: Con
   const source: string[] = [];
   pushContext(context);
   addWhitespace(source, node, context);
-  const exportProperty = emitPropertyName(node.getNameNode(), context);
+  const exportMethod = emitPropertyName(node.getNameNode(), context);
   popContext(context);
 
-  source.push("[Export(\"",exportProperty.trim(),"\")]\n");
+  source.push("[Export(\"",exportMethod.trim(),"\")]\n");
   var len = source.length;
   addWhitespace(source, node, context);
 
