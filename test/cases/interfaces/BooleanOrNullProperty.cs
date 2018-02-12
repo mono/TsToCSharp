@@ -1,9 +1,9 @@
-[Export(RTCIceParameters)]
+[Export("RTCIceParameters")]
 interface RTCIceParameters {
-    [Export(iceLite)]
+    [Export("iceLite")]
     bool? iceLite { get; set; }
-    [Export(password)]
+    [Export("password")]
     string password { get; set; }
-    [Export(usernameFragment)]
+    [Export("usernameFragment")]
     string usernameFragment { get; set; }
 }

@@ -1,63 +1,65 @@
-[Export(EventTarget)]
+[Export("EventTarget")]
 interface EventTarget {
+    [Export("dispatchEvent")]
     bool dispatchEvent(Event evt);
 }
 
-[Export(Node)]
+[Export("Node")]
 interface Node :  EventTarget {
-    [Export(nodeName)]
+    [Export("nodeName")]
     string nodeName { get; }
-    [Export(nodeType)]
+    [Export("nodeType")]
     double nodeType { get; }
 }
 
-[Export(GlobalEventHandlers)]
+[Export("GlobalEventHandlers")]
 interface GlobalEventHandlers {
 }
 
-[Export(ElementTraversal)]
+[Export("ElementTraversal")]
 interface ElementTraversal {
-    [Export(childElementCount)]
+    [Export("childElementCount")]
     double childElementCount { get; }
 }
 
-[Export(NodeSelector)]
+[Export("NodeSelector")]
 interface NodeSelector {
 }
 
-[Export(ChildNode)]
+[Export("ChildNode")]
 interface ChildNode {
+    [Export("remove")]
     void remove();
 }
 
-[Export(ParentNode)]
+[Export("ParentNode")]
 interface ParentNode {
-    [Export(children)]
+    [Export("children")]
     HTMLCollection children { get; }
-    [Export(childElementCount)]
+    [Export("childElementCount")]
     double childElementCount { get; }
 }
 
-[Export(Element)]
+[Export("Element")]
 interface Element :  Node,  GlobalEventHandlers,  ElementTraversal,  NodeSelector,  ChildNode,  ParentNode {
-    [Export(classList)]
+    [Export("classList")]
     DOMTokenList classList { get; }
-    [Export(className)]
+    [Export("className")]
     string className { get; set; }
-    [Export(clientHeight)]
+    [Export("clientHeight")]
     double clientHeight { get; }
-    [Export(clientLeft)]
+    [Export("clientLeft")]
     double clientLeft { get; }
-    [Export(clientTop)]
+    [Export("clientTop")]
     double clientTop { get; }
-    [Export(clientWidth)]
+    [Export("clientWidth")]
     double clientWidth { get; }
-    [Export(id)]
+    [Export("id")]
     string id { get; set; }
-    [Export(innerHTML)]
+    [Export("innerHTML")]
     string innerHTML { get; set; }
-    [Export(msContentZoomFactor)]
+    [Export("msContentZoomFactor")]
     double msContentZoomFactor { get; set; }
-    [Export(msRegionOverflow)]
+    [Export("msRegionOverflow")]
     string msRegionOverflow { get; }
 }

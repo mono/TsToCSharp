@@ -1,17 +1,17 @@
-[Export(Coordinates)]
+[Export("Coordinates")]
 interface Coordinates {
-    [Export(accuracy)]
+    [Export("accuracy")]
     double accuracy { get; }
-    [Export(altitude)]
+    [Export("altitude")]
     double? altitude { get; }
-    [Export(altitudeAccuracy)]
+    [Export("altitudeAccuracy")]
     double? altitudeAccuracy { get; }
-    [Export(heading)]
+    [Export("heading")]
     double? heading { get; }
-    [Export(latitude)]
+    [Export("latitude")]
     double latitude { get; }
-    [Export(longitude)]
+    [Export("longitude")]
     double longitude { get; }
-    [Export(speed)]
+    [Export("speed")]
     double? speed { get; }
 }

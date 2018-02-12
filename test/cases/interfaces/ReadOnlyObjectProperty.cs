@@ -1,5 +1,5 @@
-[Export(HTMLElement)]
+[Export("HTMLElement")]
 interface HTMLElement {
-    [Export(children)]
+    [Export("children")]
     HTMLCollection children { get; }
 }

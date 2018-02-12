@@ -1,5 +1,5 @@
-[Export(GamepadFaux)]
+[Export("GamepadFaux")]
 interface GamepadFaux {
-    [Export(axesAvailable)]
+    [Export("axesAvailable")]
     bool?[] axesAvailable { get; }
 }

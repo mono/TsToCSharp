@@ -1,2 +1,2 @@
-[Export(Node)]
+[Export("Node")]
 interface Node :  EventTarget {}

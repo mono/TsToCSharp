@@ -16,6 +16,7 @@ import {
   endNode,
   generateExportForInterface,
   generateExportForProperty,
+  generateExportForMethod,
   pushContext,
   swapContext,
   popContext,
@@ -225,10 +226,10 @@ function visitHeritageClauses(source: string[],
     return source.join('');
  }
 
-function visitTypeNode(node: sast.Node, 
-                        context: Context): string {
-  return emitter.emitTypeNode(node, context);
-}
+  function visitTypeNode(node: sast.Node, 
+                          context: Context): string {
+    return emitter.emitTypeNode(node, context);
+  }
 
 
 
@@ -335,7 +336,11 @@ function visitTypeNode(node: sast.Node,
  function visitMethodSignature(node: sast.MethodSignature, context: Context): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
-    addWhitespace(source, node, context);
+
+    // This will generate an Export attribute as well as takes into account whitespace
+    source.push(generateExportForMethod(node, context));
+
+    //addWhitespace(source, node, context);
 
     // let's push the name node offset so spacing will be ok.
     // Modifiers seem to mess the spacing up with whitespace

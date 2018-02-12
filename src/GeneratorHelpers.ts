@@ -152,7 +152,7 @@ export function generateExportForInterface(node: sast.InterfaceDeclaration, cont
   const exportInterface = emitPropertyName(node.getNameNode(), context);
   popContext(context);
 
-  source.push("[Export(",exportInterface.trim(),")]\n");
+  source.push("[Export(\"",exportInterface.trim(),"\")]\n");
   var len = source.length;
   addWhitespace(source, node, context);
 
@@ -172,7 +172,27 @@ export function generateExportForProperty(node: sast.PropertySignature, context:
   const exportProperty = emitPropertyName(node.getNameNode(), context);
   popContext(context);
 
-  source.push("[Export(",exportProperty.trim(),")]\n");
+  source.push("[Export(\"",exportProperty.trim(),"\")]\n");
+  var len = source.length;
+  addWhitespace(source, node, context);
+
+  if (source.length > len)
+  {
+    // Strip all line break combinations so spacing looks correct
+    source[source.length - 1] = source[source.length - 1].replace(/(\r\n|\n|\r)/gm,"");
+  }
+  
+  return source.join('');  
+}
+
+export function generateExportForMethod(node: sast.MethodSignature, context: Context): string {
+  const source: string[] = [];
+  pushContext(context);
+  addWhitespace(source, node, context);
+  const exportProperty = emitPropertyName(node.getNameNode(), context);
+  popContext(context);
+
+  source.push("[Export(\"",exportProperty.trim(),"\")]\n");
   var len = source.length;
   addWhitespace(source, node, context);
 

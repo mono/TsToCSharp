@@ -1,5 +1,5 @@
-[Export(MediaKeySystemConfiguration)]
+[Export("MediaKeySystemConfiguration")]
 interface MediaKeySystemConfiguration {
-    [Export(initDataTypes)]
+    [Export("initDataTypes")]
     string[] initDataTypes { get; set; }
 }

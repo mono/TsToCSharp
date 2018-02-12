@@ -1,13 +1,13 @@
-[Export(ServiceWorkerMessageEventInit)]
+[Export("ServiceWorkerMessageEventInit")]
 interface ServiceWorkerMessageEventInit :  EventInit {
-    [Export(data)]
+    [Export("data")]
     Object data { get; set; }
-    [Export(lastEventId)]
+    [Export("lastEventId")]
     string lastEventId { get; set; }
-    [Export(origin)]
+    [Export("origin")]
     string origin { get; set; }
-    [Export(ports)]
+    [Export("ports")]
     MessagePort[] ports { get; set; }
-    [Export(source)]
+    [Export("source")]
     object source { get; set; }
 }

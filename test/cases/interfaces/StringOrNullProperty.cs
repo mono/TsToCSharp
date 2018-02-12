@@ -1,7 +1,7 @@
-[Export(Node)]
+[Export("Node")]
 interface Node :  EventTarget {
-    [Export(baseURIFoo)]
+    [Export("baseURIFoo")]
     string baseURIFoo { get; }
-    [Export(baseURI)]
+    [Export("baseURI")]
     string baseURI { get; }
 }

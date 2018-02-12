@@ -1,5 +1,5 @@
-[Export(HTMLElement)]
+[Export("HTMLElement")]
 interface HTMLElement {
-    [Export(accessKey)]
+    [Export("accessKey")]
     string accessKey { get; set; }
 }

@@ -1,9 +1,10 @@
-[Export(EventTarget)]
+[Export("EventTarget")]
 interface EventTarget {
+    [Export("dispatchEvent")]
     bool dispatchEvent(Event evt);
 }
 
-[Export(Node)]
+[Export("Node")]
 interface Node :  EventTarget {
 
 }

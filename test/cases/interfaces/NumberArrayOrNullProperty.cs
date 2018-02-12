@@ -1,5 +1,5 @@
-[Export(Gamepad)]
+[Export("Gamepad")]
 interface Gamepad {
-    [Export(axes)]
+    [Export("axes")]
     double?[] axes { get; }
 }

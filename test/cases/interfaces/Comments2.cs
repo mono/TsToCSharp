@@ -1,5 +1,5 @@
 // This is a leading comment
-[Export(EventTarget)]
+[Export("EventTarget")]
 interface EventTarget
 { // This is a trailing comment
 

@@ -1,32 +1,32 @@
 
-[Export(DeviceAcceleration)]
+[Export("DeviceAcceleration")]
 interface DeviceAcceleration {
-    [Export(x)]
+    [Export("x")]
     double? x { get; }
-    [Export(y)]
+    [Export("y")]
     double? y { get; }
-    [Export(z)]
+    [Export("z")]
     double? z { get; }
 }
 
-[Export(DeviceRotationRate)]
+[Export("DeviceRotationRate")]
 interface DeviceRotationRate {
-    [Export(alpha)]
+    [Export("alpha")]
     double? alpha { get; }
-    [Export(beta)]
+    [Export("beta")]
     double? beta { get; }
-    [Export(gamma)]
+    [Export("gamma")]
     double? gamma { get; }
 }
 
-[Export(DeviceMotionEvent)]
+[Export("DeviceMotionEvent")]
 interface DeviceMotionEvent :  Event {
-    [Export(acceleration)]
+    [Export("acceleration")]
     DeviceAcceleration acceleration { get; }
-    [Export(accelerationIncludingGravity)]
+    [Export("accelerationIncludingGravity")]
     DeviceAcceleration accelerationIncludingGravity { get; }
-    [Export(interval)]
+    [Export("interval")]
     double? interval { get; }
-    [Export(rotationRate)]
+    [Export("rotationRate")]
     DeviceRotationRate rotationRate { get; }
 }

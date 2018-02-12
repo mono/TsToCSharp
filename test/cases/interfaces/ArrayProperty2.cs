@@ -1,17 +1,17 @@
-[Export(Gamepad)]
+[Export("Gamepad")]
 interface Gamepad {
-    [Export(axes)]
+    [Export("axes")]
     double[] axes { get; }
-    [Export(buttons)]
+    [Export("buttons")]
     GamepadButton[] buttons { get; }
-    [Export(connected)]
+    [Export("connected")]
     bool connected { get; }
-    [Export(id)]
+    [Export("id")]
     string id { get; }
-    [Export(index)]
+    [Export("index")]
     double index { get; }
-    [Export(mapping)]
+    [Export("mapping")]
     string mapping { get; }
-    [Export(timestamp)]
+    [Export("timestamp")]
     double timestamp { get; }
 }
