@@ -76,7 +76,41 @@ Property:
    double scrollTop { get; set; }
 ```
 
+## String
 
+Strings in TypeScript represet UTF-16 string data.  The `string` type has a direct mapping to C# `string`.
+
+Method returning string:
+
+```typescript
+    toString(): string;
+```
+
+```csharp
+    string toString();
+```
+
+Method with string parameter:
+
+```typescript
+    setAttribute(name: string, value: string): void;
+```
+
+```csharp
+    void setAttribute(string name, string value);
+```
+
+Property:
+
+```typescript
+    readonly baseURI: string;
+    accessKey: string;
+```
+
+```csharp
+   string baseURI { get; }
+   string accessKey { get; set; }
+```
 
 
 
