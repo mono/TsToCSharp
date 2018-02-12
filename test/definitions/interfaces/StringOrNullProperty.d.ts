@@ -1,4 +1,4 @@
 interface Node extends EventTarget {
-    readonly baseURIa: string;
+    readonly baseURIFoo: string;
     readonly baseURI: string | null;
 }

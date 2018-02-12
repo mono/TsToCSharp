@@ -3,46 +3,57 @@ interface HTMLFormElement :  HTMLElement {
     /**
      * Sets or retrieves a list of character encodings for input data that must be accepted by the server processing the form.
      */
+    [Export(acceptCharset)]
     string acceptCharset { get; set; }
     /**
      * Sets or retrieves the URL to which the form content is sent for processing.
      */
+    [Export(action)]
     string action { get; set; }
     /**
      * Specifies whether autocomplete is applied to an editable text field.
      */
+    [Export(autocomplete)]
     string autocomplete { get; set; }
     /**
      * Retrieves a collection, in source order, of all controls in a given form.
      */
+    [Export(elements)]
     HTMLFormControlsCollection elements { get; }
     /**
      * Sets or retrieves the MIME encoding for the form.
      */
+    [Export(encoding)]
     string encoding { get; set; }
     /**
      * Sets or retrieves the encoding type for the form.
      */
+    [Export(enctype)]
     string enctype { get; set; }
     /**
      * Sets or retrieves the number of objects in a collection.
      */
+    [Export(length)]
     double length { get; }
     /**
      * Sets or retrieves how to send the form data to the server.
      */
+    [Export(method)]
     string method { get; set; }
     /**
      * Sets or retrieves the name of the object.
      */
+    [Export(name)]
     string name { get; set; }
     /**
      * Designates a form that is not validated when submitted.
      */
+    [Export(noValidate)]
     bool noValidate { get; set; }
     /**
      * Sets or retrieves the window or frame at which to target content.
      */
+    [Export(target)]
     string target { get; set; }
     /**
      * Returns whether a form will validate when it is submitted, without having to submit it.

@@ -1,5 +1,6 @@
 [Export(NamedNodeMap)]
 interface NamedNodeMap {
+    [Export(length)]
     double length { get; }
     Attr getNamedItem(string name);
     Attr getNamedItemNS(string namespaceURI, string localName);

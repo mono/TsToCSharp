@@ -1,6 +1,7 @@
 [Export(ClientRectList)]
 interface ClientRectList {
     // This is the length
+    [Export(length)]
     double length { get; } /* returns a number */
     ClientRect item(double index); // Return the ClientRect at the specified index
     /**

@@ -15,6 +15,7 @@ import {
   addComma,
   endNode,
   generateExportForInterface,
+  generateExportForProperty,
   pushContext,
   swapContext,
   popContext,
@@ -235,7 +236,9 @@ function visitTypeNode(node: sast.Node,
 
     const source: string[] = [];
     addLeadingComment(source, node, context);
-    addWhitespace(source, node, context);
+
+    // This will generate an Export attribute as well as takes into account whitespace
+    source.push(generateExportForProperty(node, context));
     
     visitModifiers(source, node, context);
 
