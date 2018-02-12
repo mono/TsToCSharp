@@ -1,3 +1,4 @@
+[Export(Coordinates)]
 interface Coordinates {
     double accuracy { get; }
     double? altitude { get; }

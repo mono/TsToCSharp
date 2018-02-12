@@ -1,3 +1,4 @@
+[Export(NamedNodeMap)]
 interface NamedNodeMap {
     double length { get; }
     Attr getNamedItem(string name);

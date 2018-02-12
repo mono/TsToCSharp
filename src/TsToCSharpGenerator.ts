@@ -194,7 +194,8 @@ function visitHeritageClauses(source: string[],
     const source: string[] = [];
     addLeadingComment(source, node, context);
 
-    addWhitespace(source, node, context);
+    // This will generate an Export attribute as well as takes into account whitespace
+    source.push(generateExportForInterface(node, context));
 
     visitModifiers(source, node, context);
 

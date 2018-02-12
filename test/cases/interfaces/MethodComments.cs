@@ -1,3 +1,4 @@
+[Export(HTMLFormElement)]
 interface HTMLFormElement :  HTMLElement {
     /**
      * Returns whether a form will validate when it is submitted, without having to submit it.

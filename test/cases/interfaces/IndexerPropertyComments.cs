@@ -1,3 +1,4 @@
+[Export(ClientRectList)]
 interface ClientRectList {
     // This is the length
     double length { get; } /* returns a number */

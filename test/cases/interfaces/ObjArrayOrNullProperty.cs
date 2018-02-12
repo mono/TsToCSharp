@@ -1,3 +1,4 @@
+[Export(ServiceWorkerMessageEventInit)]
 interface ServiceWorkerMessageEventInit :  EventInit {
     Object data { get; set; }
     string lastEventId { get; set; }

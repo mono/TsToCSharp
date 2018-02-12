@@ -1,3 +1,4 @@
+[Export(Gamepad)]
 interface Gamepad {
     double[] axes { get; }
     GamepadButton[] buttons { get; }

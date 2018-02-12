@@ -60,14 +60,14 @@ export function getWhitespace(posOrNode: number|sast.Node, nodeOrContext: sast.N
     const text = node.getSourceFile().getFullText().substring(pos, node.getEnd());
     const leadingWhitespace = text.match(whitespaces);
     if (leadingWhitespace) {
-      //context.offset = pos + leadingWhitespace[1].length;
+      context.offset = pos + leadingWhitespace[1].length;
       return leadingWhitespace[1];
     }
   } else {
     const text = node.getSourceFile().getFullText().substring(context.offset, node.getEnd());
     const trailingWhitespace = text.match(whitespaces);
     if (trailingWhitespace) {
-      //context.offset = context.offset + trailingWhitespace[1].length;
+      context.offset = context.offset + trailingWhitespace[1].length;
       return trailingWhitespace[1];
     }
   }
@@ -148,10 +148,20 @@ export function endNode(node: sast.Node, context: Context): void {
 export function generateExportForInterface(node: sast.InterfaceDeclaration, context: Context): string {
   const source: string[] = [];
   pushContext(context);
-  let whitespace = getWhitespace(node, context);
+  addWhitespace(source, node, context);
   const exportInterface = emitPropertyName(node.getNameNode(), context);
-  source.push(whitespace,"[Export(",exportInterface.trim(),")]\n");
   popContext(context);
+
+  source.push("[Export(",exportInterface.trim(),")]\n");
+  var len = source.length;
+  addWhitespace(source, node, context);
+
+  if (source.length > len)
+  {
+    // Strip all line break combinations so spacing looks correct
+    source[source.length - 1] = source[source.length - 1].replace(/(\r\n|\n|\r)/gm,"");
+  }
+  
   return source.join('');  
 }
 

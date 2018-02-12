@@ -29,7 +29,7 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "args": [
-                "./test/definitions/interfaces/Comments.d.ts"
+                "./test/definitions/interfaces/Extends.d.ts"
                 
             ]
         }
