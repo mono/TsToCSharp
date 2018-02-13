@@ -29,8 +29,10 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "args": [
-                "./test/definitions/interfaces/MethodWithBooleanParms.d.ts"
-                
+                "./test/definitions/interfaces/NumberProperty.d.ts",
+                "./test/definitions/interfaces/NumberOrNullProperty.d.ts",
+                "-o",
+                "./test/cases/interfaces"
             ]
         }
     ]

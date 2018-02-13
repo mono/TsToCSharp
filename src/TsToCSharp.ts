@@ -1,17 +1,21 @@
+#!/usr/bin/env node
 import * as ts from 'typescript';
 import * as fs from "fs";
 import Ast from "ts-simple-ast";
 import * as path from "path";
 
+
+import {ParseCommandLine} from "./CommandLineParser";
 import { TsToCSharpGenerator } from './TsToCSharpGenerator';
 
 class Startup {
 
     public static main(): number {
         
-        const fileNames = process.argv.slice(2);
-        console.log('Starting Generation for file(s): ' + fileNames.join(","));
-        fileNames.forEach(fileName => {
+        const genOptions = ParseCommandLine();
+
+        console.log('Starting Generation for file(s): ' + genOptions.fileList.join(","));
+        genOptions.fileList.forEach(fileName => {
              const ast = new Ast({
                  compilerOptions: {
                      target: ts.ScriptTarget.ESNext
@@ -19,19 +23,21 @@ class Startup {
              });
             
             console.log('Resolving File: ' + fileName + ' => ' + path.resolve(fileName));
-            var sf = ast.addSourceFileIfExists(path.resolve(fileName));
-            var sfs = ast.getSourceFiles();
+            const sf = ast.addSourceFileIfExists(path.resolve(fileName));
+            const sfs = ast.getSourceFiles();
             sfs.forEach(
                     astSourceFile => {
                         let sourceCode = TsToCSharpGenerator(astSourceFile, {
                              offset: 0,
                             indent: 0
                         }
-                    );    
+                    );   
+
                     // output the file.
-                    var filePath = path.dirname(fileName);
-                    var justTheName = path.basename(fileName,".d.ts");
-                    
+                    const filePath = (genOptions.outDir) ? genOptions.outDir : path.dirname(fileName);
+                    const justTheName = path.basename(fileName,".d.ts");
+
+                    console.log('Generating File: ' + path.resolve(path.join(filePath,justTheName+".cs")));
                     fs.writeFileSync(path.join(filePath,justTheName+".cs"), sourceCode);
                 }
             )

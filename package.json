@@ -2,14 +2,19 @@
   "name": "tstocsharp",
   "version": "1.0.0",
   "description": "Emit C# code from TypeScrypt definition files",
-  "main": "index.js",
+  "main": "./dist/TStoCSharp.js",
+  "bin": {
+    "TsToCSharp": "./dist/TStoCSharp.js"
+  },
   "directories": {
     "test": "mocha"
   },
   "dependencies": {
+    "@types/yargs": "^10.0.1",
     "change-case": "^3.0.1",
     "ts-simple-ast": "^6.12.0",
-    "typescript": "^2.7.1"
+    "typescript": "^2.7.1",
+    "yargs": "^11.0.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
