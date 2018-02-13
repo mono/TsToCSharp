@@ -8,9 +8,7 @@ First you will need a TypeScript (.d.ts) definition file to be used as input.
 $ npm start [options] path/to/file/definition.d.ts
 ```
 
-The output will reside in the same path as the definition file and will have a `.cs` extension.
-
-If the CLI interface was setup by following the instructions [Command Line Interface](#command-line-interface) below.  
+By default the generated file will reside in the same path as the definition file and will have a `.cs` extension.
 
 ## Command Line Options
 
@@ -35,59 +33,18 @@ Resolving File: ../tests/interface.d.ts => /projects/TypeScript/tests/interface.
 
 The output will reside in the same directory as `/projects/TypeScript/tests/interface.cs`.
 
-## Command Line Interface
+## Using the CLI
 
-The project can also be setup to run from the command line.
-
-### Setup a symlink to TsToCSharp
-
-From the project directory execute the following:
+If the CLI interface was setup by following the instructions [Command Line Interface](./Installing#command-line-interface) from the [Installing](./Installing.md) doc then you can simple do the following:
 
 ``` bash
-npm link
+$ TsToCSharp [options] file1.d.ts file2.d.ts
 ```
 
-To test this you can open a new Terminal or Command Prompt, make sure you are not in the project directory and execute the `TsToCSharp` command.
+From the Terminal or Command Prompt enter the following:
 
 ``` bash
 $ TsToCSharp
 ```
 
-You should get a usage help screen because no parameters were specified.
-
-```
-Usage: TsToCSharp [options] file1.d.ts file2.d.ts
-
-Options:
-  --version               Show version number                          [boolean]
-  -o, --outDir            Output directory for generated C# files.
-  --noEmitComments        Do not emit comments contained in the definition
-                          file(s).
-  --noEmitExports         Do not emit any Export attributes.
-  --noEmitMethodExport    Do not emit Export attribute for methods.
-  --noEmitPropertyExport  Do not emit Export attribute for properties.
-  -h, --help              Show help                                    [boolean]
-
-Examples:
-  TsToCSharp file1.d.ts        Emit strongly typed C# definition from TypeScript
-                               definition file(s)
-  TsToCSharp -o ./ file1.d.ts  Emit strongly typed C# definition from TypeScript
-                               definition file(s)
-
-Not enough non-option arguments: got 0, need at least 1
-
-```
-
-All the available command line options can be found in the [Generate Options](./GenerateOptions.md) document.
-
-### Install globally
-
-To install globally make sure you are in the the project directory and execute the following command:
-
-``` bash
-npm install -g
-```
-
-> Tip: On Windows Npm will install a `.cmd` wrapper so users can execute it from the command-line.
-
-
+And you will be presented with a help screen

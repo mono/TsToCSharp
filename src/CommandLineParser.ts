@@ -5,17 +5,17 @@ import {IGenOptions, GenOptions} from "./GenerateOptions";
 export function ParseCommandLine() : IGenOptions
 {
     const argv = yargs.usage("Usage: TsToCSharp [options] file1.d.ts file2.d.ts")
+    .demandCommand(1)   
     .example("TsToCSharp file1.d.ts", "Emit strongly typed C# definition from TypeScript definition file(s)")
     .example("TsToCSharp -o ./ file1.d.ts", "Emit strongly typed C# definition from TypeScript definition file(s)")
-    .alias("o", "outDir")
-    .describe("o", "Output directory for generated C# files.")
+    .help("h")
+    .alias("h", "help")
     .describe("noEmitComments", "Do not emit comments contained in the definition file(s).")
     .describe("noEmitExports", "Do not emit any Export attributes.")
     .describe("noEmitMethodExport", "Do not emit Export attribute for methods.")
     .describe("noEmitPropertyExport", "Do not emit Export attribute for properties.")
-    .demandCommand(1)   
-    .help("h")
-    .alias("h", "help")
+    .alias("o", "outDir")
+    .describe("o", "Output directory for generated C# files.")
     .argv;
 
     //console.log('Yargs', argv);
