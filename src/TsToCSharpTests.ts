@@ -4,6 +4,7 @@ import {expect} from "chai";
 import * as fs from "fs";
 import Ast from "ts-simple-ast";
 import {TsToCSharpGenerator} from "./TStoCSharpGenerator";
+import {IGenOptions, GenOptions} from "./GenerateOptions";
 
 console.log("");
 console.log("TypeScript version: " + ts.version);
@@ -11,6 +12,7 @@ console.log("Working Directory: " + __dirname);
 
 const definitionsPath = "./test/definitions";
 const casesPath = "./test/cases";
+
 
 const interfaceCases = [
     {should: "should generate simple interface", file: "Interface"},
@@ -85,11 +87,13 @@ describe("TsToCSharpGenerator", () => {
                     ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
                     var sourceFiles = ast.getSourceFiles();
+
                     let sourceCode = TsToCSharpGenerator(sourceFiles[0], {
-                            offset: 0,
-                        indent: 0
+                        offset: 0,
+                        indent: 0,
+                        genOptions: new GenOptions() 
                     })
-                    //fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
+                    fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
                     var genCase = fs.readFileSync(path.join(casesPath,testPath,testFile + ".cs")).toString();
                     expect(sourceCode).to.equal(genCase);
                 });

@@ -28,8 +28,9 @@ class Startup {
             sfs.forEach(
                     astSourceFile => {
                         let sourceCode = TsToCSharpGenerator(astSourceFile, {
-                             offset: 0,
-                            indent: 0
+                            offset: 0,
+                            indent: 0,
+                            genOptions: genOptions
                         }
                     );   
 

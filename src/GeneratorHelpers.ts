@@ -91,6 +91,8 @@ export function addLeadingComment(source: string[], posOrNode: number|sast.Node,
           const prefix = text.substring(context.offset, range.pos);
           const comment = prefix + text.substring(range.pos, range.end);
           context.offset += comment.length;
+          if (!context.genOptions.emitComments) 
+            return null;
           return comment;
         }
         return '';
@@ -116,6 +118,8 @@ export function addTrailingComment(source: string[], posOrNode: number|sast.Node
           const prefix = text.substring(context.offset, range.pos);
           const comment = prefix + text.substring(range.pos, range.end);
           context.offset += comment.length;
+          if (!context.genOptions.emitComments) 
+            return null;
           return comment;
         }
         return '';
