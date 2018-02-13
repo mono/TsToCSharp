@@ -5,12 +5,16 @@ Using the project is a simple step of executing the project from the command lin
 First you will need a TypeScript (.d.ts) definition file to be used as input.
 
 ``` bash
-$ npm start path/to/file/definition.d.ts
+$ npm start [options] path/to/file/definition.d.ts
 ```
 
 The output will reside in the same path as the definition file and will have a `.cs` extension.
 
-> Note: The command line is very simple right now as only a list of files are passed in.  This will change in the future as more options are added and the project advances.
+If the CLI interface was setup by following the instructions [Command Line Interface](#command-line-interface) below.  
+
+## Command Line Options
+
+All the available command line options can be found in the [Generate Options](./GenerateOptions.md) document.
 
 ## Sample run
 
@@ -55,9 +59,14 @@ You should get a usage help screen because no parameters were specified.
 Usage: TsToCSharp [options] file1.d.ts file2.d.ts
 
 Options:
-  --version     Show version number                                    [boolean]
-  -o, --outDir  Output directory for generated C# files.
-  -h, --help    Show help                                              [boolean]
+  --version               Show version number                          [boolean]
+  -o, --outDir            Output directory for generated C# files.
+  --noEmitComments        Do not emit comments contained in the definition
+                          file(s).
+  --noEmitExports         Do not emit any Export attributes.
+  --noEmitMethodExport    Do not emit Export attribute for methods.
+  --noEmitPropertyExport  Do not emit Export attribute for properties.
+  -h, --help              Show help                                    [boolean]
 
 Examples:
   TsToCSharp file1.d.ts        Emit strongly typed C# definition from TypeScript
@@ -69,6 +78,8 @@ Not enough non-option arguments: got 0, need at least 1
 
 ```
 
+All the available command line options can be found in the [Generate Options](./GenerateOptions.md) document.
+
 ### Install globally
 
 To install globally make sure you are in the the project directory and execute the following command:
@@ -78,3 +89,5 @@ npm install -g
 ```
 
 > Tip: On Windows Npm will install a `.cmd` wrapper so users can execute it from the command-line.
+
+

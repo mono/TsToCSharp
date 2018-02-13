@@ -10,12 +10,15 @@ export function ParseCommandLine() : IGenOptions
     .alias("o", "outDir")
     .describe("o", "Output directory for generated C# files.")
     .describe("noEmitComments", "Do not emit comments contained in the definition file(s).")
+    .describe("noEmitExports", "Do not emit any Export attributes.")
+    .describe("noEmitMethodExport", "Do not emit Export attribute for methods.")
+    .describe("noEmitPropertyExport", "Do not emit Export attribute for properties.")
     .demandCommand(1)   
     .help("h")
     .alias("h", "help")
     .argv;
 
-    console.log('Yargs', argv);
+    //console.log('Yargs', argv);
 
     let options = new GenOptions();
 
@@ -26,6 +29,26 @@ export function ParseCommandLine() : IGenOptions
 
     if (argv.noEmitComments)
         options.emitComments = false;
+
+    // overall Export Attribute emit control
+    if (argv.noEmitExports)
+    {
+        options.emitExports = false;
+        options.emitMethodExport = false;
+        options.emitPropertyExport = false;
+    }
+    else 
+    {
+        if (argv.noEmitMethodExport)
+        {
+            options.emitMethodExport = false;
+        }
+        if (argv.noEmitPropertyExport)
+        {
+            options.emitPropertyExport = false;
+        }
+    
+    }
 
     return options;
 }
