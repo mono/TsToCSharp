@@ -1,4 +1,4 @@
-interface WebGLRenderingContext {
-    [Export("getSupportedExtensions")]
-    string[] getSupportedExtensions();
+interface ConfirmSiteSpecificExceptionsInformation :  ExceptionInformation {
+    [Export("arrayOfDomainStrings")]
+    string[] arrayOfDomainStrings { get; set; }
 }

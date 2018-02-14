@@ -112,5 +112,55 @@ Property:
    string accessKey { get; set; }
 ```
 
+## Array
 
+Array types can be written with a element type followed by `[]` (`elemType[]`) or as a generic array type, Array<elemType>.
+
+First some examples of the element type followed by `[]`
+
+Method returning `elemType[]`:
+
+```typescript
+    getLineDash(): number[];
+    getAll(name: string): string[];
+    deepPath(): EventTarget[];
+```
+
+```csharp
+    double[] getLineDash();
+    string[] getAll(string name);
+    EventTarget[] deepPath();
+```
+
+Method with `elemType[]` parameter:
+
+```typescript
+    initFauxInterface(fauxArg: boolean[]): void;
+    setLineDash(segments: number[]): void;
+    msLockOrientation(orientations: string[]): boolean;
+    makeCredential(accountInformation: Account, cryptoParameters: ScopedCredentialParameters[], attestationChallenge: BufferSource, options?: ScopedCredentialOptions): ScopedCredentialInfo;
+```
+
+```csharp
+    void initFauxInterface(bool[] fauxArg);
+    void setLineDash(double[] segments);
+    bool msLockOrientation(string[] orientations);
+    ScopedCredentialInfo makeCredential(Account accountInformation, ScopedCredentialParameters[] cryptoParameters, BufferSource attestationChallenge, ScopedCredentialOptions options);    
+```
+
+Property:
+
+```typescript
+    readonly axesAvailable: boolean[];
+    readonly axes: number[];
+    readonly languages: string[];    
+    MessagePort[] ports { get; set; }
+```
+
+```csharp
+    bool[] axesAvailable { get; }
+    double[] axes { get; }
+    string[] languages { get; }    
+    MessagePort[] ports { get; set; }
+```
 

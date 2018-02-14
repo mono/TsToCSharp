@@ -29,8 +29,8 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "args": [
-                "./test/definitions/interfaces/NumberProperty.d.ts",
-                "./test/definitions/interfaces/NumberOrNullProperty.d.ts",
+                "./test/definitions/interfaces/StringArrayProperty.d.ts",
+                "./test/definitions/interfaces/StringArrayOrNullProperty.d.ts",
                 "-o",
                 "./test/cases/interfaces"
             ]

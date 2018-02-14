@@ -1,3 +1,3 @@
-interface WebGLRenderingContext {
-    getSupportedExtensions(): string[] | null;
+interface ConfirmSiteSpecificExceptionsInformation extends ExceptionInformation {
+    arrayOfDomainStrings?: string[] | null;
 }
