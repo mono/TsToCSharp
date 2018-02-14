@@ -10,7 +10,7 @@
     $ mkdir projects
     $ cd projects
     projects$
-    projects$ git clone git@github.com:kjpou1/TsToCSharp.git
+    projects$ git clone git@github.com:mono/TsToCSharp.git
     ```
 
     * For HTTPS 
@@ -20,7 +20,7 @@
     $ mkdir projects
     $ cd projects
     projects$
-    projects$ git clone https://github.com/kjpou1/TsToCSharp.git
+    projects$ git clone https://github.com/mono/TsToCSharp.git
     ```
 
 ## Install NPM module dependencies
