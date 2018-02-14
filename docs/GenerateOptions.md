@@ -10,6 +10,6 @@ The command line options that can be passed to TsToCSharp allow you to control a
 | --noEmitExports | boolean | true | Do not emit any Export attributes. Global|
 | --noEmitMethodExport | boolean | true | Do not emit Export attribute for methods. |
 | --noEmitPropertyExport | boolean | true | Do not emit Export attribute for properties. |
-| --noEmitComments | boolean | true | Do not emit comments contained in the definition file(s). |
 | -o, --outDir | string | | Output directory for generated C# files. |
+| --removeComments | boolean | false | Do not emit comments contained in the definition file(s). |
 

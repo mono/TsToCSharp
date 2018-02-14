@@ -10,12 +10,12 @@ export function ParseCommandLine() : IGenOptions
     .example("TsToCSharp -o ./ file1.d.ts", "Emit strongly typed C# definition from TypeScript definition file(s)")
     .help("h")
     .alias("h", "help")
-    .describe("noEmitComments", "Do not emit comments contained in the definition file(s).")
     .describe("noEmitExports", "Do not emit any Export attributes.")
     .describe("noEmitMethodExport", "Do not emit Export attribute for methods.")
     .describe("noEmitPropertyExport", "Do not emit Export attribute for properties.")
     .alias("o", "outDir")
     .describe("o", "Output directory for generated C# files.")
+    .describe("removeComments", "Do not emit comments contained in the definition file(s).")
     .argv;
 
     //console.log('Yargs', argv);
@@ -27,7 +27,7 @@ export function ParseCommandLine() : IGenOptions
     if (argv.outDir)
         options.outDir = argv.outDir;
 
-    if (argv.noEmitComments)
+    if (argv.removeComments)
         options.emitComments = false;
 
     // overall Export Attribute emit control
