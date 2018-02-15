@@ -35,7 +35,7 @@ The output will reside in the same directory as `/projects/TypeScript/tests/inte
 
 ## Using the CLI
 
-If the CLI interface was setup by following the instructions [Command Line Interface](./Installing#command-line-interface) from the [Installing](./Installing.md) doc then you can simple do the following:
+If the CLI interface was setup by following the instructions [Command Line Interface](./Installing.md#command-line-interface) from the [Installing](./Installing.md) doc then you can simple do the following:
 
 ``` bash
 $ TsToCSharp [options] file1.d.ts file2.d.ts
