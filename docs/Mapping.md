@@ -5,4 +5,4 @@ Only the very basic TypeScript AST parsing is present at this time. Mostly the b
 > More information to follow shortly
 
 - [Basic Types](./Mapping/BasicTypes.md)
-- [Basic Types](./Mapping/RestParameters.md)
+- [Rest Parameters](./Mapping/RestParameters.md)
