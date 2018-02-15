@@ -57,6 +57,8 @@ const ValueTypeTextMap = [
         return emitAnyType(node, context);
       case ts.SyntaxKind.ArrayType:
         return emitArrayType(node, context);        
+      case ts.SyntaxKind.DotDotDotToken:
+        return emitRestParameter(node, context);        
       default:
         throw new Error(`Unknown TypeNode kind ${ts.SyntaxKind[node.getKind()]}`);
     }
@@ -259,6 +261,20 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
     endNode(node, context);
     return source.join('');
   }
+
+  export function emitRestParameter(node: sast.Node, context: ContextInterface): string {
+    const source: string[] = [];
+    const at = <sast.ArrayTypeNode>node;
+    const element = at.getElementTypeNode();
+    source.push("params ");
+    emitTypeNode(element, context);
+    source.push(emitTypeNode(element, context));
+    source.push("[");
+    source.push("]");
+    endNode(node, context);
+    return source.join('');
+  }
+  
 
   export function emitNumberKeyword(node: sast.Node, context: ContextInterface): string {
     return _emitKeyword('double', node, context);

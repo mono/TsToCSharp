@@ -296,8 +296,18 @@ function visitHeritageClauses(source: string[],
     context.offset = node.getStart();
     pushContext(context);
 
-    // emit our parameter type which is at the end.
-    source.push(visitTypeNode(node.getTypeNode(), context));
+    // First check if it is a rest parameter
+    if (node.isRestParameter())
+    {
+      // emit our parameter type which is at the end.
+      source.push(emitter.emitRestParameter(node.getTypeNode(), context));
+
+    }
+    else
+    {
+      // emit our parameter type which is at the end.
+      source.push(visitTypeNode(node.getTypeNode(), context));
+    }
     // let's also put a spacer in there
     source.push(" ");
 
