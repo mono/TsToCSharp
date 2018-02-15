@@ -4,7 +4,8 @@ import {expect} from "chai";
 import * as fs from "fs";
 import Ast from "ts-simple-ast";
 import {TsToCSharpGenerator} from "./TStoCSharpGenerator";
-import {IGenOptions, GenOptions} from "./GenerateOptions";
+import {GenOptions} from "./GenerateOptions";
+import {Context} from "./Context";
 
 console.log("");
 console.log("TypeScript version: " + ts.version);
@@ -13,6 +14,13 @@ console.log("Working Directory: " + __dirname);
 const definitionsPath = "./test/definitions";
 const casesPath = "./test/cases";
 
+class TestGenOptions extends GenOptions {
+    constructor () 
+    {
+        super();
+        this.isPrefixInterface = false;
+    }
+}
 
 const interfaceCases = [
     {should: "should generate simple interface", file: "Interface"},
@@ -62,14 +70,14 @@ const interfaceCases = [
     {should: "should generate interface with indexer property with leading and trailing comments", file: "IndexerPropertyComments"},
     {should: "should generate interface with string array property", file: "ArrayProperty"},
     {should: "should generate interface with number and object array property", file: "ArrayProperty2"},
-    {should: "should generate interface with nullable number array property", file: "NumberArrayProperty"},    
-    {should: "should generate interface with nullable number array or null property", file: "NumberArrayOrNullProperty"},    
-    {should: "should generate interface with nullable boolean array property", file: "BooleanArrayProperty"},
-    {should: "should generate interface with nullable boolean array or null property", file: "BooleanArrayOrNullProperty"},
-    {should: "should generate interface with nullable type reference array property", file: "TypeRefArrayProperty"},            
-    {should: "should generate interface with nullable type reference array or null property", file: "TypeRefArrayOrNullProperty"},            
-    {should: "should generate interface with nullable string array property", file: "StringArrayProperty"},            
-    {should: "should generate interface with nullable string array or null property", file: "StringArrayOrNullProperty"},            
+    {should: "should generate interface with number array property", file: "NumberArrayProperty"},    
+    {should: "should generate interface with nullable number array property", file: "NumberArrayOrNullProperty"},    
+    {should: "should generate interface with boolean array property", file: "BooleanArrayProperty"},
+    {should: "should generate interface with nullable boolean array property", file: "BooleanArrayOrNullProperty"},
+    {should: "should generate interface with type reference array property", file: "TypeRefArrayProperty"},            
+    {should: "should generate interface with nullable type reference array property", file: "TypeRefArrayOrNullProperty"},            
+    {should: "should generate interface with string array property", file: "StringArrayProperty"},            
+    {should: "should generate interface with nullable string array property", file: "StringArrayOrNullProperty"},            
 
     
     
@@ -98,13 +106,10 @@ describe("TsToCSharpGenerator", () => {
                     ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
                     var sourceFiles = ast.getSourceFiles();
+                    const context = new Context(new TestGenOptions());
 
-                    let sourceCode = TsToCSharpGenerator(sourceFiles[0], {
-                        offset: 0,
-                        indent: 0,
-                        genOptions: new GenOptions() 
-                    })
-                    fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
+                    let sourceCode = TsToCSharpGenerator(sourceFiles[0], context)
+                    //fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
                     var genCase = fs.readFileSync(path.join(casesPath,testPath,testFile + ".cs")).toString();
                     expect(sourceCode).to.equal(genCase);
                 });

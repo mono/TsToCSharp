@@ -3,7 +3,7 @@ import * as sast from "ts-simple-ast";
 import { TypeGuards } from 'ts-simple-ast';
 
 import * as emitter from "./CSharpEmitter";
-import {Context} from "./Context";
+import {ContextInterface} from "./Context";
 
 import {
   addWhitespace,
@@ -20,17 +20,25 @@ import {
   pushContext,
   swapContext,
   popContext,
+  identifyInterfaces,
 } from './GeneratorHelpers';
 
-export function TsToCSharpGenerator(node: sast.SourceFile, context: Context): string {
+import { InterfaceTrackingMap } from './DataStructures';
+
+export function TsToCSharpGenerator(node: sast.SourceFile, context: ContextInterface): string {
     const source: string[] = [];
+
+    //console.log("Identifying interfaces for later class implementations")
+    const total = identifyInterfaces(node, context);
+    //console.log("Total interfaces identified: %d", context.diagnostics.identifiedInterfaces);
+
     visitStatements(source, node, context);
     addWhitespace(source, node, context);
     endNode(node, context);
     return source.join('');
 }
 
-function visit(node: sast.Node, context: Context): string {
+function visit(node: sast.Node, context: ContextInterface): string {
   if ((visitor as any)[node.getKind()]) {
     return (visitor as any)[node.getKind()](node, context);
   }
@@ -38,14 +46,14 @@ function visit(node: sast.Node, context: Context): string {
 }
 
 // tslint:disable-next-line cyclomatic-complexity
-function visitStatements(source: string[], node: sast.SourceFile, context: Context): void {
+function visitStatements(source: string[], node: sast.SourceFile, context: ContextInterface): void {
   node.getStatements().forEach(statement =>
     source.push(visitStatement(statement, context))
   );
 }
  
 // tslint:disable-next-line cyclomatic-complexity
-function visitStatement(node: sast.Statement, context: Context): string {
+function visitStatement(node: sast.Statement, context: ContextInterface): string {
 
    switch (node.getKind()) {
      case ts.SyntaxKind.VariableStatement:
@@ -57,13 +65,13 @@ function visitStatement(node: sast.Statement, context: Context): string {
   }
 }
 
-function visitModifiers(source: string[], node: sast.ModifierableNode, context: Context): void {
+function visitModifiers(source: string[], node: sast.ModifierableNode, context: ContextInterface): void {
     node.getModifiers().forEach(modifier => {
       source.push(emitter.emitModifierable(modifier, context));
     });
 }
 
-function visitTypeParameters(source: string[], node: sast.TypeParameteredNode, context: Context): void {
+function visitTypeParameters(source: string[], node: sast.TypeParameteredNode, context: ContextInterface): void {
   node.getTypeParameters().forEach(typeParameter => {
     emitter.emitTypeParameter(source, typeParameter, context);
   });
@@ -71,10 +79,10 @@ function visitTypeParameters(source: string[], node: sast.TypeParameteredNode, c
 
 function visitMembers(source: string[], 
   node: (sast.InterfaceDeclaration | sast.ClassDeclaration), 
-  context: Context): void {
+  context: ContextInterface): void {
     
-    let members = node.getAllMembers();
-    for (var x = 0; x < members.length; x++)
+    const members = node.getAllMembers();
+    for (let x = 0; x < members.length; x++)
     {
       let member = members[x];
       source.push(visit(member, context));
@@ -85,7 +93,7 @@ function visitMembers(source: string[],
 function isIndexerReadOnly(node: ts.IndexSignatureDeclaration): boolean {
     
   if (node.modifiers) {
-    var modifers = node.modifiers;
+    const modifers = node.modifiers;
     for (let i = 0, n = node.modifiers.length; i < n; i++) {
       if (node.modifiers[i].kind === ts.SyntaxKind.ReadonlyKeyword)
         return true;
@@ -96,7 +104,7 @@ function isIndexerReadOnly(node: ts.IndexSignatureDeclaration): boolean {
   return false;
 }
 
-function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: Context): string {
+function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: ContextInterface): string {
   const source: string[] = [];
 
   addLeadingComment(source, node, context);
@@ -153,15 +161,16 @@ function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: Cont
   return source.join('');
 }
 
-function visitHeritageClause(node: sast.HeritageClause, context: Context): string {
+function visitHeritageClause(node: sast.HeritageClause, context: ContextInterface): string {
   const source: string[] = [];
   addLeadingComment(source, node, context);
-  let clauseTypes = node.getTypes();
-  let n = clauseTypes.length;
+
+  const clauseTypes = node.getTypes();
+  const n = clauseTypes.length;
 
   if (n > 0)
   {
-    for (var t = 0; t < n; t++)
+    for (let t = 0; t < n; t++)
     {
       source.push(emitter.emit(clauseTypes[t], context));
       if ((t < n - 1)) {
@@ -174,16 +183,16 @@ function visitHeritageClause(node: sast.HeritageClause, context: Context): strin
 
 function visitHeritageClauses(source: string[], 
   node: (sast.HeritageClauseableNode), 
-  context: Context): void {
+  context: ContextInterface): void {
     
-    let ancestors = node.getHeritageClauses();
-    let n = ancestors.length;
+    const ancestors = node.getHeritageClauses();
+    const n = ancestors.length;
     if (ancestors.length > 0)
     {
       source.push(" : ");
-      for (var x = 0; x < n; x++)
+      for (let x = 0; x < n; x++)
       {
-        let leaf = ancestors[x];
+        const leaf = ancestors[x];
         source.push(visit(leaf, context));
         if ((x < n - 1)) {
           source.push(", ");
@@ -192,18 +201,21 @@ function visitHeritageClauses(source: string[],
     }
 }
 
-  function visitInterfaceDeclaration(node: sast.InterfaceDeclaration, context: Context): string {
+  function visitInterfaceDeclaration(node: sast.InterfaceDeclaration, context: ContextInterface): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
     addWhitespace(source, node, context);
-
+    
     visitModifiers(source, node, context);
 
     // emit first punctuation which should be an opening brace.
     source.push(emitter.emit(node.getFirstChildByKind(ts.SyntaxKind.InterfaceKeyword), context));    
     
     addWhitespace(source, node, context);
-    source.push(emitter.emitIdentifier(node.getNameNode(), context));
+    source.push(emitter.emitInterfaceName(node.getNameNode(), context));
+
+    if (!InterfaceTrackingMap.has(node.getName()))
+      InterfaceTrackingMap.set(node.getName(), node);
 
     visitHeritageClauses(source, node, context);    
 
@@ -225,13 +237,13 @@ function visitHeritageClauses(source: string[],
  }
 
   function visitTypeNode(node: sast.Node, 
-                          context: Context): string {
+                          context: ContextInterface): string {
     return emitter.emitTypeNode(node, context);
   }
 
 
 
-  function visitPropertySignature(node: sast.PropertySignature, context: Context): string {
+  function visitPropertySignature(node: sast.PropertySignature, context: ContextInterface): string {
 
     const source: string[] = [];
     addLeadingComment(source, node, context);
@@ -276,18 +288,7 @@ function visitHeritageClauses(source: string[],
     return source.join('');
  }
 
- function cloneObject(obj: any) {
-  var clone:any = {};
-  for(var i in obj) {
-      if(obj[i] != null &&  typeof(obj[i])=="object")
-          clone[i] = cloneObject(obj[i]);
-      else
-          clone[i] = obj[i];
-  }
-  return clone;
-}
-
- function visitParameter(source: string[], node: sast.ParameterDeclaration, context: Context): void {
+ function visitParameter(source: string[], node: sast.ParameterDeclaration, context: ContextInterface): void {
 
     // We have to take into account that the type follows the name
     // let's push the parameter name node offset so spacing will be ok.
@@ -310,9 +311,9 @@ function visitHeritageClauses(source: string[],
 
  }
 
- function visitParameters(source: string[], node: sast.ParameteredNode, context: Context): void {
+ function visitParameters(source: string[], node: sast.ParameteredNode, context: ContextInterface): void {
 
-    var parmList = node.getParameters();
+    const parmList = node.getParameters();
 
     let n = node.getParameters().length;
     
@@ -331,7 +332,7 @@ function visitHeritageClauses(source: string[],
 
 
  // tslint:disable-next-line cyclomatic-complexity
- function visitMethodSignature(node: sast.MethodSignature, context: Context): string {
+ function visitMethodSignature(node: sast.MethodSignature, context: ContextInterface): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
 
@@ -372,7 +373,7 @@ function visitHeritageClauses(source: string[],
   }
 
 
-function visitVariableStatement(node: sast.VariableStatement, context: Context): string {
+function visitVariableStatement(node: sast.VariableStatement, context: ContextInterface): string {
    const source: string[] = [];
    addLeadingComment(source, node, context);
 //   emitModifiers(source, node, context);

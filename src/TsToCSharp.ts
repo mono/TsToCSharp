@@ -7,6 +7,7 @@ import * as path from "path";
 
 import {ParseCommandLine} from "./CommandLineParser";
 import { TsToCSharpGenerator } from './TsToCSharpGenerator';
+import {Context} from "./Context";
 
 class Startup {
 
@@ -25,23 +26,19 @@ class Startup {
             console.log('Resolving File: ' + fileName + ' => ' + path.resolve(fileName));
             const sf = ast.addSourceFileIfExists(path.resolve(fileName));
             const sfs = ast.getSourceFiles();
-            sfs.forEach(
-                    astSourceFile => {
-                        let sourceCode = TsToCSharpGenerator(astSourceFile, {
-                            offset: 0,
-                            indent: 0,
-                            genOptions: genOptions
-                        }
-                    );   
+            const context = new Context(genOptions);
+            
+            sfs.forEach(astSourceFile => {
+                        
+                let sourceCode = TsToCSharpGenerator(astSourceFile, context);   
 
-                    // output the file.
-                    const filePath = (genOptions.outDir) ? genOptions.outDir : path.dirname(fileName);
-                    const justTheName = path.basename(fileName,".d.ts");
+                // output the file.
+                const filePath = (genOptions.outDir) ? genOptions.outDir : path.dirname(fileName);
+                const justTheName = path.basename(fileName,".d.ts");
 
-                    console.log('Generating File: ' + path.resolve(path.join(filePath,justTheName+".cs")));
-                    fs.writeFileSync(path.join(filePath,justTheName+".cs"), sourceCode);
-                }
-            )
+                console.log('Generating File: ' + path.resolve(path.join(filePath,justTheName+".cs")));
+                fs.writeFileSync(path.join(filePath,justTheName+".cs"), sourceCode);
+            });
 
         });
         return 0;

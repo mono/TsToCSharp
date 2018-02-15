@@ -1,3 +1,6 @@
+
+import {Node} from "ts-simple-ast";
+
 export class Stack<T> {
     _store: T[] = [];
     push(val: T) {
@@ -7,3 +10,6 @@ export class Stack<T> {
       return this._store.pop();
     }
 }
+
+export const InterfaceTrackingMap = new Map<string, Node>();
+

@@ -1,24 +1,25 @@
 import * as ts from 'typescript';
 import * as sast from "ts-simple-ast";
-import {Context} from "./Context";
+import {ContextInterface} from "./Context";
 import {Stack} from "./DataStructures";
 import {emitPropertyName} from "./CSharpEmitter";
+import { InterfaceTrackingMap } from './DataStructures';
 
 const ContextStack = new Stack<number>();
 
-export function emitStatic(source: string[], text: string, node: sast.Node, context: Context): void {
+export function emitStatic(source: string[], text: string, node: sast.Node, context: ContextInterface): void {
   addWhitespace(source, node, context);
   source.push(text);
   context.offset += text.length;
 }
 
 const whitespaces = /^([ \f\n\r\t\v\u0085\u00A0\u2028\u2029\u3000]+)/;
-export function addWhitespace(source: string[], node: sast.Node, context: Context): void;
-export function addWhitespace(source: string[], pos: number, node: sast.Node, context: Context): void;
+export function addWhitespace(source: string[], node: sast.Node, context: ContextInterface): void;
+export function addWhitespace(source: string[], pos: number, node: sast.Node, context: ContextInterface): void;
 // tslint:disable-next-line:cyclomatic-complexity
-export function addWhitespace(source: string[], posOrNode: number|sast.Node, nodeOrContext: sast.Node|Context,
-  optionalContext?: Context): void {
-  const context = optionalContext || (nodeOrContext as Context);
+export function addWhitespace(source: string[], posOrNode: number|sast.Node, nodeOrContext: sast.Node|ContextInterface,
+  optionalContext?: ContextInterface): void {
+  const context = optionalContext || (nodeOrContext as ContextInterface);
   const node = optionalContext ? nodeOrContext as sast.Node : posOrNode as sast.Node;
   const pos = optionalContext ? posOrNode as number : node.getFullStart();
 
@@ -43,12 +44,12 @@ export function addWhitespace(source: string[], posOrNode: number|sast.Node, nod
   }
 }
 
-export function getWhitespace(node: sast.Node, context: Context): string;
-export function getWhitespace(pos: number, node: sast.Node, context: Context): string;
+export function getWhitespace(node: sast.Node, context: ContextInterface): string;
+export function getWhitespace(pos: number, node: sast.Node, context: ContextInterface): string;
 // tslint:disable-next-line:cyclomatic-complexity
-export function getWhitespace(posOrNode: number|sast.Node, nodeOrContext: sast.Node|Context,
-  optionalContext?: Context): string {
-  const context = optionalContext || (nodeOrContext as Context);
+export function getWhitespace(posOrNode: number|sast.Node, nodeOrContext: sast.Node|ContextInterface,
+  optionalContext?: ContextInterface): string {
+  const context = optionalContext || (nodeOrContext as ContextInterface);
   const node = optionalContext ? nodeOrContext as sast.Node : posOrNode as sast.Node;
   const pos = optionalContext ? posOrNode as number : node.getFullStart();
 
@@ -74,11 +75,11 @@ export function getWhitespace(posOrNode: number|sast.Node, nodeOrContext: sast.N
 }
 
 
-export function addLeadingComment(source: string[], node: sast.Node, context: Context): void;
-export function addLeadingComment(source: string[], pos: number, node: sast.Node, context: Context): void;
-export function addLeadingComment(source: string[], posOrNode: number|sast.Node, nodeOrContext: sast.Node|Context,
-    optionalContext?: Context): void {
-  const context = optionalContext || (nodeOrContext as Context);
+export function addLeadingComment(source: string[], node: sast.Node, context: ContextInterface): void;
+export function addLeadingComment(source: string[], pos: number, node: sast.Node, context: ContextInterface): void;
+export function addLeadingComment(source: string[], posOrNode: number|sast.Node, nodeOrContext: sast.Node|ContextInterface,
+    optionalContext?: ContextInterface): void {
+  const context = optionalContext || (nodeOrContext as ContextInterface);
   const node = optionalContext ? nodeOrContext as sast.Node : posOrNode as sast.Node;
   const pos = optionalContext ? posOrNode as number : node.getFullStart();
 
@@ -101,11 +102,11 @@ export function addLeadingComment(source: string[], posOrNode: number|sast.Node,
   }
 }
 
-export function addTrailingComment(source: string[], node: sast.Node, context: Context): void;
-export function addTrailingComment(source: string[], pos: number, node: sast.Node, context: Context): void;
-export function addTrailingComment(source: string[], posOrNode: number|sast.Node, nodeOrContext: sast.Node|Context,
-    optionalContext?: Context): void {
-  var context = optionalContext || (nodeOrContext as Context);
+export function addTrailingComment(source: string[], node: sast.Node, context: ContextInterface): void;
+export function addTrailingComment(source: string[], pos: number, node: sast.Node, context: ContextInterface): void;
+export function addTrailingComment(source: string[], posOrNode: number|sast.Node, nodeOrContext: sast.Node|ContextInterface,
+    optionalContext?: ContextInterface): void {
+  var context = optionalContext || (nodeOrContext as ContextInterface);
   const node = optionalContext ? nodeOrContext as sast.Node : posOrNode as sast.Node;
   const pos = optionalContext ? posOrNode as number : node.getEnd();
 
@@ -129,27 +130,27 @@ export function addTrailingComment(source: string[], posOrNode: number|sast.Node
   
 }
 
-export function addSemicolon(source: string[], node: sast.Node, context: Context): void {
+export function addSemicolon(source: string[], node: sast.Node, context: ContextInterface): void {
   
   if (node.getSourceFile().getFullText().substring(context.offset).trim().startsWith(';')) {
     emitStatic(source, ';', node, context);
   }
 }
 
-export function addComma(source: string[], node: sast.Node, context: Context): void {
+export function addComma(source: string[], node: sast.Node, context: ContextInterface): void {
   if (node.getSourceFile().getFullText().substring(context.offset).trim().startsWith(',')) {
     emitStatic(source, ',', node, context);
   }
 }
 
-export function endNode(node: sast.Node, context: Context): void {
+export function endNode(node: sast.Node, context: ContextInterface): void {
   const end = node.getEnd();
   if (context.offset < end) {
     context.offset = end;
   }
 }
 
-export function generateExportForClass(node: sast.ClassDeclaration, context: Context): string {
+export function generateExportForClass(node: sast.ClassDeclaration, context: ContextInterface): string {
   const source: string[] = [];
   pushContext(context);
   addWhitespace(source, node, context);
@@ -169,7 +170,7 @@ export function generateExportForClass(node: sast.ClassDeclaration, context: Con
   return source.join('');  
 }
 
-export function generateExportForProperty(node: sast.PropertySignature, context: Context): string {
+export function generateExportForProperty(node: sast.PropertySignature, context: ContextInterface): string {
   const source: string[] = [];
   if (context.genOptions.emitExports && context.genOptions.emitPropertyExport)
   {
@@ -196,7 +197,7 @@ export function generateExportForProperty(node: sast.PropertySignature, context:
   return source.join('');  
 }
 
-export function generateExportForMethod(node: sast.MethodSignature, context: Context): string {
+export function generateExportForMethod(node: sast.MethodSignature, context: ContextInterface): string {
   const source: string[] = [];
   if (context.genOptions.emitExports && context.genOptions.emitMethodExport)
   {  
@@ -223,13 +224,13 @@ export function generateExportForMethod(node: sast.MethodSignature, context: Con
   return source.join('');  
 }
 
-export function pushContext(context: Context): void
+export function pushContext(context: ContextInterface): void
 {
    // save off our original context
    ContextStack.push(context.offset);
 }
 
-export function swapContext(context: Context)
+export function swapContext(context: ContextInterface)
 {
 
    // save off our original context
@@ -238,8 +239,23 @@ export function swapContext(context: Context)
    context.offset = swap;
 }
 
-export function popContext(context: Context)
+export function popContext(context: ContextInterface)
 {
   context.offset = ContextStack.pop();
 }
+
+// This is simplistic right now and will need to be expanded to include namespaces
+export function identifyInterfaces(node: sast.SourceFile, context: ContextInterface)
+{
+  node.getStatements().forEach(statement => {
+    switch(statement.getKind()) {
+      case ts.SyntaxKind.InterfaceDeclaration:
+      {
+        context.diagnostics.identifiedInterfaces++;
+        InterfaceTrackingMap.set((<sast.InterfaceDeclaration>statement).getName(), statement);
+      }
+   }
+  });
+}
+
 

@@ -2,7 +2,7 @@ import * as ts from 'typescript';
 
 import * as sast from "ts-simple-ast";
 import { TypeGuards } from 'ts-simple-ast';
-import {Context} from "./Context";
+import {ContextInterface} from "./Context";
 
 import {
   addWhitespace,
@@ -14,6 +14,7 @@ import {
   addComma,
   endNode,
 } from './GeneratorHelpers';
+import { InterfaceTrackingMap } from './DataStructures';
 
 const ReferenceTypeMap = [
   ts.SyntaxKind.StringKeyword
@@ -29,14 +30,14 @@ const ValueTypeTextMap = [
   "bool"
 ]
 
-  export function emit(node: sast.Node, context: Context): string {
+  export function emit(node: sast.Node, context: ContextInterface): string {
     if ((emitter as any)[node.getKind()]) {
       return (emitter as any)[node.getKind()](node, context);
     } 
     throw new Error(`Unknown node kind ${ts.SyntaxKind[node.getKind()]}`);
   }
 
-  export function emitTypeNode(node: sast.Node, context: Context) : string {
+  export function emitTypeNode(node: sast.Node, context: ContextInterface) : string {
     
     // tslint:disable-next-line cyclomatic-complexity
     switch (node.getKind()) {
@@ -62,7 +63,7 @@ const ValueTypeTextMap = [
   }
 
   function emitExpressionWithTypeArguments(node: sast.ExpressionWithTypeArguments,
-    context: Context): string {
+    context: ContextInterface): string {
     const source: string[] = [];
     addWhitespace(source, node, context);
     source.push(emit(node.getExpression(), context));
@@ -73,7 +74,7 @@ const ValueTypeTextMap = [
 export function emitPropertyName(node: (sast.PropertyName 
                                         | sast.StringLiteral
                                         | sast.ComputedPropertyName
-                                        | sast.NumericLiteral), context: Context): string {
+                                        | sast.NumericLiteral), context: ContextInterface): string {
     switch (node.getKind()) {
       case ts.SyntaxKind.Identifier:
         return emitIdentifier(node, context);
@@ -89,7 +90,7 @@ export function emitPropertyName(node: (sast.PropertyName
   }
 
   export function emitComputedPropertyName(node: sast.ComputedPropertyName,
-    context: Context): string {
+    context: ContextInterface): string {
     const source: string[] = [];
     emitStatic(source, '[', node, context);
     addWhitespace(source, node, context);
@@ -99,30 +100,30 @@ export function emitPropertyName(node: (sast.PropertyName
     return source.join('');
   }
 
-  export function emitModifierable(node: sast.Node, context: Context): string {
+  export function emitModifierable(node: sast.Node, context: ContextInterface): string {
     if ((emitter as any)[node.getKind()]) {
       return (emitter as any)[node.getKind()](node, context);
     }
     throw new Error(`Unknown Modifierable node kind ${ts.SyntaxKind[node.getKind()]}`);
   }
 
-  export function emitPublicKeyword(node: sast.Node, context: Context): string {
+  export function emitPublicKeyword(node: sast.Node, context: ContextInterface): string {
     return _emitKeyword('public', node, context);
   }
 
-  export function emitInterfaceKeyword(node: sast.Node, context: Context): string {
+  export function emitInterfaceKeyword(node: sast.Node, context: ContextInterface): string {
     return _emitKeyword('interface', node, context);
   }
 
   // We will not emit the readonly keyword but we do need to update the context
-  export function emitReadonlyKeyword(node: sast.Node, context: Context): string {
+  export function emitReadonlyKeyword(node: sast.Node, context: ContextInterface): string {
     const source: string[] = [];
     addWhitespace(source, node, context);
     context.offset = node.getEnd();
     return source.join('');
   }
 
-  function _emitKeyword(keyword: string, node: sast.Node, context: Context): string {
+  function _emitKeyword(keyword: string, node: sast.Node, context: ContextInterface): string {
     const source: string[] = [];
     addWhitespace(source, node, context);
     source.push(keyword);
@@ -130,7 +131,7 @@ export function emitPropertyName(node: (sast.PropertyName
     return source.join('');
   }
 
-  function _emitType(type: string, node: sast.Node, context: Context): string {
+  function _emitType(type: string, node: sast.Node, context: ContextInterface): string {
     const source: string[] = [];
     source.push(type);
     context.offset = node.getEnd();
@@ -140,22 +141,51 @@ export function emitPropertyName(node: (sast.PropertyName
   export function emitIdentifier(node: (sast.Identifier 
                                         | sast.PropertyName
                                         | sast.EntityName), 
-                                context: Context): string {
+                                context: ContextInterface): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
     addWhitespace(source, node, context);
     
-    const literal = (node.getText().trim().length > 0)
+    let literal = (node.getText().trim().length > 0)
       ? node.getText().trim()
       : node.getFullText().substring(node.getStart(), node.getEnd()).trim()
-  
+
+    // Let's check if it is an interface that we need to prefix
+    if (context.genOptions.isPrefixInterface)
+    {
+      if (InterfaceTrackingMap.has(literal))
+      {
+        literal = context.genOptions.interfacePrefix.concat(literal);
+      }
+    }
+
     source.push(literal);
     endNode(node, context);
     addTrailingComment(source, node, context);
     return source.join('');
   }
 
-  export function emitStringLiteral(node: sast.StringLiteral, context: Context): string {
+  export function emitInterfaceName(node: sast.Identifier, context: ContextInterface): string {
+
+    const source: string[] = [];
+    addLeadingComment(source, node, context);
+    addWhitespace(source, node, context);
+
+    let literal = (node.getText().trim().length > 0)
+    ? node.getText().trim()
+    : node.getFullText().substring(node.getStart(), node.getEnd()).trim()
+
+    if (context.genOptions.isPrefixInterface && context.genOptions.interfacePrefix)
+    {
+      literal = context.genOptions.interfacePrefix.concat(literal);
+    }
+    source.push(literal);
+    endNode(node, context);
+    addTrailingComment(source, node, context);
+    return source.join('');
+  }
+
+export function emitStringLiteral(node: sast.StringLiteral, context: ContextInterface): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
     addWhitespace(source, node, context);
@@ -167,7 +197,7 @@ export function emitPropertyName(node: (sast.PropertyName
     return source.join('');
   }
   
-  export function emitFirstLiteralToken(node: sast.NumericLiteral, context: Context): string {
+  export function emitFirstLiteralToken(node: sast.NumericLiteral, context: ContextInterface): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
     addWhitespace(source, node, context);
@@ -179,27 +209,27 @@ export function emitPropertyName(node: (sast.PropertyName
     return source.join('');
   }
 
-  export function emitVoidType(node: sast.Node, context: Context): string {
+  export function emitVoidType(node: sast.Node, context: ContextInterface): string {
     return _emitType('void', node, context);
   }  
 
-  export function emitBooleanType(node: sast.Node, context: Context): string {
+  export function emitBooleanType(node: sast.Node, context: ContextInterface): string {
     return _emitType('bool', node, context);
   }
 
-  export function emitNumberType(node: sast.Node, context: Context): string {
+  export function emitNumberType(node: sast.Node, context: ContextInterface): string {
     return _emitType('double', node, context);
   }
     
-  export function emitStringType(node: sast.Node, context: Context): string {
+  export function emitStringType(node: sast.Node, context: ContextInterface): string {
     return _emitType('string', node, context);
   }
   
-  export function emitAnyType(node: sast.Node, context: Context): string {
+  export function emitAnyType(node: sast.Node, context: ContextInterface): string {
     return _emitType('Object', node, context);
   }
 
-  export function emitArrayType(node: sast.Node, context: Context): string {
+  export function emitArrayType(node: sast.Node, context: ContextInterface): string {
     const source: string[] = [];
     const at = <sast.ArrayTypeNode>node;
     const element = at.getElementTypeNode();
@@ -211,14 +241,26 @@ export function emitPropertyName(node: (sast.PropertyName
     return source.join('');
   }
 
-  export function emitTypeReference(node: sast.TypeReferenceNode, context: Context): string {
+  export function emitTypeReference(node: sast.TypeReferenceNode, context: ContextInterface): string {
     const source: string[] = [];
-    source.push(node.getText());
+
+    let typeRefLiteral = node.getText();
+
+    // Let's check if it is an interface that we need to prefix
+    if (context.genOptions.isPrefixInterface)
+    {
+      if (InterfaceTrackingMap.has(typeRefLiteral))
+      {
+        typeRefLiteral = context.genOptions.interfacePrefix.concat(typeRefLiteral);
+      }
+    }
+
+    source.push(typeRefLiteral);
     endNode(node, context);
     return source.join('');
   }
 
-  export function emitNumberKeyword(node: sast.Node, context: Context): string {
+  export function emitNumberKeyword(node: sast.Node, context: ContextInterface): string {
     return _emitKeyword('double', node, context);
   }
 
@@ -232,7 +274,7 @@ export function emitPropertyName(node: (sast.PropertyName
   }
 
   // at this time UnionTypeNode is not wrapped by ts-simple-ast
-  export function emitUnionType(node: sast.UnionTypeNode, context: Context): string {
+  export function emitUnionType(node: sast.UnionTypeNode, context: ContextInterface): string {
     const source: string[] = [];
 
     addTrailingComment(source, context.offset, node, context);
@@ -290,7 +332,7 @@ export function emitPropertyName(node: (sast.PropertyName
     return source.join('');
   }  
 
-  export function emitTypeParameter(source: string[], node: sast.TypeParameterDeclaration, context: Context): void {
+  export function emitTypeParameter(source: string[], node: sast.TypeParameterDeclaration, context: ContextInterface): void {
     // if (node.typeParameters) {
     // emitStatic(source, '<', node, context);
     //   for (let i = 0, n = node.typeParameters.length; i < n; i++) {
@@ -305,19 +347,19 @@ export function emitPropertyName(node: (sast.PropertyName
     // }
   }
 
-  function _emitToken(source: string[], token: string, node: sast.Node, context: Context): void {
+  function _emitToken(source: string[], token: string, node: sast.Node, context: ContextInterface): void {
     addLeadingComment(source, node, context);
     emitStatic(source, token, node, context);
   }
 
-  export function emitCloseBraceToken(node: sast.Node, context: Context): string {
+  export function emitCloseBraceToken(node: sast.Node, context: ContextInterface): string {
     const source: string[] = [];
     _emitToken(source, '}', node, context);
     endNode(node, context);
     return source.join('');
   }  
   
-  export function emitFirstPunctuation(node: sast.Node, context: Context): string {
+  export function emitFirstPunctuation(node: sast.Node, context: ContextInterface): string {
     const source: string[] = [];
     _emitToken(source, node.getText(), node, context);
     endNode(node, context);
