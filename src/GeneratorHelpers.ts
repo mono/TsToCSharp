@@ -1,5 +1,6 @@
-import * as ts from 'typescript';
+
 import * as sast from "ts-simple-ast";
+import {ts, SyntaxKind} from "ts-simple-ast"
 import {ContextInterface} from "./Context";
 import {Stack} from "./DataStructures";
 import {emitPropertyName} from "./CSharpEmitter";
@@ -249,7 +250,7 @@ export function identifyInterfaces(node: sast.SourceFile, context: ContextInterf
 {
   node.getStatements().forEach(statement => {
     switch(statement.getKind()) {
-      case ts.SyntaxKind.InterfaceDeclaration:
+      case SyntaxKind.InterfaceDeclaration:
       {
         context.diagnostics.identifiedInterfaces++;
         InterfaceTrackingMap.set((<sast.InterfaceDeclaration>statement).getName(), statement);

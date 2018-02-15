@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import * as ts from 'typescript';
+
 import * as fs from "fs";
-import Ast from "ts-simple-ast";
+import Ast, {ts, ScriptTarget} from "ts-simple-ast";
 import * as path from "path";
 
 
@@ -19,7 +19,7 @@ class Startup {
         genOptions.fileList.forEach(fileName => {
              const ast = new Ast({
                  compilerOptions: {
-                     target: ts.ScriptTarget.ESNext
+                     target: ScriptTarget.ESNext
                  }
              });
             

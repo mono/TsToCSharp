@@ -1,7 +1,6 @@
-import * as ts from 'typescript';
 
 import * as sast from "ts-simple-ast";
-import { TypeGuards } from 'ts-simple-ast';
+import {ts, SyntaxKind, TypeGuards } from 'ts-simple-ast';
 import {ContextInterface} from "./Context";
 
 import {
@@ -17,12 +16,12 @@ import {
 import { InterfaceTrackingMap } from './DataStructures';
 
 const ReferenceTypeMap = [
-  ts.SyntaxKind.StringKeyword
+  SyntaxKind.StringKeyword
 ]
 
 const ValueTypeMap = [
-  ts.SyntaxKind.NumberKeyword,
-  ts.SyntaxKind.BooleanKeyword
+  SyntaxKind.NumberKeyword,
+  SyntaxKind.BooleanKeyword
 ]
 
 const ValueTypeTextMap = [
@@ -34,33 +33,33 @@ const ValueTypeTextMap = [
     if ((emitter as any)[node.getKind()]) {
       return (emitter as any)[node.getKind()](node, context);
     } 
-    throw new Error(`Unknown node kind ${ts.SyntaxKind[node.getKind()]}`);
+    throw new Error(`Unknown node kind ${SyntaxKind[node.getKind()]}`);
   }
 
   export function emitTypeNode(node: sast.Node, context: ContextInterface) : string {
     
     // tslint:disable-next-line cyclomatic-complexity
     switch (node.getKind()) {
-      case ts.SyntaxKind.TypeReference:
+      case SyntaxKind.TypeReference:
         return emitTypeReference(<sast.TypeReferenceNode>node, context);
-      case ts.SyntaxKind.VoidKeyword:
+      case SyntaxKind.VoidKeyword:
         return emitVoidType(node, context);
-      case ts.SyntaxKind.NumberKeyword:
+      case SyntaxKind.NumberKeyword:
         return emitNumberType(node, context);
-      case ts.SyntaxKind.BooleanKeyword:
+      case SyntaxKind.BooleanKeyword:
         return emitBooleanType(node, context);
-      case ts.SyntaxKind.UnionType:
+      case SyntaxKind.UnionType:
         return emitUnionType(<sast.UnionTypeNode>node, context);
-      case ts.SyntaxKind.StringKeyword:
+      case SyntaxKind.StringKeyword:
         return emitStringType(node, context);
-      case ts.SyntaxKind.AnyKeyword:
+      case SyntaxKind.AnyKeyword:
         return emitAnyType(node, context);
-      case ts.SyntaxKind.ArrayType:
+      case SyntaxKind.ArrayType:
         return emitArrayType(node, context);        
-      case ts.SyntaxKind.DotDotDotToken:
+      case SyntaxKind.DotDotDotToken:
         return emitRestParameter(node, context);        
       default:
-        throw new Error(`Unknown TypeNode kind ${ts.SyntaxKind[node.getKind()]}`);
+        throw new Error(`Unknown TypeNode kind ${SyntaxKind[node.getKind()]}`);
     }
   }
 
@@ -78,16 +77,16 @@ export function emitPropertyName(node: (sast.PropertyName
                                         | sast.ComputedPropertyName
                                         | sast.NumericLiteral), context: ContextInterface): string {
     switch (node.getKind()) {
-      case ts.SyntaxKind.Identifier:
+      case SyntaxKind.Identifier:
         return emitIdentifier(node, context);
-      case ts.SyntaxKind.StringLiteral:
+      case SyntaxKind.StringLiteral:
         return emitStringLiteral(<sast.StringLiteral>node, context);
-      case ts.SyntaxKind.ComputedPropertyName:
+      case SyntaxKind.ComputedPropertyName:
         return emitComputedPropertyName(<sast.ComputedPropertyName>node, context);
-      case ts.SyntaxKind.FirstLiteralToken:
+      case SyntaxKind.FirstLiteralToken:
         return emitFirstLiteralToken(<sast.NumericLiteral>node, context);
       default:
-        throw new Error(`Unknown PropertyName kind '${ts.SyntaxKind[node.getKind()]}'`);
+        throw new Error(`Unknown PropertyName kind '${SyntaxKind[node.getKind()]}'`);
     }
   }
 
@@ -106,7 +105,7 @@ export function emitPropertyName(node: (sast.PropertyName
     if ((emitter as any)[node.getKind()]) {
       return (emitter as any)[node.getKind()](node, context);
     }
-    throw new Error(`Unknown Modifierable node kind ${ts.SyntaxKind[node.getKind()]}`);
+    throw new Error(`Unknown Modifierable node kind ${SyntaxKind[node.getKind()]}`);
   }
 
   export function emitPublicKeyword(node: sast.Node, context: ContextInterface): string {
@@ -300,8 +299,8 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
     var typeMap = [];
     
     for (let i = 0, n = node.getTypeNodes().length; i < n; i++) {
-      if (node.getTypeNodes()[i].getKind() !== ts.SyntaxKind.NullKeyword &&
-      node.getTypeNodes()[i].getKind() !== ts.SyntaxKind.UndefinedKeyword)
+      if (node.getTypeNodes()[i].getKind() !== SyntaxKind.NullKeyword &&
+      node.getTypeNodes()[i].getKind() !== SyntaxKind.UndefinedKeyword)
         {
           typeMap.push(node.getTypeNodes()[i]);
         }
@@ -383,11 +382,11 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
   }  
 
   const emitter = {
-    [ts.SyntaxKind.CloseBraceToken]: emitCloseBraceToken,
-    [ts.SyntaxKind.FirstPunctuation]: emitFirstPunctuation,
-    [ts.SyntaxKind.Identifier]: emitIdentifier,
-    [ts.SyntaxKind.PublicKeyword]: emitPublicKeyword,
-    [ts.SyntaxKind.ReadonlyKeyword]: emitReadonlyKeyword, 
-    [ts.SyntaxKind.ExpressionWithTypeArguments]: emitExpressionWithTypeArguments,   
-    [ts.SyntaxKind.InterfaceKeyword]: emitInterfaceKeyword,
+    [SyntaxKind.CloseBraceToken]: emitCloseBraceToken,
+    [SyntaxKind.FirstPunctuation]: emitFirstPunctuation,
+    [SyntaxKind.Identifier]: emitIdentifier,
+    [SyntaxKind.PublicKeyword]: emitPublicKeyword,
+    [SyntaxKind.ReadonlyKeyword]: emitReadonlyKeyword, 
+    [SyntaxKind.ExpressionWithTypeArguments]: emitExpressionWithTypeArguments,   
+    [SyntaxKind.InterfaceKeyword]: emitInterfaceKeyword,
   };

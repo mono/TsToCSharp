@@ -1,6 +1,7 @@
-import * as ts from 'typescript';
-import * as sast from "ts-simple-ast";
-import { TypeGuards } from 'ts-simple-ast';
+
+import * as sast from "ts-simple-ast"
+
+import {SourceFile, SyntaxKind, TypeGuards} from "ts-simple-ast";
 
 import * as emitter from "./CSharpEmitter";
 import {ContextInterface} from "./Context";
@@ -25,7 +26,7 @@ import {
 
 import { InterfaceTrackingMap } from './DataStructures';
 
-export function TsToCSharpGenerator(node: sast.SourceFile, context: ContextInterface): string {
+export function TsToCSharpGenerator(node: SourceFile, context: ContextInterface): string {
     const source: string[] = [];
 
     //console.log("Identifying interfaces for later class implementations")
@@ -42,7 +43,7 @@ function visit(node: sast.Node, context: ContextInterface): string {
   if ((visitor as any)[node.getKind()]) {
     return (visitor as any)[node.getKind()](node, context);
   }
-  throw new Error(`Unknown node kind ${ts.SyntaxKind[node.getKind()]}`);
+  throw new Error(`Unknown node kind ${SyntaxKind[node.getKind()]}`);
 }
 
 // tslint:disable-next-line cyclomatic-complexity
@@ -56,12 +57,12 @@ function visitStatements(source: string[], node: sast.SourceFile, context: Conte
 function visitStatement(node: sast.Statement, context: ContextInterface): string {
 
    switch (node.getKind()) {
-     case ts.SyntaxKind.VariableStatement:
+     case SyntaxKind.VariableStatement:
        return visitVariableStatement(node as sast.VariableStatement, context);
-    case ts.SyntaxKind.InterfaceDeclaration:
+    case SyntaxKind.InterfaceDeclaration:
       return visitInterfaceDeclaration(node as sast.InterfaceDeclaration, context);
     default:
-      throw new Error(`Unknown statement kind '${ts.SyntaxKind[node.getKind()]}'`);
+      throw new Error(`Unknown statement kind '${SyntaxKind[node.getKind()]}'`);
   }
 }
 
@@ -81,27 +82,13 @@ function visitMembers(source: string[],
   node: (sast.InterfaceDeclaration | sast.ClassDeclaration), 
   context: ContextInterface): void {
     
-    const members = node.getAllMembers();
+    const members = node.getMembers();
     for (let x = 0; x < members.length; x++)
     {
       let member = members[x];
       source.push(visit(member, context));
       addTrailingComment(source, context.offset, node, context);
     }
-}
-
-function isIndexerReadOnly(node: ts.IndexSignatureDeclaration): boolean {
-    
-  if (node.modifiers) {
-    const modifers = node.modifiers;
-    for (let i = 0, n = node.modifiers.length; i < n; i++) {
-      if (node.modifiers[i].kind === ts.SyntaxKind.ReadonlyKeyword)
-        return true;
-    }
-
-  }
-
-  return false;
 }
 
 function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: ContextInterface): string {
@@ -165,7 +152,7 @@ function visitHeritageClause(node: sast.HeritageClause, context: ContextInterfac
   const source: string[] = [];
   addLeadingComment(source, node, context);
 
-  const clauseTypes = node.getTypes();
+  const clauseTypes = node.getTypeNodes();
   const n = clauseTypes.length;
 
   if (n > 0)
@@ -209,7 +196,7 @@ function visitHeritageClauses(source: string[],
     visitModifiers(source, node, context);
 
     // emit first punctuation which should be an opening brace.
-    source.push(emitter.emit(node.getFirstChildByKind(ts.SyntaxKind.InterfaceKeyword), context));    
+    source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.InterfaceKeyword), context));    
     
     addWhitespace(source, node, context);
     source.push(emitter.emitInterfaceName(node.getNameNode(), context));
@@ -222,7 +209,7 @@ function visitHeritageClauses(source: string[],
     addTrailingComment(source, context.offset, node, context);
 
     // emit first punctuation which should be an opening brace.
-    source.push(emitter.emit(node.getFirstChildByKind(ts.SyntaxKind.FirstPunctuation), context));
+    source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.FirstPunctuation), context));
 
     addTrailingComment(source, context.offset, node, context);
     
@@ -415,9 +402,9 @@ function visitVariableStatement(node: sast.VariableStatement, context: ContextIn
 
 
 const visitor = {
-  [ts.SyntaxKind.SourceFile]: TsToCSharpGenerator,
-  [ts.SyntaxKind.PropertySignature]: visitPropertySignature,
-  [ts.SyntaxKind.MethodSignature]: visitMethodSignature,
-  [ts.SyntaxKind.HeritageClause]: visitHeritageClause,
-  [ts.SyntaxKind.IndexSignature]: visitIndexSignature,
+  [SyntaxKind.SourceFile]: TsToCSharpGenerator,
+  [SyntaxKind.PropertySignature]: visitPropertySignature,
+  [SyntaxKind.MethodSignature]: visitMethodSignature,
+  [SyntaxKind.HeritageClause]: visitHeritageClause,
+  [SyntaxKind.IndexSignature]: visitIndexSignature,
 };

@@ -1,8 +1,7 @@
 import * as path from "path";
-import * as ts from "typescript";
 import {expect} from "chai";
 import * as fs from "fs";
-import Ast from "ts-simple-ast";
+import Ast, {ts, ScriptTarget} from "ts-simple-ast";
 import {TsToCSharpGenerator} from "./TStoCSharpGenerator";
 import {GenOptions} from "./GenerateOptions";
 import {Context} from "./Context";
@@ -102,7 +101,7 @@ describe("TsToCSharpGenerator", () => {
                 it(testCase.should, () => {
                     const ast = new Ast({
                         compilerOptions: {
-                            target: ts.ScriptTarget.ESNext
+                            target: ScriptTarget.ESNext
                         }
                     });
                     //console.log("Adding Source File: " + path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
