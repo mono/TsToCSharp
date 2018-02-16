@@ -214,6 +214,59 @@ Property:
 
 ```
 
+## Any
+
+The `any` keyword bows out of type checking.
+
+For all general purposes we will be mapping this to C# `object` type.
+
+Method returning `any`:
+
+```typescript
+
+    toJSON(): any;
+    receiveMessage(message: any, targetOrigin: string): any[];
+    item(name?: any, index?: any): any;
+
+```
+
+```csharp
+
+    Object toJSON();
+    Object[] receiveMessage(Object message, string targetOrigin); 
+    Object item(Object name, Object index);
+```
+
+Method with `any` parameter:
+
+```typescript
+
+    warn(message?: any, ...optionalParams: any[]): void;
+
+```
+
+```csharp
+
+    void warn(Object message, params Object[] optionalParams);
+
+```
+
+Property:
+
+```typescript
+
+    data?: any;
+
+```
+
+```csharp
+
+    Object data { get; set; }
+
+```
+
+
+
 ## Void
 
 The `void` keyword represents a method or function that will not return back a value and thus has no type.
@@ -253,3 +306,7 @@ Method returning `never`:
     void fail();
 
 ```
+
+## Null and undefined
+
+
