@@ -78,7 +78,9 @@ Property:
 
 ## String
 
-Strings in TypeScript represet UTF-16 string data.  The `string` type has a direct mapping to C# `string`.
+Strings in TypeScript represet UTF-16 string data.  
+
+The `string` type has a direct mapping to C# `string`.
 
 Method returning string:
 
@@ -115,6 +117,8 @@ Property:
 ## Array
 
 Array types can be written with a element type followed by `[]` (`elemType[]`) or as a generic array type, Array<elemType>.
+
+### elemType[]
 
 First some examples of the element type followed by `[]`
 
@@ -164,3 +168,88 @@ Property:
     MessagePort[] ports { get; set; }
 ```
 
+### Array<elemType>
+
+Now some examples of Array<elemType>.
+
+Method returning `Array<elemType>`:
+
+```typescript
+
+    Not supported yet
+
+```
+
+```csharp
+
+    Not supported yet
+
+```
+
+Method with `Array<elemType>` parameter:
+
+```typescript
+
+    Not supported yet
+
+```
+
+```csharp
+
+    Not supported yet
+
+```
+
+Property:
+
+```typescript
+
+    Not supported yet
+
+```
+
+```csharp
+
+    Not supported yet
+
+```
+
+## Void
+
+The `void` keyword represents a method or function that will not return back a value and thus has no type.
+
+The `void` keyword has a direct mapping to C# `void`.
+
+Method returning `void`:
+
+```typescript
+
+    dispatchEvent(): void;
+
+```
+
+```csharp
+
+    void dispatchEvent();
+
+```
+
+## Never
+
+The `never` type represents values that never occur.
+
+The `never` type has no direct mapping to C# and at this type defaults to `void`.
+
+Method returning `never`:
+
+```typescript
+
+    fail(): never;
+
+```
+
+```csharp
+
+    void fail();
+
+```

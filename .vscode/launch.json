@@ -29,10 +29,10 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "args": [
-                "./test/definitions/interfaces/StringArrayProperty.d.ts",
-                "./test/definitions/interfaces/StringArrayOrNullProperty.d.ts",
+                "./test/definitions/interfaces/MethodReturnNever.d.ts",
                 "-o",
-                "./test/cases/interfaces"
+                "./test/cases/interfaces",
+                "--noPrefixInterface",
             ]
         }
     ]

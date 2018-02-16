@@ -28,6 +28,7 @@ const interfaceCases = [
     {should: "should generate simple interface with leading and trailing comments on separate line", file: "Comments2"},
     {should: "should generate interface extending one interface", file: "Extends"},
     {should: "should generate interface with method that returns void", file: "MethodReturnVoid"},
+    {should: "should generate interface with method that returns never", file: "MethodReturnNever"},
     {should: "should generate interface with method that returns bool", file: "MethodReturnBool"},
     {should: "should generate interface with method that returns string", file: "MethodReturnString"},
     {should: "should generate interface with method that returns any", file: "MethodReturnAny"},

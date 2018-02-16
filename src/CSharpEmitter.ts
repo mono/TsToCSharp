@@ -58,6 +58,8 @@ const ValueTypeTextMap = [
         return emitArrayType(node, context);        
       case SyntaxKind.DotDotDotToken:
         return emitRestParameter(node, context);        
+      case SyntaxKind.NeverKeyword:
+        return emitNeverType(node, context);
       default:
         throw new Error(`Unknown TypeNode kind ${SyntaxKind[node.getKind()]}`);
     }
@@ -211,6 +213,10 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
   }
 
   export function emitVoidType(node: sast.Node, context: ContextInterface): string {
+    return _emitType('void', node, context);
+  }  
+
+  export function emitNeverType(node: sast.Node, context: ContextInterface): string {
     return _emitType('void', node, context);
   }  
 
