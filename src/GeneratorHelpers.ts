@@ -3,7 +3,7 @@ import * as sast from "ts-simple-ast";
 import {ts, SyntaxKind} from "ts-simple-ast"
 import {ContextInterface} from "./Context";
 import {Stack} from "./DataStructures";
-import {emitPropertyName} from "./CSharpEmitter";
+import {emitPropertyName, emitMethodName} from "./CSharpEmitter";
 import { InterfaceTrackingMap } from './DataStructures';
 
 const ContextStack = new Stack<number>();
@@ -177,7 +177,14 @@ export function generateExportForProperty(node: sast.PropertySignature, context:
   {
     pushContext(context);
     addWhitespace(source, node, context);
+
+    const caseChange = context.genOptions.isCaseChange;
+    context.genOptions.isCaseChange = false;
+    
     const exportProperty = emitPropertyName(node.getNameNode(), context);
+
+    context.genOptions.isCaseChange = caseChange;
+    
     popContext(context);
 
     source.push("[Export(\"",exportProperty.trim(),"\")]\n");
@@ -204,7 +211,14 @@ export function generateExportForMethod(node: sast.MethodSignature, context: Con
   {  
     pushContext(context);
     addWhitespace(source, node, context);
-    const exportMethod = emitPropertyName(node.getNameNode(), context);
+
+    const caseChange = context.genOptions.isCaseChange;
+    context.genOptions.isCaseChange = false;
+
+    const exportMethod = emitMethodName(node.getNameNode(), context);
+
+    context.genOptions.isCaseChange = caseChange;
+
     popContext(context);
 
     source.push("[Export(\"",exportMethod.trim(),"\")]\n");

@@ -301,7 +301,7 @@ function visitHeritageClauses(source: string[],
     // now reposition back to the start
     swapContext(context);
 
-    source.push(emitter.emitPropertyName(node.getNameNode(), context));
+    source.push(emitter.emitParameterName(node.getNameNode(), context));
 
     // now reposition back to the start
     popContext(context);
@@ -352,7 +352,7 @@ function visitHeritageClauses(source: string[],
 
     visitTypeParameters(source, node, context);
 
-    source.push(emitter.emitPropertyName(node.getNameNode(), context));
+    source.push(emitter.emitMethodName(node.getNameNode(), context));
     
     emitStatic(source, '(', node, context);
     

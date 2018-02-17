@@ -29,10 +29,11 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "args": [
-                "./test/definitions/interfaces/MethodReturnNever.d.ts",
+                "./test/definitions/interfaces/Extends3.d.ts",
                 "-o",
                 "./test/cases/interfaces",
                 "--noPrefixInterface",
+                "--noCaseChange"
             ]
         }
     ]

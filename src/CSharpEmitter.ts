@@ -2,6 +2,7 @@
 import * as sast from "ts-simple-ast";
 import {ts, SyntaxKind, TypeGuards } from 'ts-simple-ast';
 import {ContextInterface} from "./Context";
+import * as cc from "change-case";
 
 import {
   addWhitespace,
@@ -80,7 +81,7 @@ export function emitPropertyName(node: (sast.PropertyName
                                         | sast.NumericLiteral), context: ContextInterface): string {
     switch (node.getKind()) {
       case SyntaxKind.Identifier:
-        return emitIdentifier(node, context);
+        return emitIdentifier(node, context, context.genOptions.isCaseChange && context.genOptions.isCaseChangeProperties);
       case SyntaxKind.StringLiteral:
         return emitStringLiteral(<sast.StringLiteral>node, context);
       case SyntaxKind.ComputedPropertyName:
@@ -92,7 +93,46 @@ export function emitPropertyName(node: (sast.PropertyName
     }
   }
 
-  export function emitComputedPropertyName(node: sast.ComputedPropertyName,
+  export function emitMethodName(node: (sast.PropertyName 
+    | sast.StringLiteral
+    | sast.ComputedPropertyName
+    | sast.NumericLiteral), context: ContextInterface): string {
+
+    switch (node.getKind()) {
+      case SyntaxKind.Identifier:
+        return emitIdentifier(node, context, context.genOptions.isCaseChange && context.genOptions.isCaseChangeMethods);
+      case SyntaxKind.StringLiteral:
+        return emitStringLiteral(<sast.StringLiteral>node, context);
+      case SyntaxKind.ComputedPropertyName:
+        return emitComputedPropertyName(<sast.ComputedPropertyName>node, context);
+      case SyntaxKind.FirstLiteralToken:
+        return emitFirstLiteralToken(<sast.NumericLiteral>node, context);
+      default:
+        throw new Error(`Unknown MethodName kind '${SyntaxKind[node.getKind()]}'`);
+    }
+  }
+
+  export function emitParameterName(node: (sast.PropertyName 
+    | sast.StringLiteral
+    | sast.ComputedPropertyName
+    | sast.NumericLiteral), context: ContextInterface): string {
+
+    switch (node.getKind()) {
+      case SyntaxKind.Identifier:
+        return emitIdentifier(node, context, context.genOptions.isCaseChange && context.genOptions.isCaseChangeParameters);
+      case SyntaxKind.StringLiteral:
+        return emitStringLiteral(<sast.StringLiteral>node, context);
+      case SyntaxKind.ComputedPropertyName:
+        return emitComputedPropertyName(<sast.ComputedPropertyName>node, context);
+      case SyntaxKind.FirstLiteralToken:
+        return emitFirstLiteralToken(<sast.NumericLiteral>node, context);
+      default:
+        throw new Error(`Unknown ParameterName kind '${SyntaxKind[node.getKind()]}'`);
+    }
+  }
+
+
+export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     context: ContextInterface): string {
     const source: string[] = [];
     emitStatic(source, '[', node, context);
@@ -144,7 +184,8 @@ export function emitPropertyName(node: (sast.PropertyName
   export function emitIdentifier(node: (sast.Identifier 
                                         | sast.PropertyName
                                         | sast.EntityName), 
-                                context: ContextInterface): string {
+                                context: ContextInterface,
+                              changeCase?: boolean): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
     addWhitespace(source, node, context);
@@ -152,6 +193,9 @@ export function emitPropertyName(node: (sast.PropertyName
     let literal = (node.getText().trim().length > 0)
       ? node.getText().trim()
       : node.getFullText().substring(node.getStart(), node.getEnd()).trim()
+
+    if (changeCase)
+      literal = cc.pascalCase(literal);
 
     // Let's check if it is an interface that we need to prefix
     if (context.genOptions.isPrefixInterface)

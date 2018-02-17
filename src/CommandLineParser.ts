@@ -10,6 +10,12 @@ export function ParseCommandLine() : GenOptionsInterface
     .example("TsToCSharp -o ./ file1.d.ts", "Emit strongly typed C# definition from TypeScript definition file(s)")
     .help("h")
     .alias("h", "help")
+    .describe("noCaseChange", "Do not change case.")
+    .describe("noCaseChangeClasses", "Do not change case of Class Declarations.")
+    .describe("noCaseChangeIntefaces", "Do not change case of Interface Declarations.")
+    .describe("noCaseChangeMethods", "Do not change case of Method Declarations.")
+    .describe("noCaseChangeParameters", "Do not change case of Parameter Declarations.")
+    .describe("noCaseChangeProperties", "Do not change case of Method Declarations.")
     .describe("noEmitExports", "Do not emit any Export attributes.")
     .describe("noEmitMethodExport", "Do not emit Export attribute for methods.")
     .describe("noEmitPropertyExport", "Do not emit Export attribute for properties.")
@@ -61,6 +67,43 @@ export function ParseCommandLine() : GenOptionsInterface
     {
         options.interfacePrefix = argv.interfacePrefix;
     }
+
+    // overall Case Change emit control
+    if (argv.noCaseChange)
+    {
+        options.isCaseChange = false;
+        options.isCaseChangeClasses = false;
+        options.isCaseChangeInterfaces = false;
+        options.isCaseChangeMethods = false;
+        options.isCaseChangeParameters = false;
+        options.isCaseChangeProperties = false;
+
+    }
+    else 
+    {
+        if (argv.noCaseChangeClasses)
+        {
+            options.isCaseChangeClasses = false;
+        }
+        if (argv.noCaseChangeInterfaces)
+        {
+            options.isCaseChangeInterfaces = false;
+        }
+        if (argv.noCaseChangeMethods)
+        {
+            options.isCaseChangeMethods = false;
+        }
+        if (argv.noCaseChangeParameters)
+        {
+            options.isCaseChangeParameters = false;
+        }
+        if (argv.noCaseChangeProperties)
+        {
+            options.isCaseChangeProperties = false;
+        }
+    
+    }
+    
 
     return options;
 }

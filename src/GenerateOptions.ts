@@ -2,6 +2,12 @@ export interface GenOptionsInterface
 {
     fileList: string[];
     outDir?: string;
+    isCaseChange: boolean;
+    isCaseChangeClasses: boolean;
+    isCaseChangeInterfaces: boolean;
+    isCaseChangeMethods: boolean;
+    isCaseChangeParameters: boolean;    
+    isCaseChangeProperties: boolean;    
     emitComments: boolean;
     emitExports: boolean;
     emitMethodExport: boolean;
@@ -13,6 +19,12 @@ export interface GenOptionsInterface
 export class GenOptions implements GenOptionsInterface {
     fileList: string[];
     outDir?: string;
+    isCaseChange: boolean = true;
+    isCaseChangeClasses: boolean = true;
+    isCaseChangeInterfaces: boolean = true;
+    isCaseChangeMethods: boolean = true;
+    isCaseChangeParameters: boolean = true;
+    isCaseChangeProperties: boolean = true;
     emitComments: boolean = true;
     emitExports: boolean = true;
     emitMethodExport: boolean = true;

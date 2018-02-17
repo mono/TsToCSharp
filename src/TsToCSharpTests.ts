@@ -18,6 +18,7 @@ class TestGenOptions extends GenOptions {
     {
         super();
         this.isPrefixInterface = false;
+        this.isCaseChange = false;
     }
 }
 
