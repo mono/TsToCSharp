@@ -70,12 +70,35 @@ const ValueTypeTextMap = [
 
   function emitExpressionWithTypeArguments(node: sast.ExpressionWithTypeArguments,
     context: ContextInterface): string {
+    
     const source: string[] = [];
     addWhitespace(source, node, context);
     source.push(emit(node.getExpression(), context));
+    
+    emitTypeArguments(source, node, context);
+
     endNode(node, context);
     return source.join('');
   }  
+
+  function emitTypeArguments(source: string[], node: sast.ExpressionWithTypeArguments, context: ContextInterface): void {
+
+    
+    const typeArgs = node.getTypeArguments();
+    if (typeof typeArgs !== "undefined"  && typeArgs.length > 0)
+    {
+      emitStatic(source, '<', node, context);
+      for (let i = 0, n = typeArgs.length; i < n; i++) {
+        addWhitespace(source, node, context);
+        source.push(emit(typeArgs[i], context));
+        if ((i < n - 1)) {
+          emitStatic(source, ',', node, context);
+        }
+      }
+      emitStatic(source, '>', node, context);
+      
+    }
+  }
   
 export function emitPropertyName(node: (sast.PropertyName 
                                         | sast.StringLiteral
@@ -473,16 +496,6 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
     const source: string[] = [];
     addWhitespace(source, node, context);
     source.push(emitIdentifier(node.getNameNode(), context));
-    // if (node.constraint) {
-    //   emitStatic(source, 'extends', node, context);
-    //   addWhitespace(source, node, context);
-    //   source.push(emitTypeNode(node.constraint, context));
-    // }
-    // if (node.default) {
-    //   emitStatic(source, '=', node, context);
-    //   addWhitespace(source, node, context);
-    //   source.push(emitTypeNode(node.default, context));
-    // }
     endNode(node, context);
     return source.join('');
   }
@@ -496,4 +509,5 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
     [SyntaxKind.ExpressionWithTypeArguments]: emitExpressionWithTypeArguments,   
     [SyntaxKind.InterfaceKeyword]: emitInterfaceKeyword,
     [SyntaxKind.TypeParameter]: emitTypeParameter,
+    [SyntaxKind.TypeReference]: emitTypeReference,
   };
