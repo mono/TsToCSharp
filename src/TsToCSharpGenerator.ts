@@ -74,7 +74,7 @@ function visitModifiers(source: string[], node: sast.ModifierableNode, context: 
 
 function visitTypeParameters(source: string[], node: sast.TypeParameteredNode, context: ContextInterface): void {
   node.getTypeParameters().forEach(typeParameter => {
-    emitter.emitTypeParameter(source, typeParameter, context);
+    source.push(emitter.emitTypeParameter(typeParameter, context));
   });
 }
 
@@ -186,7 +186,7 @@ function visitHeritageClauses(source: string[],
         }
       }
     }
-}
+  }
 
   function visitInterfaceDeclaration(node: sast.InterfaceDeclaration, context: ContextInterface): string {
     const source: string[] = [];
@@ -201,10 +201,15 @@ function visitHeritageClauses(source: string[],
     addWhitespace(source, node, context);
     source.push(emitter.emitInterfaceName(node.getNameNode(), context));
 
+    // If the interface is not already being tracked then add it to the interface tracking
     if (!InterfaceTrackingMap.has(node.getName()))
       InterfaceTrackingMap.set(node.getName(), node);
 
+    emitter.emitTypeParameters(source, node, context);      
+
     visitHeritageClauses(source, node, context);    
+
+    emitter.emitTypeConstraints(source, node, context);   
 
     addTrailingComment(source, context.offset, node, context);
 

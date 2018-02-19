@@ -13,6 +13,8 @@ import {
   addSemicolon,
   addComma,
   endNode,
+  pushContext,
+  popContext,
 } from './GeneratorHelpers';
 import { InterfaceTrackingMap } from './DataStructures';
 
@@ -344,6 +346,7 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
 
     addTrailingComment(source, context.offset, node, context);
     addWhitespace(source, context.offset, node, context);
+    
     const isNullable = isUnionNullable(node);
     
     var typeMap = [];
@@ -397,19 +400,54 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
     return source.join('');
   }  
 
-  export function emitTypeParameter(source: string[], node: sast.TypeParameterDeclaration, context: ContextInterface): void {
-    // if (node.typeParameters) {
-    // emitStatic(source, '<', node, context);
-    //   for (let i = 0, n = node.typeParameters.length; i < n; i++) {
-    //     addTrailingComment(source, context.offset, node, context);
-    //     addWhitespace(source, node, context);
-    //     source.push(emit(node.typeParameters[i], context));
-    //     if ((i < n - 1) || node.typeParameters.hasTrailingComma) {
-    //       emitStatic(source, ',', node, context);
-    //     }
-    //   }
-    //   emitStatic(source, '>', node, context);
-    // }
+  export function emitTypeParameters(source: string[], node: sast.Node, context: ContextInterface): void {
+
+    if (TypeGuards.isTypeParameteredNode(node))
+    {
+      const typeParameters = node.getTypeParameters();
+      if (typeof typeParameters !== 'undefined' && typeParameters.length > 0)
+      {
+        emitStatic(source, '<', node, context);
+
+        for (let i = 0, n = typeParameters.length; i < n; i++) {
+          addTrailingComment(source, context.offset, node, context);
+          addWhitespace(source, node, context);
+          source.push(emit(typeParameters[i], context));
+          if ((i < n - 1)) {
+            emitStatic(source, ',', node, context);
+          }
+        }
+        emitStatic(source, '>', node, context);
+      } 
+    }
+  }
+
+  export function emitTypeConstraints(source: string[], node: sast.Node, context: ContextInterface): void {
+
+    // Since we are appending the constraints we need to save off our context and restore it afterwards
+    pushContext(context);
+
+    if (TypeGuards.isTypeParameteredNode(node))
+    {
+
+      const typeParameters = node.getTypeParameters();
+      if (typeof typeParameters !== 'undefined' && typeParameters.length > 0)
+      {
+        for (let i = 0, n = typeParameters.length; i < n; i++) {
+          if (typeof typeParameters[i].getConstraintNode() !== 'undefined')
+          {
+            source.push(' where ');
+            source.push(emit(typeParameters[i], context));
+            source.push(' : ');
+            source.push(emitTypeNode(typeParameters[i].getConstraintNode(), context));
+          }
+        }        
+
+      }
+    }
+
+    // Restore our context
+    popContext(context);
   }
 
   function _emitToken(source: string[], token: string, node: sast.Node, context: ContextInterface): void {
@@ -431,6 +469,24 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
     return source.join('');
   }  
 
+  export function emitTypeParameter(node: sast.TypeParameterDeclaration, context: ContextInterface): string {
+    const source: string[] = [];
+    addWhitespace(source, node, context);
+    source.push(emitIdentifier(node.getNameNode(), context));
+    // if (node.constraint) {
+    //   emitStatic(source, 'extends', node, context);
+    //   addWhitespace(source, node, context);
+    //   source.push(emitTypeNode(node.constraint, context));
+    // }
+    // if (node.default) {
+    //   emitStatic(source, '=', node, context);
+    //   addWhitespace(source, node, context);
+    //   source.push(emitTypeNode(node.default, context));
+    // }
+    endNode(node, context);
+    return source.join('');
+  }
+
   const emitter = {
     [SyntaxKind.CloseBraceToken]: emitCloseBraceToken,
     [SyntaxKind.FirstPunctuation]: emitFirstPunctuation,
@@ -439,4 +495,5 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
     [SyntaxKind.ReadonlyKeyword]: emitReadonlyKeyword, 
     [SyntaxKind.ExpressionWithTypeArguments]: emitExpressionWithTypeArguments,   
     [SyntaxKind.InterfaceKeyword]: emitInterfaceKeyword,
+    [SyntaxKind.TypeParameter]: emitTypeParameter,
   };
