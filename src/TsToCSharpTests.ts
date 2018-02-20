@@ -87,9 +87,9 @@ const interfaceCases = [
     
     {should: "should generate interfaces extending one interface", file: "Extends2"},
     {should: "should generate multiple interfaces extending multiple interfaces", file: "Extends3"},
-    {should: "should generate interface with generic and generic constraints", file: "ExtendsGenericWithConstraint"},
-    {should: "should generate interface with generic and generic constraints #2", file: "ExtendsGenericWithConstraint2"},
     {should: "should generate interface with generic and extends generic", file: "ExtendsGeneric"},
+    {should: "should generate generic interface with constraints", file: "GenericInterfaceWithConstraint"},
+    {should: "should generate generic interface generic constraints #2", file: "GenericInterfaceWithConstraint2"},
     {should: "should generate generic interface with non supported type default", file: "GenericInterfaceWithTypeDefault"},
 
 ]
