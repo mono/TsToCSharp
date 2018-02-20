@@ -38,6 +38,20 @@ class Startup {
 
                 console.log('Generating File: ' + path.resolve(path.join(filePath,justTheName+".cs")));
                 fs.writeFileSync(path.join(filePath,justTheName+".cs"), sourceCode);
+
+                if (context.diagnostics.errors.length > 0)
+                {
+                    context.diagnostics.errors.forEach(warning => {
+                        console.log(warning);
+                    });
+
+                }
+                if (context.diagnostics.warnings.length > 0)
+                {
+                    context.diagnostics.warnings.forEach(warning => {
+                        console.log(warning);
+                    });
+                }
             });
 
         });

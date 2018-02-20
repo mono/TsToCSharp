@@ -464,6 +464,10 @@ export function emitStringLiteral(node: sast.StringLiteral, context: ContextInte
             source.push(' : ');
             source.push(emitTypeNode(typeParameters[i].getConstraintNode(), context));
           }
+          if (typeof typeParameters[i].getDefaultNode() !== 'undefined')
+          {
+            context.diagnostics.pushWarningAtLoc("C# does not support default generic types", typeParameters[i].getDefaultNode() );
+          }
         }        
 
       }
