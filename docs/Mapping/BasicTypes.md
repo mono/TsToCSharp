@@ -309,5 +309,36 @@ Method returning `never`:
 
 ## Null and undefined
 
+TypeScript defines both `undefined` and `null` and not extremely useful on their own.  In the definition files the nullable definitions are paired with [Union Types](#union-types) defined with the pipe symbol (|).
 
+C# Nullable types represent value-type variables that can be assigned the value of null. You cannot create a nullable type based on a reference type. (Reference types already support the null value.)
 
+Method returning `nullable` type:
+
+```typescript
+
+    iceLite?: boolean | null;
+    now(): number | null;
+    getLineDash(): number[] | null;
+    item(index: number): string | null;
+    getAll(name: string): string[] | null;
+    add(data: File): DataTransferItem | null;
+    deepPath(): EventTarget[] | null;
+    toJSON(): any | null;
+    receiveMessage(message: any, targetOrigin: string): any[] | null;
+
+```
+
+```csharp
+
+    bool? iceLite { get; set; }
+    double? now();
+    double?[] getLineDash();
+    string item(double index);
+    string[] getAll(string name);
+    DataTransferItem add(File data);
+    EventTarget[] deepPath();
+    Object toJSON();
+    Object[] receiveMessage(Object message, string targetOrigin);
+
+```
