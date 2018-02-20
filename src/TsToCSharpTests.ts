@@ -102,7 +102,7 @@ describe("TsToCSharpGenerator", () => {
         interfaceCases.forEach(testCase =>
             {
 
-                var testFile = testCase.file;
+                const testFile = testCase.file;
 
                 it(testCase.should, () => {
                     const ast = new Ast({
@@ -113,16 +113,46 @@ describe("TsToCSharpGenerator", () => {
                     //console.log("Adding Source File: " + path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
                     ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
-                    var sourceFiles = ast.getSourceFiles();
+                    const sourceFiles = ast.getSourceFiles();
                     const context = new Context(new TestGenOptions());
 
-                    let sourceCode = TsToCSharpGenerator(sourceFiles[0], context)
+                    const sourceCode = TsToCSharpGenerator(sourceFiles[0], context)
                     //fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
-                    var genCase = fs.readFileSync(path.join(casesPath,testPath,testFile + ".cs")).toString();
+                    const genCase = fs.readFileSync(path.join(casesPath,testPath,testFile + ".cs")).toString();
                     expect(sourceCode).to.equal(genCase);
                 });
         
             }
         )
+    });
+});
+
+const diagnosticCases = [
+    {should: "should generate warning non supported type default", file: "GenericInterfaceWithTypeDefault"},
+
+]
+
+describe("TsToCSharpGenerator", () => {
+    describe("diagnostics", () => {
+
+        const testPath = "diagnostics";
+        let testCase = diagnosticCases[0];
+        let testFile = diagnosticCases[0].file;
+        it(testCase.should, () => {
+            const ast = new Ast({
+                compilerOptions: {
+                    target: ScriptTarget.ESNext
+                }
+            });
+
+            ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+
+            const sourceFiles = ast.getSourceFiles();
+            const context = new Context(new TestGenOptions());
+
+            TsToCSharpGenerator(sourceFiles[0], context)
+            expect(context.diagnostics.warnings.length).to.equal(1);
+        });
+
     });
 });
