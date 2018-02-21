@@ -342,3 +342,30 @@ Method returning `nullable` type:
     Object[] receiveMessage(Object message, string targetOrigin);
 
 ```
+
+Method with `nullable` parameter:
+
+```typescript
+
+    initFaux(eventTypeArg: string, canBubbleArg: boolean | null, cancelableArg: boolean | null): void;
+    initDeviceOrientationEvent(type: string, bubbles: boolean, cancelable: boolean, alpha: number | null, beta: number | null, gamma: number | null, absolute: boolean): void;
+    setFauxLineDash(segments: number[] | null): void;
+    getNamedItemNS(namespaceURI: string | null, localName: string | null): Attr;
+    msLockOrientation(orientations: string[] | null): boolean;
+    evaluate(expression: string, contextNode: Node, resolver: XPathNSResolver | null, type: number, result: XPathResult | null): XPathResult;
+    makeCredential(accountInformation: Account, cryptoParameters: ScopedCredentialParameters[] | null, attestationChallenge: BufferSource, options?: ScopedCredentialOptions): ScopedCredentialInfo;
+
+```
+
+```csharp
+
+    void initFaux(string eventTypeArg, bool? canBubbleArg, bool? cancelableArg);
+    void initFauxInterface(bool?[] fauxArg);
+    void initDeviceOrientationEvent(string type, bool bubbles, bool cancelable, double? alpha, double? beta, double? gamma, bool absolute);
+    void setFauxLineDash(double?[] segments);
+    Attr getNamedItemNS(string namespaceURI, string localName);
+    bool msLockOrientation(string[] orientations);
+    XPathResult evaluate(string expression, Node contextNode, XPathNSResolver resolver, double type, XPathResult result);
+    ScopedCredentialInfo makeCredential(Account accountInformation, ScopedCredentialParameters[] cryptoParameters, BufferSource attestationChallenge, ScopedCredentialOptions options);
+
+```
