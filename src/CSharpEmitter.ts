@@ -250,6 +250,7 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     {
       literal = context.genOptions.interfacePrefix.concat(literal);
     }
+
     source.push(literal);
     endNode(node, context);
     addTrailingComment(source, node, context);

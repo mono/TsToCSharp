@@ -195,7 +195,17 @@ function visitHeritageClauses(source: string[],
     addLeadingComment(source, node, context);
     addWhitespace(source, node, context);
 
-    visitModifiers(source, node, context);
+    if (node.getModifiers().length == 0)
+    {
+      if (context.genOptions.interfaceAccessModifier && context.genOptions.interfaceAccessModifier.length > 0)
+      {
+        source.push(context.genOptions.interfaceAccessModifier, " ");
+      }
+    }
+    else 
+    {
+      visitModifiers(source, node, context);
+    }
 
     // emit first punctuation which should be an opening brace.
     source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.InterfaceKeyword), context));
@@ -509,6 +519,9 @@ function visitDeclarationOfInterface(node: sast.VariableDeclaration, context: Co
 
   // Now reposition to the end of the method type
   popContext(context);
+
+  // Make sure we add a body
+  source.push(" { }");
 
   addSemicolon(source, node, context);
   endNode(node, context);

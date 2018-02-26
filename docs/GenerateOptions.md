@@ -7,6 +7,8 @@ The command line options that can be passed to TsToCSharp allow you to control a
 | Option | Type | Default | Description |
 |---|---|---|---|
 | -h, --help | boolean | | Show help |
+| --interfacePrefix | string | "I" (uppercase `i`) | Prefix interfaces with the string provided. |
+| --interfaceAccessModifier | string | "public" | Default interface access identifier. |
 | --noCaseChange | boolean | true | Do not change case. Global|
 | --noCaseChangeClasses | boolean | true | Do not change case of Class Declarations. |
 | --noCaseChangeInterfaces | boolean | true | Do not change case of Interface Declarations. |
@@ -18,6 +20,5 @@ The command line options that can be passed to TsToCSharp allow you to control a
 | --noEmitPropertyExport | boolean | true | Do not emit Export attribute for properties. |
 | --noPrefixInterface | boolean | true | Do not prefix interface names. |
 | -o, --outDir | string | | Output directory for generated C# files. |
-| --interfacePrefix | string | "I" (uppercase `i`) | Prefix interfaces with the string provided. |
 | --removeComments | boolean | false | Do not emit comments contained in the definition file(s). |
 

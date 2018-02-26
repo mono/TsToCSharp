@@ -15,6 +15,7 @@ export interface GenOptionsInterface
     interfacePrefix: string;
     isPrefixInterface: boolean;
     isEmitAllInterfaces: boolean;
+    interfaceAccessModifier: string;
 }
 
 export class GenOptions implements GenOptionsInterface {
@@ -33,5 +34,6 @@ export class GenOptions implements GenOptionsInterface {
     interfacePrefix: string = "I";
     isPrefixInterface: boolean = true;
     isEmitAllInterfaces: boolean = false;
+    interfaceAccessModifier: string = "public";
     constructor() { }
 }

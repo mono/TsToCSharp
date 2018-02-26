@@ -19,6 +19,7 @@ class TestGenOptions extends GenOptions {
         super();
         this.isPrefixInterface = false;
         this.isCaseChange = false;
+        this.interfaceAccessModifier = "";
     }
 }
 
@@ -140,6 +141,7 @@ class TestClassGenOptions extends GenOptions {
     constructor () 
     {
         super();
+        this.isCaseChangeParameters = false;
     }
 }
 
@@ -148,6 +150,7 @@ class TestClassNoEmitComments extends GenOptions {
     {
         super();
         this.emitComments = false;
+        this.isCaseChangeParameters = false;
     }
 }
 
@@ -155,6 +158,8 @@ const classCases = [
     {should: "should generate simple class from declaraion of interface", file: "InterfaceDeclaration", genOptions: new TestClassGenOptions() },
     {should: "should generate simple class from declaraion of interface with comments", file: "InterfaceDeclarationWithComments", genOptions: new TestClassGenOptions()},
     {should: "should generate simple class from declaraion of interface without comments", file: "InterfaceDeclarationNoEmitComments", genOptions: new TestClassNoEmitComments()},
+    {should: "should generate simple class from declaraion of interface with constructor arguments", file: "InterfaceDeclarationWithConstructorArgs", genOptions: new TestClassGenOptions()},    
+    
 ]
 
 describe("TsToCSharpGenerator", () => {
@@ -166,7 +171,7 @@ describe("TsToCSharpGenerator", () => {
             {
 
                 const testFile = testCase.file;
-                const genOptions = testCase.genOptions ? testCase.genOptions : new TestClassGenOptions();
+                const genOptions = testCase.genOptions;//testCase.genOptions ? testCase.genOptions : new TestClassGenOptions();
 
                 it(testCase.should, () => {
                     const ast = new Ast({

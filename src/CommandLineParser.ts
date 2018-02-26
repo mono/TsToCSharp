@@ -11,6 +11,10 @@ export function ParseCommandLine() : GenOptionsInterface
     .help("h")
     .alias("h", "help")
     .describe("emitAllInterfaces", "Emit C# class implementations for all Interfaces and not just those declared.")
+    .describe("interfacePrefix", "Prefix interfaces with the string provided. Default is \"I\"")
+    .describe("interfaceAccessModifier", "Default interface access identifier. Default is \"public\"")
+    .nargs("interfaceAccessModifier", 1)
+    .choices("interfaceAccessModifier", ["public", "internal", "private", "none"])
     .describe("noCaseChange", "Do not change case.")
     .describe("noCaseChangeClasses", "Do not change case of Class Declarations.")
     .describe("noCaseChangeIntefaces", "Do not change case of Interface Declarations.")
@@ -24,7 +28,6 @@ export function ParseCommandLine() : GenOptionsInterface
     .describe("noPrefixInterface", "Do not prefix interface names.")
     .alias("o", "outDir")
     .describe("o", "Output directory for generated C# files.")
-    .describe("interfacePrefix", "Prefix interfaces with the string provided. Default is \"I\"")
     .describe("removeComments", "Do not emit comments contained in the definition file(s).")
     .argv;
 
@@ -115,6 +118,12 @@ export function ParseCommandLine() : GenOptionsInterface
     {
         options.emitComments = false;
     }
+    
+    if (typeof(argv.interfaceAccessModifier) === "string" )
+    {
+        options.interfaceAccessModifier = (argv.interfaceAccessModifier !== "none") ? argv.interfaceAccessModifier : undefined;
+    }
+
 
     
 

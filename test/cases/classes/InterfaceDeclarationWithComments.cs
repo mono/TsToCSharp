@@ -1,4 +1,4 @@
-    interface IAudioListener {
+    public interface IAudioListener {
     }   // Trailing comment of interface defintion.
 
     // This is a leading comment
@@ -14,5 +14,5 @@
         /**
          * Creates a new AudioListener
          */
-        public AudioListener (); // Trailing of constructor
+        public AudioListener () { }; // Trailing of constructor
     }          // Trailing comments
