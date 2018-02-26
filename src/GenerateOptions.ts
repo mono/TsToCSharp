@@ -14,6 +14,7 @@ export interface GenOptionsInterface
     emitPropertyExport: boolean;
     interfacePrefix: string;
     isPrefixInterface: boolean;
+    isEmitAllInterfaces: boolean;
 }
 
 export class GenOptions implements GenOptionsInterface {
@@ -31,5 +32,6 @@ export class GenOptions implements GenOptionsInterface {
     emitPropertyExport: boolean = true;
     interfacePrefix: string = "I";
     isPrefixInterface: boolean = true;
+    isEmitAllInterfaces: boolean = false;
     constructor() { }
 }

@@ -1,7 +1,7 @@
 
 import * as sast from "ts-simple-ast"
 
-import {SourceFile, SyntaxKind, TypeGuards} from "ts-simple-ast";
+import {SourceFile, SyntaxKind, TypeGuards, ts} from "ts-simple-ast";
 
 import * as emitter from "./CSharpEmitter";
 import {ContextInterface} from "./Context";
@@ -22,6 +22,8 @@ import {
   swapContext,
   popContext,
   identifyInterfaces,
+  isDeclarationOfInterface,
+  generateExportForInterfaceDeclaration,
 } from './GeneratorHelpers';
 
 import { InterfaceTrackingMap } from './DataStructures';
@@ -52,7 +54,7 @@ function visitStatements(source: string[], node: sast.SourceFile, context: Conte
     source.push(visitStatement(statement, context))
   );
 }
- 
+
 // tslint:disable-next-line cyclomatic-complexity
 function visitStatement(node: sast.Statement, context: ContextInterface): string {
 
@@ -78,10 +80,10 @@ function visitTypeParameters(source: string[], node: sast.TypeParameteredNode, c
   });
 }
 
-function visitMembers(source: string[], 
-  node: (sast.InterfaceDeclaration | sast.ClassDeclaration), 
+function visitMembers(source: string[],
+  node: (sast.InterfaceDeclaration | sast.ClassDeclaration),
   context: ContextInterface): void {
-    
+
     const members = node.getMembers();
     for (let x = 0; x < members.length; x++)
     {
@@ -96,10 +98,10 @@ function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: Cont
 
   addLeadingComment(source, node, context);
   addWhitespace(source, node, context);
-  
+
   // visit the modifiers.
   visitModifiers(source, node, context);
-  
+
   if (node.compilerNode.modifiers) {
     node.compilerNode.modifiers.forEach(modifier => {
       source.push(emitter.emitModifierable(sast.createWrappedNode(modifier), context));
@@ -127,11 +129,11 @@ function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: Cont
   swapContext(context);
 
   emitStatic(source, 'this[', node, context);
-  
+
   source.push(visitTypeNode(node.getKeyTypeNode(), context));
   source.push(" ");
   source.push(emitter.emitParameterName(node.getKeyNameNode(), context));
-  
+
   emitStatic(source, ']', node, context);
 
   if (node.isReadonly())
@@ -168,10 +170,10 @@ function visitHeritageClause(node: sast.HeritageClause, context: ContextInterfac
   return source.join('');
 }
 
-function visitHeritageClauses(source: string[], 
-  node: (sast.HeritageClauseableNode), 
+function visitHeritageClauses(source: string[],
+  node: (sast.HeritageClauseableNode),
   context: ContextInterface): void {
-    
+
     const ancestors = node.getHeritageClauses();
     const n = ancestors.length;
     if (ancestors.length > 0)
@@ -192,12 +194,12 @@ function visitHeritageClauses(source: string[],
     const source: string[] = [];
     addLeadingComment(source, node, context);
     addWhitespace(source, node, context);
-    
+
     visitModifiers(source, node, context);
 
     // emit first punctuation which should be an opening brace.
-    source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.InterfaceKeyword), context));    
-    
+    source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.InterfaceKeyword), context));
+
     addWhitespace(source, node, context);
     source.push(emitter.emitInterfaceName(node.getNameNode(), context));
 
@@ -205,11 +207,11 @@ function visitHeritageClauses(source: string[],
     if (!InterfaceTrackingMap.has(node.getName()))
       InterfaceTrackingMap.set(node.getName(), node);
 
-    emitter.emitTypeParameters(source, node, context);      
+    emitter.emitTypeParameters(source, node, context);
 
-    visitHeritageClauses(source, node, context);    
+    visitHeritageClauses(source, node, context);
 
-    emitter.emitTypeConstraints(source, node, context);   
+    emitter.emitTypeConstraints(source, node, context);
 
     addTrailingComment(source, context.offset, node, context);
 
@@ -217,7 +219,7 @@ function visitHeritageClauses(source: string[],
     source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.FirstPunctuation), context));
 
     addTrailingComment(source, context.offset, node, context);
-    
+
     visitMembers(source, node, context);
     addLeadingComment(source, context.offset, node, context);
 
@@ -228,7 +230,7 @@ function visitHeritageClauses(source: string[],
     return source.join('');
  }
 
-  function visitTypeNode(node: sast.Node, 
+  function visitTypeNode(node: sast.Node,
                           context: ContextInterface): string {
     return emitter.emitTypeNode(node, context);
   }
@@ -242,7 +244,7 @@ function visitHeritageClauses(source: string[],
 
     // This will generate an Export attribute as well as takes into account whitespace
     source.push(generateExportForProperty(node, context));
-    
+
     visitModifiers(source, node, context);
 
     // let's push the name node offset so spacing will be ok.
@@ -266,7 +268,7 @@ function visitHeritageClauses(source: string[],
     swapContext(context);
 
     source.push(emitter.emitPropertyName(node.getNameNode(), context));
-    
+
     if (node.isReadonly())
     {
       source.push(" { get; }");
@@ -318,7 +320,7 @@ function visitHeritageClauses(source: string[],
     const parmList = node.getParameters();
 
     let n = node.getParameters().length;
-    
+
     if (n > 0)
     {
       for (let p = 0; p < n; p++)
@@ -346,7 +348,7 @@ function visitHeritageClauses(source: string[],
     context.offset = node.getNameNode().getStart();
     pushContext(context);
 
-    
+
     // emit our method type which is at the end.
     source.push(visitTypeNode(node.getReturnTypeNode(), context));
     // make sure we put a spacer in there
@@ -358,9 +360,9 @@ function visitHeritageClauses(source: string[],
     visitTypeParameters(source, node, context);
 
     source.push(emitter.emitMethodName(node.getNameNode(), context));
-    
+
     emitStatic(source, '(', node, context);
-    
+
     visitParameters(source, node, context);
 
     emitStatic(source, ')', node, context);
@@ -376,35 +378,143 @@ function visitHeritageClauses(source: string[],
 
 
 function visitVariableStatement(node: sast.VariableStatement, context: ContextInterface): string {
-   const source: string[] = [];
-   addLeadingComment(source, node, context);
-//   emitModifiers(source, node, context);
-//   source.push(emitVariableDeclarationList(node.declarationList, context));
-   addSemicolon(source, node, context);
-   endNode(node, context);
-   addTrailingComment(source, node, context);
-   return source.join('');
- }
+  const source: string[] = [];
+  addLeadingComment(source, node, context);
+
+  visitVariableDeclarationList(source, node.getDeclarationList(), context);
+  endNode(node, context);
+  addTrailingComment(source, node, context);
+  return source.join('');
+}
+
+function visitVariableDeclarationList(source: string[], node: sast.VariableDeclarationList, context: ContextInterface) : void {
+
+  switch(node.getDeclarationTypeKeyword().getKind())
+  {
+    case SyntaxKind.VarKeyword:
+      visitVariableDeclarations(source, node, context);
+      break;
+    default:
+      context.diagnostics.pushErrorAtLoc("Declaration type " + node.getDeclarationTypeKeyword().getKindName() + " is not yet supported", node);
+
+  }
+}
+
+function visitVariableDeclarations(source: string[], node: sast.VariableDeclarationList, context: ContextInterface) : void {
+
+const declarations = node.getDeclarations();
+
+for (let x = 0; x < declarations.length; x++)
+{
+  let declaration = declarations[x];
+  source.push(visit(declaration, context));
+  addTrailingComment(source, context.offset, node, context);
+}
+
+}
+
+function visitVariableDeclaration(node: sast.VariableDeclaration, context: ContextInterface): string {
+
+  const source: string[] = [];
+  addLeadingComment(source, node, context);
+
+  if (isDeclarationOfInterface(node))
+  {
+    source.push(visitDeclarationOfInterface(node, context));
+  }
+  else
+  {
+    context.diagnostics.pushWarningAtLoc("Variable Declarations other than Interfaces are not supported", node);
+  }
+
+  endNode(node, context);
+  addTrailingComment(source, node, context);
+  return source.join('');
+}
+
+function visitDeclarationOfInterface(node: sast.VariableDeclaration, context: ContextInterface): string {
+
+  const source: string[] = [];
+  addLeadingComment(source, node, context);
+
+  // This will generate an Export attribute as well as takes into account whitespace
+  source.push(generateExportForInterfaceDeclaration(node, context));
+
+  // Here we emit the C# definition
+  emitter.emitClassDefinitionOfInterfaceDeclaration(source, node, context, context.genOptions.isCaseChange && context.genOptions.isCaseChangeClasses);
+
+  // emit first punctuation which should be an opening brace.
+  const typeNodeLiteral = node.getTypeNode();
+  source.push(emitter.emit(typeNodeLiteral.getFirstChildByKind(SyntaxKind.FirstPunctuation), context));
+
+  addTrailingComment(source, context.offset, node, context);
+
+  if (TypeGuards.isTypeLiteralNode(typeNodeLiteral))
+  {
+    const members = typeNodeLiteral.getMembers();
+    const constructors = typeNodeLiteral.getConstructSignatures();
+    for (let c = 0; c < constructors.length; c++)
+    {
+      source.push(visit(constructors[c], context));
+    }
+  }
 
 
-// function visitTypeParameter(node: sast.TypeParameterDeclaration, context: VisitorContext): string {
-//   const source: string[] = [];
-//   addWhitespace(source, node, context);
-//   //source.push(emitter.emitIdentifier(node., context));
-//   // if (node.constraint) {
-//   //   emitStatic(source, 'extends', node, context);
-//   //   addWhitespace(source, node, context);
-//   //   source.push(emitTypeNode(node.constraint, context));
-//   // }
-//   // if (node.default) {
-//   //   emitStatic(source, '=', node, context);
-//   //   addWhitespace(source, node, context);
-//   //   source.push(emitTypeNode(node.default, context));
-//   // }
-//   endNode(node, context);
-//   return source.join('');
-// }
+  addLeadingComment(source, typeNodeLiteral, context);
+  addWhitespace(source, typeNodeLiteral, context);
+  source.push(emitter.emit(typeNodeLiteral.getFirstChildByKind(SyntaxKind.CloseBraceToken), context));
 
+  return source.join('');
+}
+
+ // tslint:disable-next-line cyclomatic-complexity
+ function visitConstructSignature(node: sast.ConstructSignatureDeclaration, context: ContextInterface): string {
+  
+  const source: string[] = [];
+  addLeadingComment(source, node, context);
+  addWhitespace(source, node, context);
+
+  const parameters = node.getTypeParameters();
+
+  pushContext(context);
+
+  // the constructors in this case do not allow modifiers so we will make it public by default
+  source.push("public");
+
+  // emit our constructor type which is at the end.
+  const savePrefixInterface = context.genOptions.isPrefixInterface;
+  const saveCaseChangeInterfaces = context.genOptions.isCaseChangeInterfaces;
+  context.genOptions.isPrefixInterface = false;
+  context.genOptions.isCaseChangeInterfaces = false;
+  
+  addWhitespace(source, node.getReturnTypeNode(), context);
+  source.push(visitTypeNode(node.getReturnTypeNode(), context));
+  
+  context.genOptions.isCaseChangeInterfaces = saveCaseChangeInterfaces;
+  context.genOptions.isPrefixInterface = savePrefixInterface;
+
+  // make sure we put a spacer in there
+  source.push(" ");
+
+  // now reposition back to the start
+  swapContext(context);
+
+  visitTypeParameters(source, node, context);
+
+  emitStatic(source, '(', node, context);
+
+  visitParameters(source, node, context);
+
+  emitStatic(source, ')', node, context);
+
+  // Now reposition to the end of the method type
+  popContext(context);
+
+  addSemicolon(source, node, context);
+  endNode(node, context);
+  addTrailingComment(source, context.offset, node, context);
+  return source.join('');
+}
 
 const visitor = {
   [SyntaxKind.SourceFile]: TsToCSharpGenerator,
@@ -412,4 +522,7 @@ const visitor = {
   [SyntaxKind.MethodSignature]: visitMethodSignature,
   [SyntaxKind.HeritageClause]: visitHeritageClause,
   [SyntaxKind.IndexSignature]: visitIndexSignature,
+  [SyntaxKind.VariableDeclaration]: visitVariableDeclaration,
+  [SyntaxKind.ConstructSignature]: visitConstructSignature,
+
 };

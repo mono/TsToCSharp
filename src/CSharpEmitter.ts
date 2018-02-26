@@ -100,7 +100,7 @@ const ValueTypeTextMap = [
     }
   }
   
-export function emitPropertyName(node: (sast.PropertyName 
+  export function emitPropertyName(node: (sast.PropertyName 
                                         | sast.StringLiteral
                                         | sast.ComputedPropertyName
                                         | sast.NumericLiteral), context: ContextInterface): string {
@@ -162,7 +162,6 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     const source: string[] = [];
     emitStatic(source, '[', node, context);
     addWhitespace(source, node, context);
-    //source.push(emitExpression(node.expression, context));
     emitStatic(source, ']', node, context);
     endNode(node, context);
     return source.join('');
@@ -257,7 +256,37 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     return source.join('');
   }
 
-export function emitStringLiteral(node: sast.StringLiteral, context: ContextInterface): string {
+  export function emitClassName(node: sast.Identifier, context: ContextInterface, changeCase?: boolean): string {
+
+    const source: string[] = [];
+    addLeadingComment(source, node, context);
+    addWhitespace(source, node, context);
+
+    let literal = (node.getText().trim().length > 0)
+    ? node.getText().trim()
+    : node.getFullText().substring(node.getStart(), node.getEnd()).trim()
+
+    if (changeCase)
+      literal = cc.pascalCase(literal);
+
+    source.push(literal);
+    endNode(node, context);
+    addTrailingComment(source, node, context);
+    return source.join('');
+  }
+
+  export function emitClassDefinitionOfInterfaceDeclaration(source: string[], 
+                                                            node: sast.VariableDeclaration, 
+                                                            context: ContextInterface,
+                                                            changeCase?: boolean): void {
+
+    source.push("public sealed class");
+  
+    addWhitespace(source, node.getPos(), node, context);
+    source.push(emitClassName(node.getNameNode(), context, changeCase));
+  }
+
+  export function emitStringLiteral(node: sast.StringLiteral, context: ContextInterface): string {
     const source: string[] = [];
     addLeadingComment(source, node, context);
     addWhitespace(source, node, context);

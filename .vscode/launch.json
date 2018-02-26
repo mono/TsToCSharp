@@ -29,11 +29,11 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "args": [
-                "./test/definitions/interfaces/Extends3.d.ts",
+                "./test/definitions/classes/Class.d.ts",
                 "-o",
-                "./test/cases/interfaces",
-                "--noPrefixInterface",
-                "--noCaseChange"
+                "./test/cases/classes",
+                "--noPrefixInterfaces",
+                "--noCaseChangeParameters"
             ]
         }
     ]

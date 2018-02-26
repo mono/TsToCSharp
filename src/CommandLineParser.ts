@@ -10,6 +10,7 @@ export function ParseCommandLine() : GenOptionsInterface
     .example("TsToCSharp -o ./ file1.d.ts", "Emit strongly typed C# definition from TypeScript definition file(s)")
     .help("h")
     .alias("h", "help")
+    .describe("emitAllInterfaces", "Emit C# class implementations for all Interfaces and not just those declared.")
     .describe("noCaseChange", "Do not change case.")
     .describe("noCaseChangeClasses", "Do not change case of Class Declarations.")
     .describe("noCaseChangeIntefaces", "Do not change case of Interface Declarations.")
@@ -102,6 +103,11 @@ export function ParseCommandLine() : GenOptionsInterface
             options.isCaseChangeProperties = false;
         }
     
+    }
+
+    if (argv.emitAllInterfaces)
+    {
+        options.isEmitAllInterfaces = true;
     }
     
 

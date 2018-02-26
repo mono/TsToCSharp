@@ -136,8 +136,53 @@ describe("TsToCSharpGenerator", () => {
     });
 });
 
+class TestClassGenOptions extends GenOptions {
+    constructor () 
+    {
+        super();
+    }
+}
+
+const classCases = [
+    {should: "should generate simple class from declaraion of interface", file: "Class"},
+
+]
+
+describe("TsToCSharpGenerator", () => {
+    describe("classes", () => {
+
+        const testPath = "classes";
+
+        classCases.forEach(testCase =>
+            {
+
+                const testFile = testCase.file;
+
+                it(testCase.should, () => {
+                    const ast = new Ast({
+                        compilerOptions: {
+                            target: ScriptTarget.ESNext
+                        }
+                    });
+                    //console.log("Adding Source File: " + path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+                    ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+        
+                    const sourceFiles = ast.getSourceFiles();
+                    const context = new Context(new TestClassGenOptions());
+                    const sourceCode = TsToCSharpGenerator(sourceFiles[0], context)
+                    //fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
+                    const genCase = fs.readFileSync(path.join(casesPath,testPath,testFile + ".cs")).toString();
+                    expect(sourceCode).to.equal(genCase);
+                });
+        
+            }
+        )
+    });
+});
+
 const diagnosticCases = [
     {should: "should generate warning non supported type default", file: "GenericInterfaceWithTypeDefault"},
+    {should: "should generate warning non supported declaration", file: "DeclarationOfNonInterface"},
 
 ]
 
@@ -163,5 +208,22 @@ describe("TsToCSharpGenerator", () => {
             expect(context.diagnostics.warnings.length).to.equal(1);
         });
 
+        testCase = diagnosticCases[1];
+        testFile = diagnosticCases[1].file;
+        it(testCase.should, () => {
+            const ast = new Ast({
+                compilerOptions: {
+                    target: ScriptTarget.ESNext
+                }
+            });
+
+            ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+
+            const sourceFiles = ast.getSourceFiles();
+            const context = new Context(new TestClassGenOptions());
+
+            TsToCSharpGenerator(sourceFiles[0], context)
+            expect(context.diagnostics.warnings.length).to.equal(1);
+        });
     });
 });

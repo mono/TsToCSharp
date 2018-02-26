@@ -1,9 +1,9 @@
 
 import * as sast from "ts-simple-ast";
-import {ts, SyntaxKind} from "ts-simple-ast"
+import {ts, SyntaxKind, TypeGuards} from "ts-simple-ast"
 import {ContextInterface} from "./Context";
 import {Stack} from "./DataStructures";
-import {emitPropertyName, emitMethodName} from "./CSharpEmitter";
+import {emitPropertyName, emitMethodName, emitClassName} from "./CSharpEmitter";
 import { InterfaceTrackingMap } from './DataStructures';
 
 const ContextStack = new Stack<number>();
@@ -151,6 +151,38 @@ export function endNode(node: sast.Node, context: ContextInterface): void {
   }
 }
 
+export function generateExportForInterfaceDeclaration(node: sast.VariableDeclaration, context: ContextInterface): string {
+  const source: string[] = [];
+  pushContext(context);
+  
+  const variableStatement = node.getParentWhile((parent) => 
+  {
+    if (parent.getKind() !== SyntaxKind.VariableStatement)
+      return true;
+    return false;
+
+  }).getParentIfKind(SyntaxKind.VariableStatement);
+
+  addWhitespace(source, variableStatement, context);
+  
+  const exportClass = node.getName();
+  popContext(context);
+
+  source.push("[Export(\"",exportClass.trim(),"\", typeof(Mono.WebAssembly.JSObject))]\n");
+  
+
+  var len = source.length;
+  addWhitespace(source, variableStatement, context);
+
+  if (source.length > len)
+  {
+    // Strip all line break combinations so spacing looks correct
+    source[source.length - 1] = source[source.length - 1].replace(/(\r\n|\n|\r)/gm,"");
+  }
+
+  return source.join('');  
+}
+
 export function generateExportForClass(node: sast.ClassDeclaration, context: ContextInterface): string {
   const source: string[] = [];
   pushContext(context);
@@ -260,17 +292,36 @@ export function popContext(context: ContextInterface)
 }
 
 // This is simplistic right now and will need to be expanded to include namespaces
-export function identifyInterfaces(node: sast.SourceFile, context: ContextInterface)
+export function identifyInterfaces(sourceFile: sast.SourceFile, context: ContextInterface)
 {
-  node.getStatements().forEach(statement => {
-    switch(statement.getKind()) {
-      case SyntaxKind.InterfaceDeclaration:
-      {
-        context.diagnostics.identifiedInterfaces++;
-        InterfaceTrackingMap.set((<sast.InterfaceDeclaration>statement).getName(), statement);
-      }
-   }
+  const interfaces = sourceFile.getDescendantsOfKind(SyntaxKind.InterfaceDeclaration);
+  interfaces.forEach(intercara => {
+    context.diagnostics.identifiedInterfaces++;
+    InterfaceTrackingMap.set(intercara.getName(), intercara);
   });
+}
+
+export function isDeclarationOfInterface(node: sast.VariableDeclaration) : boolean {
+
+  const properties = node.getDescendantsOfKind(SyntaxKind.PropertySignature);
+
+  for (let i = 0; i < properties.length; i++)
+  {
+    const propName = properties[i].getName();
+    if (properties[i].getName() === "prototype")
+    {
+      const propType = properties[i].getTypeNode();
+
+      if (TypeGuards.isTypeReferenceNode(propType))
+      {
+        const typeName = propType.getText();
+        const interfaceDec = propType.getSourceFile().getInterface(typeName);
+        return (typeof interfaceDec !== "undefined");
+      }
+        
+    }
+  }
+  return false;
 }
 
 
