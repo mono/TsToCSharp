@@ -18,6 +18,7 @@ export function ParseCommandLine() : GenOptionsInterface
     .describe("noCaseChangeParameters", "Do not change case of Parameter Declarations.")
     .describe("noCaseChangeProperties", "Do not change case of Method Declarations.")
     .describe("noEmitExports", "Do not emit any Export attributes.")
+    .describe("noEmitComments", "Do not emit comments.")
     .describe("noEmitMethodExport", "Do not emit Export attribute for methods.")
     .describe("noEmitPropertyExport", "Do not emit Export attribute for properties.")
     .describe("noPrefixInterface", "Do not prefix interface names.")
@@ -109,6 +110,12 @@ export function ParseCommandLine() : GenOptionsInterface
     {
         options.isEmitAllInterfaces = true;
     }
+
+    if (argv.noEmitComments)
+    {
+        options.emitComments = false;
+    }
+
     
 
     return options;

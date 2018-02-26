@@ -143,9 +143,18 @@ class TestClassGenOptions extends GenOptions {
     }
 }
 
-const classCases = [
-    {should: "should generate simple class from declaraion of interface", file: "Class"},
+class TestClassNoEmitComments extends GenOptions {
+    constructor () 
+    {
+        super();
+        this.emitComments = false;
+    }
+}
 
+const classCases = [
+    {should: "should generate simple class from declaraion of interface", file: "InterfaceDeclaration", genOptions: new TestClassGenOptions() },
+    {should: "should generate simple class from declaraion of interface with comments", file: "InterfaceDeclarationWithComments", genOptions: new TestClassGenOptions()},
+    {should: "should generate simple class from declaraion of interface without comments", file: "InterfaceDeclarationNoEmitComments", genOptions: new TestClassNoEmitComments()},
 ]
 
 describe("TsToCSharpGenerator", () => {
@@ -157,6 +166,7 @@ describe("TsToCSharpGenerator", () => {
             {
 
                 const testFile = testCase.file;
+                const genOptions = testCase.genOptions ? testCase.genOptions : new TestClassGenOptions();
 
                 it(testCase.should, () => {
                     const ast = new Ast({
@@ -168,7 +178,7 @@ describe("TsToCSharpGenerator", () => {
                     ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
                     const sourceFiles = ast.getSourceFiles();
-                    const context = new Context(new TestClassGenOptions());
+                    const context = new Context(genOptions);
                     const sourceCode = TsToCSharpGenerator(sourceFiles[0], context)
                     //fs.writeFileSync(path.join(casesPath,testPath,testFile + ".cs"), sourceCode);
                     const genCase = fs.readFileSync(path.join(casesPath,testPath,testFile + ".cs")).toString();
