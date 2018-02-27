@@ -453,32 +453,42 @@ function visitDeclarationOfInterface(node: sast.VariableDeclaration, context: Co
   // Here we emit the C# definition
   emitter.emitClassDefinitionOfInterfaceDeclaration(source, node, context, context.genOptions.isCaseChange && context.genOptions.isCaseChangeClasses);
 
-  // emit first punctuation which should be an opening brace.
-  const typeNodeLiteral = node.getTypeNode();
-  source.push(emitter.emit(typeNodeLiteral.getFirstChildByKind(SyntaxKind.FirstPunctuation), context));
-
-  addTrailingComment(source, context.offset, node, context);
-
-  if (TypeGuards.isTypeLiteralNode(typeNodeLiteral))
-  {
-    const members = typeNodeLiteral.getMembers();
-    const constructors = typeNodeLiteral.getConstructSignatures();
-    for (let c = 0; c < constructors.length; c++)
-    {
-      source.push(visit(constructors[c], context));
-    }
-  }
-
-
-  addLeadingComment(source, typeNodeLiteral, context);
-  addWhitespace(source, typeNodeLiteral, context);
-  source.push(emitter.emit(typeNodeLiteral.getFirstChildByKind(SyntaxKind.CloseBraceToken), context));
+  source.push(visit(node.getTypeNode(), context));
 
   return source.join('');
 }
 
- // tslint:disable-next-line cyclomatic-complexity
- function visitConstructSignature(node: sast.ConstructSignatureDeclaration, context: ContextInterface): string {
+// A TypeLiteral is the declaration node for an anonymous symbol.
+function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface) : string {
+
+  const source: string[] = [];
+
+  // emit first punctuation which should be an opening brace.
+  source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.FirstPunctuation), context));
+
+  // Emit the constructors of the anonymous symbol
+  visitConstructors(source, node, context);
+
+  addLeadingComment(source, node, context);
+  addWhitespace(source, node, context);
+
+  source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.CloseBraceToken), context));
+
+  return source.join('');
+
+}
+
+function visitConstructors(source: string[], node: sast.TypeLiteralNode, context: ContextInterface) : void {
+
+  const constructors = node.getConstructSignatures();
+  for (let c = 0; c < constructors.length; c++)
+  {
+    source.push(visit(constructors[c], context));
+  }
+}
+
+// tslint:disable-next-line cyclomatic-complexity
+function visitConstructSignature(node: sast.ConstructSignatureDeclaration, context: ContextInterface): string {
   
   const source: string[] = [];
   addLeadingComment(source, node, context);
@@ -537,5 +547,6 @@ const visitor = {
   [SyntaxKind.IndexSignature]: visitIndexSignature,
   [SyntaxKind.VariableDeclaration]: visitVariableDeclaration,
   [SyntaxKind.ConstructSignature]: visitConstructSignature,
+  [SyntaxKind.TypeLiteral]: visitTypeLiteral,
 
 };
