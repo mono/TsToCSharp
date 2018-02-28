@@ -581,25 +581,6 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     }
     else
       addSemicolon(source, node, context);
-
-    // if (node.isReadonly())
-    // {
-    //   if (context.emitImplementation)
-    //   {
-    //     source.push(" => throw new NotImplementedException();");
-    //   }
-    //   else
-    //     source.push(" { get; }");
-    // }
-    // else
-    // {
-    //   if (context.emitImplementation)
-    //   {
-    //     source.push(" { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }");
-    //   }
-    //   else
-    //     source.push(" { get; set; }");
-    // }
     
     return source.join('');
   }
