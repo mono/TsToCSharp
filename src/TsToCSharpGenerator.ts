@@ -81,7 +81,7 @@ function visitTypeParameters(source: string[], node: sast.TypeParameteredNode, c
 }
 
 function visitMembers(source: string[],
-  node: (sast.InterfaceDeclaration | sast.ClassDeclaration),
+  node: (sast.InterfaceDeclaration | sast.ClassDeclaration | sast.TypeLiteralNode),
   context: ContextInterface): void {
 
     const members = node.getMembers();
@@ -138,11 +138,21 @@ function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: Cont
 
   if (node.isReadonly())
   {
-    source.push(" { get; }");
+    if (context.emitImplementation)
+    {
+      source.push(" => throw new NotImplementedException();");
+    }
+    else
+      source.push(" { get; }");
   }
   else
   {
-    source.push(" { get; set; }");
+    if (context.emitImplementation)
+    {
+      source.push(" { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }");
+    }
+    else
+      source.push(" { get; set; }");
   }
 
   endNode(node, context);
@@ -279,14 +289,9 @@ function visitHeritageClauses(source: string[],
 
     source.push(emitter.emitPropertyName(node.getNameNode(), context));
 
-    if (node.isReadonly())
-    {
-      source.push(" { get; }");
-    }
-    else
-    {
-      source.push(" { get; set; }");
-    }
+    // Emit the C# Body code of the property
+    source.push(emitter.emitPropertyBody(node, context));
+
     endNode(node, context);
     addTrailingComment(source, node, context);
     return source.join('');
@@ -380,7 +385,8 @@ function visitHeritageClauses(source: string[],
     // Now reposition to the end of the method type
     popContext(context);
 
-    addSemicolon(source, node, context);
+    source.push(emitter.emitMethodBody(node, context));
+
     endNode(node, context);
     addTrailingComment(source, context.offset, node, context);
     return source.join('');
@@ -463,11 +469,44 @@ function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface)
 
   const source: string[] = [];
 
+  addLeadingComment(source, node, context);
+  addWhitespace(source, node, context);
+
   // emit first punctuation which should be an opening brace.
   source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.FirstPunctuation), context));
 
+  addTrailingComment(source, node.getFirstChildByKind(SyntaxKind.FirstPunctuation), context );
+  addWhitespace(source, node, context);
+
   // Emit the constructors of the anonymous symbol
   visitConstructors(source, node, context);
+  
+  // Tell the emitter that we will be emitting implementations
+  context.emitImplementation = true;
+
+  // First process properties.
+  const properties = node.getDescendantsOfKind(SyntaxKind.PropertySignature);
+  for (let x = 0; x < properties.length; x++)
+  {
+    let property = properties[x];
+    if (property.getName() !== "prototype")
+    {
+      source.push(visit(property, context));
+      addTrailingComment(source, context.offset, node, context);
+    }
+  }
+
+  // Then process functions.
+  const methods = node.getDescendantsOfKind(SyntaxKind.MethodSignature);
+  for (let x = 0; x < methods.length; x++)
+  {
+    let method = methods[x];
+    source.push(visit(method, context));
+    addTrailingComment(source, context.offset, node, context);
+  }
+  
+  // Reset the flag for emitting implementations
+  context.emitImplementation = false;
 
   addLeadingComment(source, node, context);
   addWhitespace(source, node, context);
@@ -491,7 +530,11 @@ function visitConstructors(source: string[], node: sast.TypeLiteralNode, context
 function visitConstructSignature(node: sast.ConstructSignatureDeclaration, context: ContextInterface): string {
   
   const source: string[] = [];
-  addLeadingComment(source, node, context);
+  
+  // We may be jumping around processing AST nodes out of order so we need to actually set the 
+  // context offset ourselves.  Here we set the context offset to be the begging of the node.
+  context.offset = node.getPos();
+  addLeadingComment(source, node.getPos(), node, context);
   addWhitespace(source, node, context);
 
   const parameters = node.getTypeParameters();

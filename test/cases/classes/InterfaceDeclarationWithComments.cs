@@ -6,11 +6,7 @@
     public sealed class AudioListener
     { // Here is another comment
 
-        /**
-         * We will extend the AudioListener interface defined above.
-         */
-
-        prototype: AudioListener; // Trailing of prototype
+         // Trailing of prototype
         /**
          * Creates a new AudioListener
          */

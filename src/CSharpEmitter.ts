@@ -534,6 +534,77 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     return source.join('');
   }
 
+  export function emitPropertyBody(node: sast.PropertySignature, context: ContextInterface) : string {
+
+    const source: string[] = [];
+
+    if (node.isReadonly())
+    {
+      if (context.emitImplementation)
+      {
+        source.push(" => throw new NotImplementedException();");
+      }
+      else
+        source.push(" { get; }");
+    }
+    else
+    {
+      if (context.emitImplementation)
+      {
+        source.push(" { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }");
+      }
+      else
+        source.push(" { get; set; }");
+    }
+    return source.join('');
+  }
+
+  export function emitMethodBody(node: sast.MethodSignature, context: ContextInterface) : string {
+
+    const source: string[] = [];
+    
+    if (context.emitImplementation)
+    {
+      pushContext(context);
+      
+      context.offset = node.getPos();
+      const ws = getWhitespace(node, context, true); 
+
+      source.push("\n", ws);
+      // addWhitespace(source, node, context);
+      source.push("{");
+      source.push("\n", ws);
+      source.push("\t", "throw new NotImplementedException();");
+      source.push("\n", ws);
+      source.push("}");
+      popContext(context);
+    }
+    else
+      addSemicolon(source, node, context);
+
+    // if (node.isReadonly())
+    // {
+    //   if (context.emitImplementation)
+    //   {
+    //     source.push(" => throw new NotImplementedException();");
+    //   }
+    //   else
+    //     source.push(" { get; }");
+    // }
+    // else
+    // {
+    //   if (context.emitImplementation)
+    //   {
+    //     source.push(" { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }");
+    //   }
+    //   else
+    //     source.push(" { get; set; }");
+    // }
+    
+    return source.join('');
+  }
+  
+
   const emitter = {
     [SyntaxKind.CloseBraceToken]: emitCloseBraceToken,
     [SyntaxKind.FirstPunctuation]: emitFirstPunctuation,

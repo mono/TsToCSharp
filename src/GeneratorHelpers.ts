@@ -45,14 +45,17 @@ export function addWhitespace(source: string[], posOrNode: number|sast.Node, nod
   }
 }
 
-export function getWhitespace(node: sast.Node, context: ContextInterface): string;
-export function getWhitespace(pos: number, node: sast.Node, context: ContextInterface): string;
+export function getWhitespace(node: sast.Node, context: ContextInterface, stripReturn: boolean): string;
+export function getWhitespace(pos: number, node: sast.Node, context: ContextInterface, stripReturn: ContextInterface | boolean): string;
 // tslint:disable-next-line:cyclomatic-complexity
-export function getWhitespace(posOrNode: number|sast.Node, nodeOrContext: sast.Node|ContextInterface,
+export function getWhitespace(posOrNode: number|sast.Node, nodeOrContext: sast.Node|ContextInterface, 
+  stripOrContext: ContextInterface | boolean,
   optionalContext?: ContextInterface): string {
+
   const context = optionalContext || (nodeOrContext as ContextInterface);
   const node = optionalContext ? nodeOrContext as sast.Node : posOrNode as sast.Node;
   const pos = optionalContext ? posOrNode as number : node.getFullStart();
+  const stripReturn = stripOrContext as boolean ; 
 
   if (context.offset > node.getEnd()) {
     return;
@@ -62,15 +65,28 @@ export function getWhitespace(posOrNode: number|sast.Node, nodeOrContext: sast.N
     const text = node.getSourceFile().getFullText().substring(pos, node.getEnd());
     const leadingWhitespace = text.match(whitespaces);
     if (leadingWhitespace) {
-      context.offset = pos + leadingWhitespace[1].length;
-      return leadingWhitespace[1];
+      let leadingWS = leadingWhitespace[1];
+      context.offset = pos + leadingWS.length;
+      if (stripReturn)
+      {
+        // Strip all line break combinations so spacing looks correct
+        leadingWS = leadingWS.replace(/(\r\n|\n|\r)/gm,"");
+      }
+      return leadingWS;
     }
   } else {
     const text = node.getSourceFile().getFullText().substring(context.offset, node.getEnd());
     const trailingWhitespace = text.match(whitespaces);
     if (trailingWhitespace) {
-      context.offset = context.offset + trailingWhitespace[1].length;
-      return trailingWhitespace[1];
+      let trailingWS = trailingWhitespace[1];
+      context.offset = pos + trailingWS.length;
+      if (stripReturn)
+      {
+        // Strip all line break combinations so spacing looks correct
+        trailingWS = trailingWS.replace(/(\r\n|\n|\r)/gm,"");
+      }
+      return trailingWS;
+
     }
   }
 }
@@ -323,5 +339,4 @@ export function isDeclarationOfInterface(node: sast.VariableDeclaration) : boole
   }
   return false;
 }
-
 
