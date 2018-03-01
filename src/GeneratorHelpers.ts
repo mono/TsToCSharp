@@ -367,3 +367,17 @@ export function loadInterfaceMethods(bag: Map<string, sast.MethodSignature>, nod
   }
 
 }
+
+export function loadInterfaceIndexers(bag: Map<string, sast.IndexSignatureDeclaration>, node: sast.InterfaceDeclaration) : void {
+
+  const indexers = node.getIndexSignatures();
+  for (let x = 0; x < indexers.length; x++)
+  {
+    const indexer = indexers[x];
+    if (!bag.has("this[]"))
+    {
+      bag.set("this[]", indexer);
+    }
+  }
+
+}

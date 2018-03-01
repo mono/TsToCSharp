@@ -26,6 +26,7 @@ import {
   generateExportForInterfaceDeclaration,
   loadInterfaceProperties,
   loadInterfaceMethods,
+  loadInterfaceIndexers,
 } from './GeneratorHelpers';
 
 import { InterfaceTrackingMap } from './DataStructures';
@@ -536,7 +537,6 @@ function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface)
     popContext(context);
   }
 
-
   // Then process functions.
   const methods = node.getDescendantsOfKind(SyntaxKind.MethodSignature);
 
@@ -549,7 +549,7 @@ function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface)
     methodsBag.set(method.getName(), method);
 
   }
-  // We now need to load all the properties of the interface defined by the "prototype" property
+  // We now need to load all the methods of the interface defined by the "prototype" property
   // definition for the TypeLiteralNode.
   if (prototypeDefinition)
   {
@@ -567,6 +567,36 @@ function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface)
     popContext(context);
   }
 
+    // Then process indexers.
+    const indexers = node.getDescendantsOfKind(SyntaxKind.IndexSignature);
+
+    // create an index signature bag 
+    const indexersBag = new Map<string, sast.IndexSignatureDeclaration>();
+  
+    for (let x = 0; x < indexers.length; x++)
+    {
+      let indexer = indexers[x];
+      indexersBag.set("this[]", indexer);
+  
+    }
+    // We now need to load all the inexers of the interface defined by the "prototype" property
+    // definition for the TypeLiteralNode.
+    if (prototypeDefinition)
+    {
+      loadInterfaceIndexers(indexersBag, prototypeDefinition)
+    }
+    
+    for (const indexer of indexersBag.values()) {
+  
+      pushContext(context);
+      
+      context.offset = indexer.getPos();
+      source.push(visit(indexer, context));
+      addTrailingComment(source, context.offset, node, context);
+    
+      popContext(context);
+    }
+  
 
   // Reset the flag for emitting implementations
   context.emitImplementation = false;

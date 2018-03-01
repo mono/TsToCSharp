@@ -164,6 +164,7 @@ const classCases = [
     {should: "should generate class from declaraion of interface with inherited properties", file: "InterfaceDeclarationWithInheritedProperties", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with inherited methods", file: "InterfaceDeclarationWithInheritedMethods", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with inherited methods and properties", file: "InterfaceDeclaration1", genOptions: new TestClassGenOptions()},    
+    {should: "should generate class from declaraion of interface with inherited indexer", file: "InterfaceDeclarationPropertyIndexer", genOptions: new TestClassGenOptions()},    
     
 ]
 
