@@ -340,3 +340,30 @@ export function isDeclarationOfInterface(node: sast.VariableDeclaration) : boole
   return false;
 }
 
+export function loadInterfaceProperties(bag: Map<string, sast.PropertySignature>, node: sast.InterfaceDeclaration) : void {
+
+  const properties = node.getProperties();
+  for (let x = 0; x < properties.length; x++)
+  {
+    const property = properties[x];
+    if (!bag.has(property.getName()))
+    {
+      bag.set(property.getName(), property);
+    }
+  }
+
+}
+
+export function loadInterfaceMethods(bag: Map<string, sast.MethodSignature>, node: sast.InterfaceDeclaration) : void {
+
+  const methods = node.getMethods();
+  for (let x = 0; x < methods.length; x++)
+  {
+    const method = methods[x];
+    if (!bag.has(method.getName()))
+    {
+      bag.set(method.getName(), method);
+    }
+  }
+
+}

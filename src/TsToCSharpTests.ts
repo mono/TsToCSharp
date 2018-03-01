@@ -159,8 +159,11 @@ const classCases = [
     {should: "should generate simple class from declaraion of interface with comments", file: "InterfaceDeclarationWithComments", genOptions: new TestClassGenOptions()},
     {should: "should generate simple class from declaraion of interface without comments", file: "InterfaceDeclarationNoEmitComments", genOptions: new TestClassNoEmitComments()},
     {should: "should generate simple class from declaraion of interface with constructor arguments", file: "InterfaceDeclarationWithConstructorArgs", genOptions: new TestClassGenOptions()},    
-    {should: "should generate simple class from declaraion of interface with properties", file: "InterfaceDeclarationWithProperties", genOptions: new TestClassGenOptions()},    
-    {should: "should generate simple class from declaraion of interface with methods", file: "InterfaceDeclarationWithMethods", genOptions: new TestClassGenOptions()},    
+    {should: "should generate class from declaraion of interface with properties", file: "InterfaceDeclarationWithProperties", genOptions: new TestClassGenOptions()},    
+    {should: "should generate class from declaraion of interface with methods", file: "InterfaceDeclarationWithMethods", genOptions: new TestClassGenOptions()},    
+    {should: "should generate class from declaraion of interface with inherited properties", file: "InterfaceDeclarationWithInheritedProperties", genOptions: new TestClassGenOptions()},    
+    {should: "should generate class from declaraion of interface with inherited methods", file: "InterfaceDeclarationWithInheritedMethods", genOptions: new TestClassGenOptions()},    
+    {should: "should generate class from declaraion of interface with inherited methods and properties", file: "InterfaceDeclaration1", genOptions: new TestClassGenOptions()},    
     
 ]
 

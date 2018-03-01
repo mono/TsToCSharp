@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@types/yargs": "^10.0.2",
-    "change-case": "^3.0.1",
-    "ts-simple-ast": "^8.1.0",
+    "change-case": "^3.0.2",
+    "ts-simple-ast": "^8.2.1",
     "typescript": "^2.7.2",
     "yargs": "^11.0.0"
   },

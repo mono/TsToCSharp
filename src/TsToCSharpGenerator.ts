@@ -24,6 +24,8 @@ import {
   identifyInterfaces,
   isDeclarationOfInterface,
   generateExportForInterfaceDeclaration,
+  loadInterfaceProperties,
+  loadInterfaceMethods,
 } from './GeneratorHelpers';
 
 import { InterfaceTrackingMap } from './DataStructures';
@@ -484,27 +486,88 @@ function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface)
   // Tell the emitter that we will be emitting implementations
   context.emitImplementation = true;
 
+
   // First process properties.
-  const properties = node.getDescendantsOfKind(SyntaxKind.PropertySignature);
-  for (let x = 0; x < properties.length; x++)
+
+  // create a property signature bag 
+  const propertiesBag = new Map<string, sast.PropertySignature>();
+
+  // accumulate all the existing properties defined in the type.
+  const propertySignatures = node.getDescendantsOfKind(SyntaxKind.PropertySignature);
+
+  let prototypeDefinition : sast.InterfaceDeclaration = null;
+
+  // load all the properties except for the "prototype" property which defines the interface implementation
+  for (let x = 0; x < propertySignatures.length; x++)
   {
-    let property = properties[x];
-    if (property.getName() !== "prototype")
+    let property = propertySignatures[x];
+    if (property.getName() === "prototype")
     {
-      source.push(visit(property, context));
-      addTrailingComment(source, context.offset, node, context);
+      const propertyTypeNode = property.getTypeNode();
+
+      if (TypeGuards.isTypeReferenceNode(propertyTypeNode))
+      {
+        const interfaceName = propertyTypeNode.getText();
+        prototypeDefinition = propertyTypeNode.getSourceFile().getInterface(interfaceName);
+      }
+      
+    }
+    else
+    {
+      propertiesBag.set(property.getName(), property);
     }
   }
 
+  // We now need to load all the properties of the interface defined by the "prototype" property
+  // definition for the TypeLiteralNode.
+  if (prototypeDefinition)
+  {
+    loadInterfaceProperties(propertiesBag, prototypeDefinition)
+  }
+
+  for (const property of propertiesBag.values()) {
+
+    pushContext(context);
+    
+    context.offset = property.getPos();
+    source.push(visit(property, context));
+    addTrailingComment(source, context.offset, node, context);
+    
+    popContext(context);
+  }
+
+
   // Then process functions.
   const methods = node.getDescendantsOfKind(SyntaxKind.MethodSignature);
+
+  // create a method signature bag 
+  const methodsBag = new Map<string, sast.MethodSignature>();
+
   for (let x = 0; x < methods.length; x++)
   {
     let method = methods[x];
-    source.push(visit(method, context));
-    addTrailingComment(source, context.offset, node, context);
+    methodsBag.set(method.getName(), method);
+
+  }
+  // We now need to load all the properties of the interface defined by the "prototype" property
+  // definition for the TypeLiteralNode.
+  if (prototypeDefinition)
+  {
+    loadInterfaceMethods(methodsBag, prototypeDefinition)
   }
   
+  for (const method of methodsBag.values()) {
+
+    pushContext(context);
+    
+    context.offset = method.getPos();
+    source.push(visit(method, context));
+    addTrailingComment(source, context.offset, node, context);
+  
+    popContext(context);
+  }
+
+
   // Reset the flag for emitting implementations
   context.emitImplementation = false;
 
