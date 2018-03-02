@@ -17,5 +17,5 @@ public sealed class FileList {
     {
     	throw new NotImplementedException();
     }
-    File this[double index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); } 
+    File this[double index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 }

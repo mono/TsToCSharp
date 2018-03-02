@@ -11,5 +11,4 @@ public sealed class RtcSrtpSdesTransport {
     {
     	throw new NotImplementedException();
     }
-    
 }

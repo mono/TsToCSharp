@@ -308,8 +308,12 @@ export function popContext(context: ContextInterface)
 }
 
 // This is simplistic right now and will need to be expanded to include namespaces
-export function identifyInterfaces(sourceFile: sast.SourceFile, context: ContextInterface)
+export function identifyInterfaces(sourceFile: sast.SourceFile, context: ContextInterface, clearTrackingMap?: boolean)
 {
+  if (clearTrackingMap)
+  {
+    InterfaceTrackingMap.clear();
+  }
   const interfaces = sourceFile.getDescendantsOfKind(SyntaxKind.InterfaceDeclaration);
   interfaces.forEach(intercara => {
     context.diagnostics.identifiedInterfaces++;
@@ -352,6 +356,9 @@ export function loadInterfaceProperties(bag: Map<string, sast.PropertySignature>
     }
   }
 
+  loadHeritageInterfaces(node, (interfaceDecl) => {
+    loadInterfaceProperties(bag, interfaceDecl);
+  });
 }
 
 export function loadInterfaceMethods(bag: Map<string, sast.MethodSignature>, node: sast.InterfaceDeclaration) : void {
@@ -366,6 +373,10 @@ export function loadInterfaceMethods(bag: Map<string, sast.MethodSignature>, nod
     }
   }
 
+  loadHeritageInterfaces(node, (interfaceDecl) => {
+    loadInterfaceMethods(bag, interfaceDecl);
+  });
+
 }
 
 export function loadInterfaceIndexers(bag: Map<string, sast.IndexSignatureDeclaration>, node: sast.InterfaceDeclaration) : void {
@@ -377,6 +388,48 @@ export function loadInterfaceIndexers(bag: Map<string, sast.IndexSignatureDeclar
     if (!bag.has("this[]"))
     {
       bag.set("this[]", indexer);
+    }
+  }
+
+  loadHeritageInterfaces(node, (interfaceDecl) => {
+    loadInterfaceIndexers(bag, interfaceDecl);
+  });
+  
+}
+
+function loadHeritageInterfaces(node: sast.InterfaceDeclaration, loadDelegate: (node: sast.InterfaceDeclaration) => void) : void 
+{
+  const ancestors = node.getHeritageClauses();
+  const n = ancestors.length;
+  if (ancestors.length > 0)
+  {
+    for (let x = 0; x < n; x++)
+    {
+      const leaf = ancestors[x];
+      const clauseTypes = leaf.getTypeNodes();
+      const nn = clauseTypes.length;
+    
+      if (nn > 0)
+      {
+        for (let t = 0; t < nn; t++)
+        {
+          // We are going to assume right now that the expression is an identifier
+          const clauseType = clauseTypes[t];
+          const expression = clauseType.getExpression();
+          if (TypeGuards.isIdentifier(expression))
+          {
+            const interfaceName = expression.getText();
+            const interfaceDecl = node.getSourceFile().getInterface(interfaceName);
+            if (interfaceDecl)
+            {
+              //loadInterfaceProperties(bag, interfaceDecl);
+              loadDelegate(interfaceDecl);
+            }
+            
+          }
+
+        };
+      }
     }
   }
 

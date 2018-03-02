@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import * as fs from "fs";
-import Ast, {ts, ScriptTarget} from "ts-simple-ast";
+import Ast, {ts, ScriptTarget, getCompilerOptionsFromTsConfig, ModuleResolutionKind, ModuleKind} from "ts-simple-ast";
 import * as path from "path";
 
 
@@ -18,10 +18,13 @@ class Startup {
         console.log('Starting Generation for file(s): ' + genOptions.fileList.join(","));
         genOptions.fileList.forEach(fileName => {
              const ast = new Ast({
-                 compilerOptions: {
-                     target: ScriptTarget.ESNext
-                 }
-             });
+                compilerOptions: {
+                    target: ScriptTarget.ESNext,
+                    module: ModuleKind.CommonJS,
+                    moduleResolution: ModuleResolutionKind.NodeJs,
+                    noLib: true 
+                }
+            });
             
             console.log('Resolving File: ' + fileName + ' => ' + path.resolve(fileName));
             const sf = ast.addSourceFileIfExists(path.resolve(fileName));

@@ -1,7 +1,7 @@
 import * as path from "path";
 import {expect} from "chai";
 import * as fs from "fs";
-import Ast, {ts, ScriptTarget} from "ts-simple-ast";
+import Ast, {ts, ScriptTarget, ModuleResolutionKind, ModuleKind} from "ts-simple-ast";
 import {TsToCSharpGenerator} from "./TStoCSharpGenerator";
 import {GenOptions} from "./GenerateOptions";
 import {Context} from "./Context";
@@ -21,6 +21,19 @@ class TestGenOptions extends GenOptions {
         this.isCaseChange = false;
         this.interfaceAccessModifier = "";
     }
+}
+
+function CreateAST() : Ast
+{
+    const ast = new Ast({
+        compilerOptions: {
+            target: ScriptTarget.ESNext,
+            module: ModuleKind.CommonJS,
+            moduleResolution: ModuleResolutionKind.NodeJs,
+            noLib: true 
+        }
+    });
+    return ast;
 }
 
 const interfaceCases = [
@@ -115,11 +128,9 @@ describe("TsToCSharpGenerator", () => {
                 const testFile = testCase.file;
 
                 it(testCase.should, () => {
-                    const ast = new Ast({
-                        compilerOptions: {
-                            target: ScriptTarget.ESNext
-                        }
-                    });
+                    
+                    const ast = CreateAST();
+
                     //console.log("Adding Source File: " + path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
                     ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
@@ -163,28 +174,26 @@ const classCases = [
     {should: "should generate class from declaraion of interface with methods", file: "InterfaceDeclarationWithMethods", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with inherited properties", file: "InterfaceDeclarationWithInheritedProperties", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with inherited methods", file: "InterfaceDeclarationWithInheritedMethods", genOptions: new TestClassGenOptions()},    
-    {should: "should generate class from declaraion of interface with inherited methods and properties", file: "InterfaceDeclaration1", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with inherited indexer", file: "InterfaceDeclarationPropertyIndexer", genOptions: new TestClassGenOptions()},    
+    {should: "should generate class from declaraion of interface with inherited methods and properties", file: "InterfaceDeclaration1", genOptions: new TestClassGenOptions()},    
+    {should: "should generate class from declaraion of interface with extended interfaces", file: "InterfaceDeclaration2", genOptions: new TestClassGenOptions()},    
     
 ]
 
-describe("TsToCSharpGenerator", () => {
-    describe("classes", () => {
+describe("TsToCSharpGenerator", function () {
+    describe("classes", function () {
 
         const testPath = "classes";
 
         classCases.forEach(testCase =>
-            {
-
+             {
                 const testFile = testCase.file;
                 const genOptions = testCase.genOptions;//testCase.genOptions ? testCase.genOptions : new TestClassGenOptions();
 
-                it(testCase.should, () => {
-                    const ast = new Ast({
-                        compilerOptions: {
-                            target: ScriptTarget.ESNext
-                        }
-                    });
+                it(testCase.should, function () {
+                    
+                    const ast = CreateAST();
+
                     //console.log("Adding Source File: " + path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
                     ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
@@ -214,11 +223,8 @@ describe("TsToCSharpGenerator", () => {
         let testCase = diagnosticCases[0];
         let testFile = diagnosticCases[0].file;
         it(testCase.should, () => {
-            const ast = new Ast({
-                compilerOptions: {
-                    target: ScriptTarget.ESNext
-                }
-            });
+            
+            const ast = CreateAST();
 
             ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
 
@@ -232,11 +238,8 @@ describe("TsToCSharpGenerator", () => {
         testCase = diagnosticCases[1];
         testFile = diagnosticCases[1].file;
         it(testCase.should, () => {
-            const ast = new Ast({
-                compilerOptions: {
-                    target: ScriptTarget.ESNext
-                }
-            });
+
+            const ast = CreateAST();
 
             ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
 

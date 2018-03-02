@@ -35,8 +35,9 @@ export function TsToCSharpGenerator(node: SourceFile, context: ContextInterface)
     const source: string[] = [];
 
     //console.log("Identifying interfaces for later class implementations")
-    const total = identifyInterfaces(node, context);
+    identifyInterfaces(node, context, true);
     //console.log("Total interfaces identified: %d", context.diagnostics.identifiedInterfaces);
+
 
     visitStatements(source, node, context);
     addWhitespace(source, node, context);
@@ -157,6 +158,9 @@ function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: Cont
     else
       source.push(" { get; set; }");
   }
+
+  // Now reposition to the end of the indexer type
+  popContext(context);
 
   endNode(node, context);
   addTrailingComment(source, node, context);
@@ -294,6 +298,9 @@ function visitHeritageClauses(source: string[],
 
     // Emit the C# Body code of the property
     source.push(emitter.emitPropertyBody(node, context));
+
+    // Now reposition to the end of the method type
+    popContext(context);    
 
     endNode(node, context);
     addTrailingComment(source, node, context);
@@ -567,45 +574,42 @@ function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface)
     popContext(context);
   }
 
-    // Then process indexers.
-    const indexers = node.getDescendantsOfKind(SyntaxKind.IndexSignature);
+  // Then process indexers.
+  const indexers = node.getDescendantsOfKind(SyntaxKind.IndexSignature);
 
-    // create an index signature bag 
-    const indexersBag = new Map<string, sast.IndexSignatureDeclaration>();
+  // create an index signature bag 
+  const indexersBag = new Map<string, sast.IndexSignatureDeclaration>();
+
+  for (let x = 0; x < indexers.length; x++)
+  {
+    let indexer = indexers[x];
+    indexersBag.set("this[]", indexer);
+
+  }
+  // We now need to load all the inexers of the interface defined by the "prototype" property
+  // definition for the TypeLiteralNode.
+  if (prototypeDefinition)
+  {
+    loadInterfaceIndexers(indexersBag, prototypeDefinition)
+  }
   
-    for (let x = 0; x < indexers.length; x++)
-    {
-      let indexer = indexers[x];
-      indexersBag.set("this[]", indexer);
-  
-    }
-    // We now need to load all the inexers of the interface defined by the "prototype" property
-    // definition for the TypeLiteralNode.
-    if (prototypeDefinition)
-    {
-      loadInterfaceIndexers(indexersBag, prototypeDefinition)
-    }
+  for (const indexer of indexersBag.values()) {
+
+    pushContext(context);
     
-    for (const indexer of indexersBag.values()) {
+    context.offset = indexer.getPos();
+    source.push(visit(indexer, context));
+    addTrailingComment(source, context.offset, node, context);
   
-      pushContext(context);
-      
-      context.offset = indexer.getPos();
-      source.push(visit(indexer, context));
-      addTrailingComment(source, context.offset, node, context);
-    
-      popContext(context);
-    }
-  
+    popContext(context);
+  }
+
 
   // Reset the flag for emitting implementations
   context.emitImplementation = false;
 
-  addLeadingComment(source, node, context);
-  addWhitespace(source, node, context);
-
   source.push(emitter.emit(node.getFirstChildByKind(SyntaxKind.CloseBraceToken), context));
-
+  endNode(node, context);
   return source.join('');
 
 }
