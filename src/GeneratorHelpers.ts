@@ -4,7 +4,6 @@ import {ts, SyntaxKind, TypeGuards} from "ts-simple-ast"
 import {ContextInterface} from "./Context";
 import {Stack} from "./DataStructures";
 import {emitPropertyName, emitMethodName, emitClassName} from "./CSharpEmitter";
-import { InterfaceTrackingMap } from './DataStructures';
 
 const ContextStack = new Stack<number>();
 
@@ -308,16 +307,11 @@ export function popContext(context: ContextInterface)
 }
 
 // This is simplistic right now and will need to be expanded to include namespaces
-export function identifyInterfaces(sourceFile: sast.SourceFile, context: ContextInterface, clearTrackingMap?: boolean)
+export function identifyInterfaces(sourceFile: sast.SourceFile, context: ContextInterface)
 {
-  if (clearTrackingMap)
-  {
-    InterfaceTrackingMap.clear();
-  }
   const interfaces = sourceFile.getDescendantsOfKind(SyntaxKind.InterfaceDeclaration);
   interfaces.forEach(intercara => {
     context.diagnostics.identifiedInterfaces++;
-    InterfaceTrackingMap.set(intercara.getName(), intercara);
   });
 }
 

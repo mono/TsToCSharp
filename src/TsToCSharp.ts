@@ -9,6 +9,19 @@ import {ParseCommandLine} from "./CommandLineParser";
 import { TsToCSharpGenerator } from './TsToCSharpGenerator';
 import {Context} from "./Context";
 
+function CreateAST() : Ast
+{
+    const ast = new Ast({
+        compilerOptions: {
+            target: ScriptTarget.ESNext,
+            module: ModuleKind.CommonJS,
+            moduleResolution: ModuleResolutionKind.NodeJs,
+            noLib: true 
+        }
+    });
+    return ast;
+}
+
 class Startup {
 
     public static main(): number {
@@ -17,14 +30,8 @@ class Startup {
 
         console.log('Starting Generation for file(s): ' + genOptions.fileList.join(","));
         genOptions.fileList.forEach(fileName => {
-             const ast = new Ast({
-                compilerOptions: {
-                    target: ScriptTarget.ESNext,
-                    module: ModuleKind.CommonJS,
-                    moduleResolution: ModuleResolutionKind.NodeJs,
-                    noLib: true 
-                }
-            });
+             
+            const ast = CreateAST();
             
             console.log('Resolving File: ' + fileName + ' => ' + path.resolve(fileName));
             const sf = ast.addSourceFileIfExists(path.resolve(fileName));

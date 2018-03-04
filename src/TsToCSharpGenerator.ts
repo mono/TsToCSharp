@@ -29,13 +29,11 @@ import {
   loadInterfaceIndexers,
 } from './GeneratorHelpers';
 
-import { InterfaceTrackingMap } from './DataStructures';
-
 export function TsToCSharpGenerator(node: SourceFile, context: ContextInterface): string {
     const source: string[] = [];
 
     //console.log("Identifying interfaces for later class implementations")
-    identifyInterfaces(node, context, true);
+    identifyInterfaces(node, context);
     //console.log("Total interfaces identified: %d", context.diagnostics.identifiedInterfaces);
 
 
@@ -229,10 +227,6 @@ function visitHeritageClauses(source: string[],
 
     addWhitespace(source, node, context);
     source.push(emitter.emitInterfaceName(node.getNameNode(), context));
-
-    // If the interface is not already being tracked then add it to the interface tracking
-    if (!InterfaceTrackingMap.has(node.getName()))
-      InterfaceTrackingMap.set(node.getName(), node);
 
     emitter.emitTypeParameters(source, node, context);
 

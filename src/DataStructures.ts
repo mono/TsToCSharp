@@ -11,5 +11,3 @@ export class Stack<T> {
     }
 }
 
-export const InterfaceTrackingMap = new Map<string, Node>();
-

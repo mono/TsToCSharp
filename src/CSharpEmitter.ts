@@ -16,7 +16,6 @@ import {
   pushContext,
   popContext,
 } from './GeneratorHelpers';
-import { InterfaceTrackingMap } from './DataStructures';
 
 const ReferenceTypeMap = [
   SyntaxKind.StringKeyword
@@ -224,7 +223,7 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     // Let's check if it is an interface that we need to prefix
     if (context.genOptions.isPrefixInterface)
     {
-      if (InterfaceTrackingMap.has(literal))
+      if (node.getSourceFile().getInterface(literal))
       {
         literal = context.genOptions.interfacePrefix.concat(literal);
       }
@@ -355,7 +354,7 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     // Let's check if it is an interface that we need to prefix
     if (context.genOptions.isPrefixInterface)
     {
-      if (InterfaceTrackingMap.has(typeRefLiteral))
+      if (node.getSourceFile().getInterface(typeRefLiteral))
       {
         typeRefLiteral = context.genOptions.interfacePrefix.concat(typeRefLiteral);
       }
