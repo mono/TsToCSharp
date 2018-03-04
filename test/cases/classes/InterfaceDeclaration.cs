@@ -5,5 +5,5 @@ public interface IAudioListener {
 public sealed class AudioListener
 {
     
-    public AudioListener () { };
+    public AudioListener () { }
 }

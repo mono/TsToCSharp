@@ -9,7 +9,7 @@ public interface IFileList {
 [Export("FileList", typeof(Mono.WebAssembly.JSObject))]
 public sealed class FileList {
     
-    public FileList () { };
+    public FileList () { }
     [Export("length")]
     double Length => throw new NotImplementedException();
     [Export("item")]

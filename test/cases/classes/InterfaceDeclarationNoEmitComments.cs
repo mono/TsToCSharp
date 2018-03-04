@@ -5,5 +5,5 @@
     {
 
         
-        public AudioListener () { };
+        public AudioListener () { }
     }

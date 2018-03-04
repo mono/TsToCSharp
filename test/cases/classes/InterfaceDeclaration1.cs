@@ -15,7 +15,7 @@ public interface IAudioListener {
 public sealed class AudioListener
 {
     
-    public AudioListener () { };
+    public AudioListener () { }
     [Export("dopplerFactor")]
     double DopplerFactor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     [Export("speedOfSound")]

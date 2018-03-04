@@ -11,7 +11,7 @@ public interface IAudioListener {
 public sealed class AudioListener
 {
     
-    public AudioListener () { };
+    public AudioListener () { }
     [Export("setOrientation")]
     void SetOrientation(double x, double y, double z, double xUp, double yUp, double zUp)
     {

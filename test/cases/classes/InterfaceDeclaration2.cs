@@ -16,7 +16,7 @@ public interface IErrorEvent :  IEvent {
 [Export("ErrorEvent", typeof(Mono.WebAssembly.JSObject))]
 public sealed class ErrorEvent {
     
-    public ErrorEvent (string type, ErrorEventInit errorEventInitDict) { };
+    public ErrorEvent (string type, ErrorEventInit errorEventInitDict) { }
     [Export("colno")]
     double Colno => throw new NotImplementedException();
     [Export("error")]
@@ -139,7 +139,7 @@ public interface IEvent {
 [Export("Event", typeof(Mono.WebAssembly.JSObject))]
 public sealed class Event {
     
-    public Event (string typeArg, EventInit eventInitDict) { };
+    public Event (string typeArg, EventInit eventInitDict) { }
     [Export("AT_TARGET")]
     double AtTarget => throw new NotImplementedException();
     [Export("BUBBLING_PHASE")]

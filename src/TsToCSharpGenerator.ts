@@ -667,7 +667,7 @@ function visitConstructSignature(node: sast.ConstructSignatureDeclaration, conte
   // Make sure we add a body
   source.push(" { }");
 
-  addSemicolon(source, node, context);
+  //addSemicolon(source, node, context);
   endNode(node, context);
   addTrailingComment(source, context.offset, node, context);
   return source.join('');

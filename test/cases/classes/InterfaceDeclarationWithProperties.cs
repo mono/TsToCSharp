@@ -4,7 +4,7 @@ public interface IPerformanceNavigation {
 [Export("PerformanceNavigation", typeof(Mono.WebAssembly.JSObject))]
 public sealed class PerformanceNavigation {
     
-    public PerformanceNavigation () { };
+    public PerformanceNavigation () { }
     [Export("TYPE_BACK_FORWARD")]
     double TypeBackForward => throw new NotImplementedException();
     [Export("TYPE_NAVIGATE")]
