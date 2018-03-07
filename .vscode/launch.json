@@ -18,7 +18,23 @@
                 "--colors",
                 "${workspaceFolder}/dist/TsToCSharpTests.js",
             ],
-            "internalConsoleOptions": "openOnSessionStart"
+            "internalConsoleOptions": "openOnSessionStart",
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Mocha Tests Debug",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "protocol": "inspector",
+            "args": [
+                "-u",
+                "tdd",
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}/dist/TsToCSharpTests.js",
+            ],
+            "internalConsoleOptions": "openOnSessionStart",
         },
         {
             "type": "node",
@@ -29,11 +45,16 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "args": [
-                "./test/definitions/classes/Class.d.ts",
+                "./test/definitions/interfaces/EventHandlers.d.ts",
+                "./test/definitions/interfaces/MethodWithDOMEventHandlerParms.d.ts",
                 "-o",
-                "./test/cases/classes",
-                "--noPrefixInterfaces",
-                "--noCaseChangeParameters"
+                "./test/cases/interfaces",
+                "--noCaseChangeParameters",
+                // For interface tests uncomment the following
+                "--noPrefixInterface",
+                "--noCaseChange",
+                "--interfaceAccessModifier",
+                "none"
             ]
         }
     ]

@@ -11,11 +11,11 @@ public sealed class FileList {
     
     public FileList () { }
     [Export("length")]
-    double Length => throw new NotImplementedException();
+    public double Length => throw new NotImplementedException();
     [Export("item")]
-    File Item(double index)
+    public File Item(double index)
     {
     	throw new NotImplementedException();
     }
-    File this[double index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public File this[double index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 }

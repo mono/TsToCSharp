@@ -11,7 +11,7 @@ public sealed class AudioListener
     
     public AudioListener () { }
     [Export("dopplerFactor")]
-    double DopplerFactor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public double DopplerFactor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     [Export("speedOfSound")]
-    double SpeedOfSound { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public double SpeedOfSound { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 }

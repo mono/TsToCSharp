@@ -13,17 +13,17 @@ public sealed class AudioListener
     
     public AudioListener () { }
     [Export("setOrientation")]
-    void SetOrientation(double x, double y, double z, double xUp, double yUp, double zUp)
+    public void SetOrientation(double x, double y, double z, double xUp, double yUp, double zUp)
     {
     	throw new NotImplementedException();
     }
     [Export("setPosition")]
-    void SetPosition(double x, double y, double z)
+    public void SetPosition(double x, double y, double z)
     {
     	throw new NotImplementedException();
     }
     [Export("setVelocity")]
-    void SetVelocity(double x, double y, double z)
+    public void SetVelocity(double x, double y, double z)
     {
     	throw new NotImplementedException();
     }

@@ -18,74 +18,74 @@ public sealed class ErrorEvent {
     
     public ErrorEvent (string type, ErrorEventInit errorEventInitDict) { }
     [Export("colno")]
-    double Colno => throw new NotImplementedException();
+    public double Colno => throw new NotImplementedException();
     [Export("error")]
-    Object Error => throw new NotImplementedException();
+    public Object Error => throw new NotImplementedException();
     [Export("filename")]
-    string Filename => throw new NotImplementedException();
+    public string Filename => throw new NotImplementedException();
     [Export("lineno")]
-    double Lineno => throw new NotImplementedException();
+    public double Lineno => throw new NotImplementedException();
     [Export("message")]
-    string Message => throw new NotImplementedException();
+    public string Message => throw new NotImplementedException();
     [Export("bubbles")]
-    bool Bubbles => throw new NotImplementedException();
+    public bool Bubbles => throw new NotImplementedException();
     [Export("cancelable")]
-    bool Cancelable => throw new NotImplementedException();
+    public bool Cancelable => throw new NotImplementedException();
     [Export("cancelBubble")]
-    bool CancelBubble { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public bool CancelBubble { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     [Export("currentTarget")]
-    EventTarget CurrentTarget => throw new NotImplementedException();
+    public EventTarget CurrentTarget => throw new NotImplementedException();
     [Export("defaultPrevented")]
-    bool DefaultPrevented => throw new NotImplementedException();
+    public bool DefaultPrevented => throw new NotImplementedException();
     [Export("eventPhase")]
-    double EventPhase => throw new NotImplementedException();
+    public double EventPhase => throw new NotImplementedException();
     [Export("isTrusted")]
-    bool IsTrusted => throw new NotImplementedException();
+    public bool IsTrusted => throw new NotImplementedException();
     [Export("returnValue")]
-    bool ReturnValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public bool ReturnValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     [Export("srcElement")]
-    Element SrcElement => throw new NotImplementedException();
+    public Element SrcElement => throw new NotImplementedException();
     [Export("target")]
-    EventTarget Target => throw new NotImplementedException();
+    public EventTarget Target => throw new NotImplementedException();
     [Export("timeStamp")]
-    double TimeStamp => throw new NotImplementedException();
+    public double TimeStamp => throw new NotImplementedException();
     [Export("type")]
-    string Type => throw new NotImplementedException();
+    public string Type => throw new NotImplementedException();
     [Export("scoped")]
-    bool Scoped => throw new NotImplementedException();
+    public bool Scoped => throw new NotImplementedException();
     [Export("AT_TARGET")]
-    double AtTarget => throw new NotImplementedException();
+    public double AtTarget => throw new NotImplementedException();
     [Export("BUBBLING_PHASE")]
-    double BubblingPhase => throw new NotImplementedException();
+    public double BubblingPhase => throw new NotImplementedException();
     [Export("CAPTURING_PHASE")]
-    double CapturingPhase => throw new NotImplementedException();
+    public double CapturingPhase => throw new NotImplementedException();
     [Export("initErrorEvent")]
-    void InitErrorEvent(string typeArg, bool canBubbleArg, bool cancelableArg, string messageArg, string filenameArg, double linenoArg)
+    public void InitErrorEvent(string typeArg, bool canBubbleArg, bool cancelableArg, string messageArg, string filenameArg, double linenoArg)
     {
     	throw new NotImplementedException();
     }
     [Export("initEvent")]
-    void InitEvent(string eventTypeArg, bool canBubbleArg, bool cancelableArg)
+    public void InitEvent(string eventTypeArg, bool canBubbleArg, bool cancelableArg)
     {
     	throw new NotImplementedException();
     }
     [Export("preventDefault")]
-    void PreventDefault()
+    public void PreventDefault()
     {
     	throw new NotImplementedException();
     }
     [Export("stopImmediatePropagation")]
-    void StopImmediatePropagation()
+    public void StopImmediatePropagation()
     {
     	throw new NotImplementedException();
     }
     [Export("stopPropagation")]
-    void StopPropagation()
+    public void StopPropagation()
     {
     	throw new NotImplementedException();
     }
     [Export("deepPath")]
-    EventTarget[] DeepPath()
+    public EventTarget[] DeepPath()
     {
     	throw new NotImplementedException();
     }
@@ -141,59 +141,59 @@ public sealed class Event {
     
     public Event (string typeArg, EventInit eventInitDict) { }
     [Export("AT_TARGET")]
-    double AtTarget => throw new NotImplementedException();
+    public double AtTarget => throw new NotImplementedException();
     [Export("BUBBLING_PHASE")]
-    double BubblingPhase => throw new NotImplementedException();
+    public double BubblingPhase => throw new NotImplementedException();
     [Export("CAPTURING_PHASE")]
-    double CapturingPhase => throw new NotImplementedException();
+    public double CapturingPhase => throw new NotImplementedException();
     [Export("bubbles")]
-    bool Bubbles => throw new NotImplementedException();
+    public bool Bubbles => throw new NotImplementedException();
     [Export("cancelable")]
-    bool Cancelable => throw new NotImplementedException();
+    public bool Cancelable => throw new NotImplementedException();
     [Export("cancelBubble")]
-    bool CancelBubble { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public bool CancelBubble { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     [Export("currentTarget")]
-    EventTarget CurrentTarget => throw new NotImplementedException();
+    public EventTarget CurrentTarget => throw new NotImplementedException();
     [Export("defaultPrevented")]
-    bool DefaultPrevented => throw new NotImplementedException();
+    public bool DefaultPrevented => throw new NotImplementedException();
     [Export("eventPhase")]
-    double EventPhase => throw new NotImplementedException();
+    public double EventPhase => throw new NotImplementedException();
     [Export("isTrusted")]
-    bool IsTrusted => throw new NotImplementedException();
+    public bool IsTrusted => throw new NotImplementedException();
     [Export("returnValue")]
-    bool ReturnValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public bool ReturnValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     [Export("srcElement")]
-    Element SrcElement => throw new NotImplementedException();
+    public Element SrcElement => throw new NotImplementedException();
     [Export("target")]
-    EventTarget Target => throw new NotImplementedException();
+    public EventTarget Target => throw new NotImplementedException();
     [Export("timeStamp")]
-    double TimeStamp => throw new NotImplementedException();
+    public double TimeStamp => throw new NotImplementedException();
     [Export("type")]
-    string Type => throw new NotImplementedException();
+    public string Type => throw new NotImplementedException();
     [Export("scoped")]
-    bool Scoped => throw new NotImplementedException();
+    public bool Scoped => throw new NotImplementedException();
     [Export("initEvent")]
-    void InitEvent(string eventTypeArg, bool canBubbleArg, bool cancelableArg)
+    public void InitEvent(string eventTypeArg, bool canBubbleArg, bool cancelableArg)
     {
     	throw new NotImplementedException();
     }
     [Export("preventDefault")]
-    void PreventDefault()
+    public void PreventDefault()
     {
     	throw new NotImplementedException();
     }
     [Export("stopImmediatePropagation")]
-    void StopImmediatePropagation()
+    public void StopImmediatePropagation()
     {
     	throw new NotImplementedException();
     }
     [Export("stopPropagation")]
-    void StopPropagation()
+    public void StopPropagation()
     {
     	throw new NotImplementedException();
     }
     [Export("deepPath")]
-    EventTarget[] DeepPath()
+    public EventTarget[] DeepPath()
     {
     	throw new NotImplementedException();
     }

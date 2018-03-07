@@ -315,6 +315,18 @@ export function identifyInterfaces(sourceFile: sast.SourceFile, context: Context
   });
 }
 
+// For ModifierableNodes we can specify access modifiers
+// we only account for non readonly modifiers.
+export function hasAccessModifiers(node: sast.ModifierableNode) : boolean {
+  const modifiers = node.getModifiers();
+  let hasAccessModifiers = false;
+  modifiers.forEach(modifier => {
+    if (modifier.getKind() !== SyntaxKind.ReadonlyKeyword)
+      hasAccessModifiers = true;
+  });
+  return hasAccessModifiers;
+}
+
 export function isDeclarationOfInterface(node: sast.VariableDeclaration) : boolean {
 
   const properties = node.getDescendantsOfKind(SyntaxKind.PropertySignature);

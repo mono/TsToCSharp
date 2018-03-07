@@ -7,7 +7,7 @@ public sealed class RtcSrtpSdesTransport {
     
     public RTCSrtpSdesTransport (RTCIceTransport transport, RTCSrtpSdesParameters encryptParameters, RTCSrtpSdesParameters decryptParameters) { }
     [Export("getLocalParameters")]
-    RTCSrtpSdesParameters[] GetLocalParameters()
+    public RTCSrtpSdesParameters[] GetLocalParameters()
     {
     	throw new NotImplementedException();
     }

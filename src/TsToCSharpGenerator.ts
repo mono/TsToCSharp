@@ -27,6 +27,7 @@ import {
   loadInterfaceProperties,
   loadInterfaceMethods,
   loadInterfaceIndexers,
+  hasAccessModifiers,
 } from './GeneratorHelpers';
 
 export function TsToCSharpGenerator(node: SourceFile, context: ContextInterface): string {
@@ -63,7 +64,9 @@ function visitStatement(node: sast.Statement, context: ContextInterface): string
    switch (node.getKind()) {
      case SyntaxKind.VariableStatement:
        return visitVariableStatement(node as sast.VariableStatement, context);
-    case SyntaxKind.InterfaceDeclaration:
+     case SyntaxKind.TypeAliasDeclaration:
+       return visitTypeAliasDeclaration(node as sast.TypeAliasDeclaration, context);
+     case SyntaxKind.InterfaceDeclaration:
       return visitInterfaceDeclaration(node as sast.InterfaceDeclaration, context);
     default:
       throw new Error(`Unknown statement kind '${SyntaxKind[node.getKind()]}'`);
@@ -101,8 +104,19 @@ function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: Cont
   addLeadingComment(source, node, context);
   addWhitespace(source, node, context);
 
-  // visit the modifiers.
-  visitModifiers(source, node, context);
+  if (hasAccessModifiers(node))
+  {
+    // visit the modifiers.
+    visitModifiers(source, node, context);
+  }
+  else
+  {
+    // If there were no modifiers present then we should default to 
+    if (context.emitImplementation)
+    {
+      source.push(context.genOptions.interfaceAccessModifier, " ");
+    }
+  }
 
   if (node.compilerNode.modifiers) {
     node.compilerNode.modifiers.forEach(modifier => {
@@ -256,50 +270,96 @@ function visitHeritageClauses(source: string[],
     return emitter.emitTypeNode(node, context);
   }
 
-
+  function isPropertyAnEventHandler(node: sast.PropertySignature, context: ContextInterface): boolean {
+    
+    if (node.getName().length > 2 && node.getName().substr(0,2).toLowerCase() === "on")
+    {
+      const typeNode = node.getTypeNode();
+      
+      if (TypeGuards.isFunctionTypeNode(typeNode) && typeNode.getReturnTypeNode().getKind() === SyntaxKind.AnyKeyword)
+      {
+        const parameters = typeNode.getParameters();
+        if (parameters && parameters.length === 2)
+        {
+          // This might be too specific by checking for 'this'
+          if (parameters[0].getName() === "this")
+          {
+            const parm2Type = parameters[1].getTypeNode();
+            if (TypeGuards.isTypeReferenceNode(parm2Type)) 
+            {
+              // Note we may want to check for a specific type reference here such as Event
+              // or if the type reference extends a DOM Event.
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
 
   function visitPropertySignature(node: sast.PropertySignature, context: ContextInterface): string {
 
     const source: string[] = [];
     addLeadingComment(source, node, context);
 
-    // This will generate an Export attribute as well as takes into account whitespace
-    source.push(generateExportForProperty(node, context));
+    if (isPropertyAnEventHandler(node, context))
+    {
+      source.push(emitter.emitDOMEventHandler(node, context));
+    }
+    else 
+    {
 
-    visitModifiers(source, node, context);
+      // This will generate an Export attribute as well as takes into account whitespace
+      source.push(generateExportForProperty(node, context));
 
-    // let's push the name node offset so spacing will be ok.
-    // Modifiers seem to mess the spacing up with whitespace
-    context.offset = node.getNameNode().getStart();
-    pushContext(context);
+      if (hasAccessModifiers(node))
+      {
+        // visit the modifiers.
+        visitModifiers(source, node, context);
+      }
+      else
+      {
+        // If there were no modifiers present then we should default to 
+        if (context.emitImplementation)
+        {
+          source.push(context.genOptions.interfaceAccessModifier, " ");
+        }
+      }
 
-    // emit our property type which is at the end.
-    source.push(visitTypeNode(node.getTypeNode(), context));
+      // let's push the name node offset so spacing will be ok.
+      // Modifiers seem to mess the spacing up with whitespace
+      context.offset = node.getNameNode().getStart();
+      pushContext(context);
 
-    // make sure we put a spacer in there but we do not have optional properties.
-    // if (node.hasQuestionToken()) {
-    //   source.push("? ");
-    // }
-    // else
-    // {
-      source.push(" ");
-    //}
+      // emit our property type which is at the end.
+      source.push(visitTypeNode(node.getTypeNode(), context));
 
-    // now reposition back to the start
-    swapContext(context);
+      // make sure we put a spacer in there but we do not have optional properties.
+      // if (node.hasQuestionToken()) {
+      //   source.push("? ");
+      // }
+      // else
+      // {
+        source.push(" ");
+      //}
 
-    source.push(emitter.emitPropertyName(node.getNameNode(), context));
+      // now reposition back to the start
+      swapContext(context);
 
-    // Emit the C# Body code of the property
-    source.push(emitter.emitPropertyBody(node, context));
+      source.push(emitter.emitPropertyName(node.getNameNode(), context));
 
-    // Now reposition to the end of the method type
-    popContext(context);    
+      // Emit the C# Body code of the property
+      source.push(emitter.emitPropertyBody(node, context));
 
+      // Now reposition to the end of the method type
+      popContext(context);    
+
+    }
     endNode(node, context);
     addTrailingComment(source, node, context);
     return source.join('');
- }
+  }
 
  function visitParameter(source: string[], node: sast.ParameterDeclaration, context: ContextInterface): void {
 
@@ -361,6 +421,12 @@ function visitHeritageClauses(source: string[],
 
     // This will generate an Export attribute as well as takes into account whitespace
     source.push(generateExportForMethod(node, context));
+
+    // If there were no modifiers present then we should default to 
+    if (context.emitImplementation)
+    {
+      source.push(context.genOptions.interfaceAccessModifier, " ");
+    }
 
     // let's push the name node offset so spacing will be ok.
     // Modifiers seem to mess the spacing up with whitespace
@@ -667,7 +733,68 @@ function visitConstructSignature(node: sast.ConstructSignatureDeclaration, conte
   // Make sure we add a body
   source.push(" { }");
 
-  //addSemicolon(source, node, context);
+  endNode(node, context);
+  addTrailingComment(source, context.offset, node, context);
+  return source.join('');
+}
+
+function visitTypeAliasDeclaration(node: sast.TypeAliasDeclaration, context: ContextInterface): string {
+  const source: string[] = [];
+  context.diagnostics.pushWarningAtLoc("Nodes of type TypeAliasDeclaration are not supported at this time ", node);
+  return source.join('');
+}
+
+// tslint:disable-next-line cyclomatic-complexity
+function visitCallSignature(node: sast.CallSignatureDeclaration, context: ContextInterface): string {
+  
+  const source: string[] = [];
+  
+  // We may be jumping around processing AST nodes out of order so we need to actually set the 
+  // context offset ourselves.  Here we set the context offset to be the begging of the node.
+  context.offset = node.getPos();
+  addLeadingComment(source, node.getPos(), node, context);
+  addWhitespace(source, node, context);
+
+  // const parameters = node.getTypeParameters();
+
+  // pushContext(context);
+
+  // // the constructors in this case do not allow modifiers so we will make it public by default
+  // source.push("public");
+
+  // // emit our constructor type which is at the end.
+  // const savePrefixInterface = context.genOptions.isPrefixInterface;
+  // const saveCaseChangeInterfaces = context.genOptions.isCaseChangeInterfaces;
+  // context.genOptions.isPrefixInterface = false;
+  // context.genOptions.isCaseChangeInterfaces = false;
+  
+  // addWhitespace(source, node.getReturnTypeNode(), context);
+  // source.push(visitTypeNode(node.getReturnTypeNode(), context));
+  
+  // context.genOptions.isCaseChangeInterfaces = saveCaseChangeInterfaces;
+  // context.genOptions.isPrefixInterface = savePrefixInterface;
+
+  // // make sure we put a spacer in there
+  // source.push(" ");
+
+  // // now reposition back to the start
+  // swapContext(context);
+
+  // visitTypeParameters(source, node, context);
+
+  // emitStatic(source, '(', node, context);
+
+  // visitParameters(source, node, context);
+
+  // emitStatic(source, ')', node, context);
+
+  // // Now reposition to the end of the method type
+  // popContext(context);
+
+  // // Make sure we add a body
+  // source.push(" { }");
+
+  addSemicolon(source, node, context);
   endNode(node, context);
   addTrailingComment(source, context.offset, node, context);
   return source.join('');
@@ -682,5 +809,6 @@ const visitor = {
   [SyntaxKind.VariableDeclaration]: visitVariableDeclaration,
   [SyntaxKind.ConstructSignature]: visitConstructSignature,
   [SyntaxKind.TypeLiteral]: visitTypeLiteral,
+  [SyntaxKind.CallSignature]: visitCallSignature,
 
 };

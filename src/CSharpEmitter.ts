@@ -62,6 +62,8 @@ const ValueTypeTextMap = [
         return emitRestParameter(node, context);        
       case SyntaxKind.NeverKeyword:
         return emitNeverType(node, context);
+      case SyntaxKind.FunctionType:
+        return emitFunctionType(node, context);        
       default:
         throw new Error(`Unknown TypeNode kind ${SyntaxKind[node.getKind()]}`);
     }
@@ -334,6 +336,12 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     return _emitType('Object', node, context);
   }
 
+  export function emitFunctionType(node: sast.Node, context: ContextInterface): string {
+    // We will need to do some more checking here probaly to return 'Action' or 'Func'
+    // so let's think of this as a place holder for now until we get some more examples.
+    return _emitType('Action', node, context);
+  }  
+
   export function emitArrayType(node: sast.Node, context: ContextInterface): string {
     const source: string[] = [];
     const at = <sast.ArrayTypeNode>node;
@@ -351,7 +359,11 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
 
     let typeRefLiteral = node.getText();
 
-    // Let's check if it is an interface that we need to prefix
+    // Special processing for DOM Event Handlers
+    if (typeRefLiteral === "EventListenerOrEventListenerObject")
+      typeRefLiteral = "DOMEventHandler";
+
+      // Let's check if it is an interface that we need to prefix
     if (context.genOptions.isPrefixInterface)
     {
       if (node.getSourceFile().getInterface(typeRefLiteral))
@@ -583,6 +595,36 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     
     return source.join('');
   }
+
+  export function emitDOMEventHandler(node: sast.PropertySignature, context: ContextInterface) : string {
+
+    const source: string[] = [];
+
+    const eventName = node.getName().substr(2);
+
+    if (context.emitImplementation)
+    {
+      pushContext(context);
+      context.offset = node.getPos();
+      const ws = getWhitespace(node, context, true); 
+      popContext(context);
+      addWhitespace(source, node, context);
+      source.push("public event DOMEventHandler ");
+      source.push("On",cc.pascalCase(eventName),"\n");
+      source.push(ws,"{\n");
+      source.push(ws,"\t", "add => AddEventListener(\"",eventName,"\", value, false);\n");
+      source.push(ws,"\t", "remove => RemoveEventListener(\"",eventName,"\", value, false);\n");
+      source.push(ws,"}");
+    }
+    else
+    {
+      addWhitespace(source, node, context);
+      source.push("event DOMEventHandler ");
+      source.push("On" + cc.pascalCase(eventName) + ";");
+    }
+    
+    return source.join('');
+  }  
   
 
   const emitter = {

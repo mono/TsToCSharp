@@ -114,6 +114,8 @@ const interfaceCases = [
     {should: "should generate generic interface with constraints", file: "GenericInterfaceWithConstraint"},
     {should: "should generate generic interface generic constraints #2", file: "GenericInterfaceWithConstraint2"},
     {should: "should generate generic interface with non supported type default", file: "GenericInterfaceWithTypeDefault"},
+    {should: "should generate interface with event handlers", file: "EventHandlers"},
+    {should: "should generate interface with with method with DOM event handler", file: "MethodWithDOMEventHandlerParms"},
 
 ]
 
@@ -177,7 +179,7 @@ const classCases = [
     {should: "should generate class from declaraion of interface with inherited indexer", file: "InterfaceDeclarationPropertyIndexer", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with inherited methods and properties", file: "InterfaceDeclaration1", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with extended interfaces", file: "InterfaceDeclaration2", genOptions: new TestClassGenOptions()},    
-    
+    {should: "should generate class from declaraion of interface with event handlers", file: "InterfaceDeclarationWithEventHandlers", genOptions: new TestClassGenOptions()},    
 ]
 
 describe("TsToCSharpGenerator", function () {
