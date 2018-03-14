@@ -3,6 +3,7 @@ import * as sast from "ts-simple-ast";
 import {ts, SyntaxKind, TypeGuards } from 'ts-simple-ast';
 import {ContextInterface} from "./Context";
 import * as cc from "change-case";
+import * as os from "os";
 
 import {
   addWhitespace,
@@ -580,13 +581,13 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
       
       context.offset = node.getPos();
       const ws = getWhitespace(node, context, true); 
-
-      source.push("\n", ws);
+      
+      source.push(os.EOL, ws);
       // addWhitespace(source, node, context);
       source.push("{");
-      source.push("\n", ws);
+      source.push(os.EOL, ws);
       source.push("\t", "throw new NotImplementedException();");
-      source.push("\n", ws);
+      source.push(os.EOL, ws);
       source.push("}");
       popContext(context);
     }
@@ -610,10 +611,10 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
       popContext(context);
       addWhitespace(source, node, context);
       source.push("public event DOMEventHandler ");
-      source.push("On",cc.pascalCase(eventName),"\n");
-      source.push(ws,"{\n");
-      source.push(ws,"\t", "add => AddEventListener(\"",eventName,"\", value, false);\n");
-      source.push(ws,"\t", "remove => RemoveEventListener(\"",eventName,"\", value, false);\n");
+      source.push("On",cc.pascalCase(eventName),os.EOL);
+      source.push(ws,"{",os.EOL);
+      source.push(ws,"\t", "add => AddEventListener(\"",eventName,"\", value, false);",os.EOL);
+      source.push(ws,"\t", "remove => RemoveEventListener(\"",eventName,"\", value, false);",os.EOL);
       source.push(ws,"}");
     }
     else

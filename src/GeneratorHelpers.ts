@@ -4,6 +4,7 @@ import {ts, SyntaxKind, TypeGuards} from "ts-simple-ast"
 import {ContextInterface} from "./Context";
 import {Stack} from "./DataStructures";
 import {emitPropertyName, emitMethodName, emitClassName} from "./CSharpEmitter";
+import * as os from "os";
 
 const ContextStack = new Stack<number>();
 
@@ -183,7 +184,7 @@ export function generateExportForInterfaceDeclaration(node: sast.VariableDeclara
   const exportClass = node.getName();
   popContext(context);
 
-  source.push("[Export(\"",exportClass.trim(),"\", typeof(Mono.WebAssembly.JSObject))]\n");
+  source.push("[Export(\"",exportClass.trim(),"\", typeof(Mono.WebAssembly.JSObject))]",os.EOL);
   
 
   var len = source.length;
@@ -205,7 +206,7 @@ export function generateExportForClass(node: sast.ClassDeclaration, context: Con
   const exportClass = emitPropertyName(node.getNameNode(), context);
   popContext(context);
 
-  source.push("[Export(\"",exportClass.trim(),"\")]\n");
+  source.push("[Export(\"",exportClass.trim(),"\")]",os.EOL);
   var len = source.length;
   addWhitespace(source, node, context);
 
@@ -234,7 +235,7 @@ export function generateExportForProperty(node: sast.PropertySignature, context:
     
     popContext(context);
 
-    source.push("[Export(\"",exportProperty.trim(),"\")]\n");
+    source.push("[Export(\"",exportProperty.trim(),"\")]", os.EOL);
     var len = source.length;
     addWhitespace(source, node, context);
 
@@ -268,7 +269,7 @@ export function generateExportForMethod(node: sast.MethodSignature, context: Con
 
     popContext(context);
 
-    source.push("[Export(\"",exportMethod.trim(),"\")]\n");
+    source.push("[Export(\"",exportMethod.trim(),"\")]", os.EOL);
     var len = source.length;
     addWhitespace(source, node, context);
 
