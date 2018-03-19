@@ -167,6 +167,25 @@ class TestClassNoEmitComments extends GenOptions {
     }
 }
 
+class TestClassNSGenOptions extends GenOptions {
+    constructor () 
+    {
+        super();
+        this.isCaseChangeParameters = false;
+        this.defaultNameSpace = "Hello.World";
+    }
+}
+
+class TestClassNSAndUsingGenOptions extends GenOptions {
+    constructor () 
+    {
+        super();
+        this.isCaseChangeParameters = false;
+        this.defaultNameSpace = "Hello.World";
+        this.isEmitUsings = true;
+    }
+}
+
 const classCases = [
     {should: "should generate simple class from declaraion of interface", file: "InterfaceDeclaration", genOptions: new TestClassGenOptions() },
     {should: "should generate simple class from declaraion of interface with comments", file: "InterfaceDeclarationWithComments", genOptions: new TestClassGenOptions()},
@@ -182,6 +201,9 @@ const classCases = [
     
     {should: "should generate class from declaraion of interface with extended interfaces", file: "InterfaceDeclaration2", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with event handlers", file: "InterfaceDeclarationWithEventHandlers", genOptions: new TestClassGenOptions()},    
+    {should: "should generate simple class with default namespace", file: "InterfaceDeclaration4", genOptions: new TestClassNSGenOptions() },
+    {should: "should generate simple class with default namespace and Usings", file: "InterfaceDeclaration5", genOptions: new TestClassNSAndUsingGenOptions() },
+
 ]
 
 describe("TsToCSharpGenerator", function () {
@@ -211,6 +233,7 @@ describe("TsToCSharpGenerator", function () {
         
             }
         )
+
     });
 });
 

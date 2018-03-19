@@ -475,3 +475,30 @@ export function isMap(node: (sast.InterfaceDeclaration | sast.ClassDeclaration |
   }
   return isMap;
 }
+
+export function emitDefaultNameSpace(source: string[], context: ContextInterface, begin?: boolean): void {
+
+  if (context.genOptions.defaultNameSpace)
+  {
+    if (begin)
+    {
+      source.push("namespace ", context.genOptions.defaultNameSpace, " ", os.EOL, "{",os.EOL);
+    }
+    else
+    {
+      source.push(os.EOL, "}");
+    }
+  }
+
+}
+
+export function emitUsings(source: string[], context: ContextInterface): void {
+
+  if (context.genOptions.isEmitUsings)
+  {
+      source.push("using System;",os.EOL);
+      source.push("using System.ComponentModel.Composition;",os.EOL);
+      source.push("using Mono.WebAssembly;",os.EOL, os.EOL);
+  }
+
+}

@@ -29,10 +29,16 @@ import {
   loadInterfaceIndexers,
   hasAccessModifiers,
   isMap,
+  emitDefaultNameSpace,
+  emitUsings,
 } from './GeneratorHelpers';
 
 export function TsToCSharpGenerator(node: SourceFile, context: ContextInterface): string {
     const source: string[] = [];
+
+    emitUsings(source, context);
+    
+    emitDefaultNameSpace(source, context, true);
 
     //console.log("Identifying interfaces for later class implementations")
     identifyInterfaces(node, context);
@@ -42,6 +48,9 @@ export function TsToCSharpGenerator(node: SourceFile, context: ContextInterface)
     visitStatements(source, node, context);
     addWhitespace(source, node, context);
     endNode(node, context);
+
+    emitDefaultNameSpace(source, context, false);
+
     return source.join('');
 }
 

@@ -3,6 +3,7 @@
 import * as fs from "fs";
 import Ast, {ts, ScriptTarget, getCompilerOptionsFromTsConfig, ModuleResolutionKind, ModuleKind} from "ts-simple-ast";
 import * as path from "path";
+import * as os from "os";
 
 
 import {ParseCommandLine} from "./CommandLineParser";

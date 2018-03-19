@@ -10,7 +10,9 @@ export function ParseCommandLine() : GenOptionsInterface
     .example("TsToCSharp -o ./ file1.d.ts", "Emit strongly typed C# definition from TypeScript definition file(s)")
     .help("h")
     .alias("h", "help")
+    .describe("defaultNameSpace", "Default name space to be emitted.")
     .describe("emitAllInterfaces", "Emit C# class implementations for all Interfaces and not just those declared.")
+    .describe("emitUsings", "Emit default C# using statements.")
     .describe("interfacePrefix", "Prefix interfaces with the string provided. Default is \"I\"")
     .describe("interfaceAccessModifier", "Default interface access identifier. Default is \"public\"")
     .nargs("interfaceAccessModifier", 1)
@@ -124,7 +126,15 @@ export function ParseCommandLine() : GenOptionsInterface
         options.interfaceAccessModifier = (argv.interfaceAccessModifier !== "none") ? argv.interfaceAccessModifier : undefined;
     }
 
+    if (argv.defaultNameSpace)
+    {
+        options.defaultNameSpace = argv.defaultNameSpace;
+    }
 
+    if (argv.emitUsings)
+    {
+        options.isEmitUsings = true;
+    }
     
 
     return options;
