@@ -28,6 +28,7 @@ import {
   loadInterfaceMethods,
   loadInterfaceIndexers,
   hasAccessModifiers,
+  isMap,
 } from './GeneratorHelpers';
 
 export function TsToCSharpGenerator(node: SourceFile, context: ContextInterface): string {
@@ -219,8 +220,19 @@ function visitHeritageClauses(source: string[],
     }
   }
 
+
+
   function visitInterfaceDeclaration(node: sast.InterfaceDeclaration, context: ContextInterface): string {
     const source: string[] = [];
+    
+    // if this is just a Map node then we will not output it.
+    if (isMap(node))
+    {
+      endNode(node, context);
+      addTrailingComment(source, node, context);
+      return source.join('');
+    }
+    
     addLeadingComment(source, node, context);
     addWhitespace(source, node, context);
 
@@ -301,6 +313,10 @@ function visitHeritageClauses(source: string[],
   function visitPropertySignature(node: sast.PropertySignature, context: ContextInterface): string {
 
     const source: string[] = [];
+
+    if (node.getNameNode().getKind() === SyntaxKind.StringLiteral)
+      return "";
+
     addLeadingComment(source, node, context);
 
     if (isPropertyAnEventHandler(node, context))

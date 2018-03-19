@@ -64,12 +64,37 @@ const ValueTypeTextMap = [
       case SyntaxKind.NeverKeyword:
         return emitNeverType(node, context);
       case SyntaxKind.FunctionType:
-        return emitFunctionType(node, context);        
+        return emitFunctionType(node, context); 
+      case SyntaxKind.TypeQuery:
+        return emitTypeQuery(node, context); 
       default:
         throw new Error(`Unknown TypeNode kind ${SyntaxKind[node.getKind()]}`);
     }
   }
 
+  export function emitTypeQuery(node: sast.Node, context: ContextInterface): string {
+    const source: string[] = [];
+
+    addWhitespace(source, node, context);
+
+    const tq = node.compilerNode;
+    if (ts.isTypeQueryNode(tq))
+    {
+      const nn = tq.exprName;
+      const nnn = sast.createWrappedNode(nn);
+      source.push(emitEntityName(nnn, context));
+    }
+    return source.join('');
+  }
+
+  function emitEntityName(node: sast.Node, context: ContextInterface): string {
+    switch (node.getKind()) {
+      case SyntaxKind.Identifier:
+        return emitIdentifier(<sast.Identifier>node, context);
+        
+    }
+  }
+  
   function emitExpressionWithTypeArguments(node: sast.ExpressionWithTypeArguments,
     context: ContextInterface): string {
     

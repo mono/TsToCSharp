@@ -11,5 +11,5 @@ interface GlobalEventHandlers {
     [Export("addEventListener")]
     void addEventListener(string type, DOMEventHandler listener, object options);
     [Export("removeEventListener")]
-    void removeEventListener(string type, DOMEventHandler listener, object options);    
+    void removeEventListener(string type, DOMEventHandler listener, object options);
 }

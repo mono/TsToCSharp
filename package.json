@@ -12,16 +12,16 @@
   "dependencies": {
     "@types/yargs": "^10.0.2",
     "change-case": "^3.0.2",
-    "ts-simple-ast": "^8.2.1",
+    "ts-simple-ast": "^8.2.4",
     "typescript": "^2.7.2",
-    "yargs": "^11.0.0"
+    "yargs": "^11.1.0"
   },
   "devDependencies": {
     "@types/chai": "^4.1.2",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^9.4.6",
+    "@types/node": "^9.4.7",
     "chai": "^4.1.2",
-    "mocha": "^5.0.1",
+    "mocha": "^5.0.4",
     "tslint": "^5.9.1"
   },
   "scripts": {

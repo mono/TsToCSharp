@@ -12,7 +12,7 @@ public interface IGlobalEventHandlers {
     [Export("addEventListener")]
     void AddEventListener(string type, DOMEventHandler listener, object options);
     [Export("removeEventListener")]
-    void RemoveEventListener(string type, DOMEventHandler listener, object options);    
+    void RemoveEventListener(string type, DOMEventHandler listener, object options);
 }
 
 public interface IEventTarget {
@@ -632,4 +632,3 @@ public sealed class Window {
     	throw new NotImplementedException();
     }
 }
-

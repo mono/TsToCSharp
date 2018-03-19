@@ -104,7 +104,7 @@ const interfaceCases = [
     {should: "should generate interface with nullable type reference array property", file: "TypeRefArrayOrNullProperty"},            
     {should: "should generate interface with string array property", file: "StringArrayProperty"},            
     {should: "should generate interface with nullable string array property", file: "StringArrayOrNullProperty"},            
-
+    {should: "should generate interface with type query property", file: "TypeQueryProperty"},            
     
     
     {should: "should generate interfaces extending one interface", file: "Extends2"},
@@ -178,6 +178,8 @@ const classCases = [
     {should: "should generate class from declaraion of interface with inherited methods", file: "InterfaceDeclarationWithInheritedMethods", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with inherited indexer", file: "InterfaceDeclarationPropertyIndexer", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with inherited methods and properties", file: "InterfaceDeclaration1", genOptions: new TestClassGenOptions()},    
+    {should: "should generate class from declaraion of interface with type query properties", file: "InterfaceDeclarationWithTypeQuery", genOptions: new TestClassGenOptions()},    
+    
     {should: "should generate class from declaraion of interface with extended interfaces", file: "InterfaceDeclaration2", genOptions: new TestClassGenOptions()},    
     {should: "should generate class from declaraion of interface with event handlers", file: "InterfaceDeclarationWithEventHandlers", genOptions: new TestClassGenOptions()},    
 ]

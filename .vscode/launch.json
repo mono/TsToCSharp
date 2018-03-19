@@ -45,8 +45,7 @@
                 "${workspaceFolder}/**/*.js"
             ],
             "args": [
-                "./test/definitions/interfaces/EventHandlers.d.ts",
-                "./test/definitions/interfaces/MethodWithDOMEventHandlerParms.d.ts",
+                "./test/definitions/interfaces/TypeQueryProperty.d.ts",
                 "-o",
                 "./test/cases/interfaces",
                 "--noCaseChangeParameters",

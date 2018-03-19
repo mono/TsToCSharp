@@ -1,12 +1,13 @@
 
 import * as sast from "ts-simple-ast";
-import {ts, SyntaxKind, TypeGuards} from "ts-simple-ast"
+import {ts, SyntaxKind, TypeGuards, Node} from "ts-simple-ast"
 import {ContextInterface} from "./Context";
 import {Stack} from "./DataStructures";
 import {emitPropertyName, emitMethodName, emitClassName} from "./CSharpEmitter";
 import * as os from "os";
 
 const ContextStack = new Stack<number>();
+const StringLiteralMap = new Map<string, sast.Node>();
 
 export function emitStatic(source: string[], text: string, node: sast.Node, context: ContextInterface): void {
   addWhitespace(source, node, context);
@@ -440,4 +441,37 @@ function loadHeritageInterfaces(node: sast.InterfaceDeclaration, loadDelegate: (
     }
   }
 
+}
+
+// some interfaces are used as a Map in the keyof definitions.
+// These types we will not want to output but process the string literals that make up
+// the map.
+export function isMap(node: (sast.InterfaceDeclaration | sast.ClassDeclaration | sast.TypeLiteralNode)) : boolean {
+  const members = node.getMembers();
+  
+  if (members.length === 0)
+    return false;
+
+  let isMap : boolean = true;
+  for (let m = 0; m < members.length; m++)
+  {
+    const member = members[m];
+    if (TypeGuards.isPropertySignature(member))
+    {
+      const name = member.getName();
+      const memberType = member.getNameNode();
+      if (!TypeGuards.isStringLiteral(memberType))
+      {
+        isMap = false;
+        break;
+      }
+      
+    }
+    else
+    {
+      isMap = false;
+      break;
+    }
+  }
+  return isMap;
 }
