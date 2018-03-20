@@ -37,7 +37,7 @@ export function TsToCSharpGenerator(node: SourceFile, context: ContextInterface)
     const source: string[] = [];
 
     emitUsings(source, context);
-    
+
     emitDefaultNameSpace(source, context, true);
 
     //console.log("Identifying interfaces for later class implementations")
@@ -442,6 +442,19 @@ function visitHeritageClauses(source: string[],
  // tslint:disable-next-line cyclomatic-complexity
  function visitMethodSignature(node: sast.MethodSignature, context: ContextInterface): string {
     const source: string[] = [];
+
+    // We will skip KeyOf Maps for now.
+    const types = node.getTypeParameters();
+    if (types && types.length > 0)
+    {
+      const keyof = types[0];
+      if (TypeGuards.isTypeParameterDeclaration(keyof))
+      {
+        endNode(node, context);
+        return source.join('');
+      }
+    }
+
     addLeadingComment(source, node, context);
 
     // This will generate an Export attribute as well as takes into account whitespace

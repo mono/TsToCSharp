@@ -73,6 +73,7 @@ const interfaceCases = [
     {should: "should generate interface with method with rest any parms", file: "MethodWithRestAnyParms"},
     {should: "should generate interface with method with rest type ref parms", file: "MethodWithRestTypeRefParms"},
     {should: "should generate interface with method with rest string parms", file: "MethodWithRestStringParms"},
+    {should: "should generate interface with method with literal type parms", file: "MethodWithLiteralTypeParm"},
     {should: "should generate interface with method leading and trailing comments", file: "MethodComments"},
     {should: "should generate interface with method that returns number array", file: "MethodReturnNumberArray"},
     {should: "should generate interface with method that returns number array or null", file: "MethodReturnNumberArrayOrNull"},
@@ -105,7 +106,7 @@ const interfaceCases = [
     {should: "should generate interface with string array property", file: "StringArrayProperty"},            
     {should: "should generate interface with nullable string array property", file: "StringArrayOrNullProperty"},            
     {should: "should generate interface with type query property", file: "TypeQueryProperty"},            
-    
+   
     
     {should: "should generate interfaces extending one interface", file: "Extends2"},
     {should: "should generate multiple interfaces extending multiple interfaces", file: "Extends3"},

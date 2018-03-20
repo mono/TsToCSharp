@@ -67,9 +67,28 @@ const ValueTypeTextMap = [
         return emitFunctionType(node, context); 
       case SyntaxKind.TypeQuery:
         return emitTypeQuery(node, context); 
+      case SyntaxKind.LastTypeNode:
+        return emitLastTypeNodeAsType(node, context); 
       default:
         throw new Error(`Unknown TypeNode kind ${SyntaxKind[node.getKind()]}`);
     }
+  }
+
+  // This is a little weird but we will treat it as a string for now untill we run across something different.
+  export function emitLastTypeNodeAsType(node: sast.Node, context: ContextInterface): string {
+    
+    // const source: string[] = [];
+    // addWhitespace(source, node, context);
+    
+    // if (TypeGuards.isLiteralTypeNode(node))
+    // {
+    //   const literal = node.getLiteral();
+    //   source.push(emit(literal, context));
+    // }
+    // endNode(node, context);
+    
+    // return source.join('');
+    return _emitType("string", node, context);
   }
 
   export function emitTypeQuery(node: sast.Node, context: ContextInterface): string {
