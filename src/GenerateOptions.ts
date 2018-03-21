@@ -3,6 +3,7 @@ export interface GenOptionsInterface
     fileList: string[];
     outDir?: string;
     defaultNameSpace: string;
+    isCombineFiles: boolean;
     isCaseChange: boolean;
     isCaseChangeClasses: boolean;
     isCaseChangeInterfaces: boolean;
@@ -23,6 +24,7 @@ export interface GenOptionsInterface
 export class GenOptions implements GenOptionsInterface {
     fileList: string[];
     outDir?: string;
+    isCombineFiles: boolean = false;
     defaultNameSpace: string;
     isCaseChange: boolean = true;
     isCaseChangeClasses: boolean = true;

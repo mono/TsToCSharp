@@ -10,6 +10,7 @@ export function ParseCommandLine() : GenOptionsInterface
     .example("TsToCSharp -o ./ file1.d.ts", "Emit strongly typed C# definition from TypeScript definition file(s)")
     .help("h")
     .alias("h", "help")
+    .describe("combine", "Combine all specified definition files before processing.")
     .describe("defaultNameSpace", "Default name space to be emitted.")
     .describe("emitAllInterfaces", "Emit C# class implementations for all Interfaces and not just those declared.")
     .describe("emitUsings", "Emit default C# using statements.")
@@ -134,6 +135,11 @@ export function ParseCommandLine() : GenOptionsInterface
     if (argv.emitUsings)
     {
         options.isEmitUsings = true;
+    }
+
+    if (argv.combine)
+    {
+        options.isCombineFiles = true;
     }
     
 
