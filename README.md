@@ -2,7 +2,7 @@
 
 Emit C# strongly typed interface code from TypeScript definition files.
 
-This project is intended to read in TypeScript (.d.ts) defintions files and generate as closely as possible a C# strongly typed API.
+This project is intended to read in TypeScript (.d.ts) defintions files and generate as closely as possible a C# strongly typed API for use from either WebAssembly code or .NET hosted in Electron.
 
 ## Current Work
 
