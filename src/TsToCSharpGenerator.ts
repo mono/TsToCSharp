@@ -586,6 +586,14 @@ function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface)
   addTrailingComment(source, node.getFirstChildByKind(SyntaxKind.FirstPunctuation), context );
   addWhitespace(source, node, context);
 
+  // save off our context
+  pushContext(context);
+
+  emitter.emitClassConstructor(source, node, context);
+
+  // now reposition back to the start
+  swapContext(context);
+
   // Emit the constructors of the anonymous symbol
   visitConstructors(source, node, context);
   

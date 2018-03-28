@@ -331,6 +331,32 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
   
     addWhitespace(source, node.getPos(), node, context);
     source.push(emitClassName(node.getNameNode(), context, changeCase));
+    source.push(" : JSObject")
+  }
+
+  export function emitClassConstructor(source: string[], 
+    node: sast.TypeLiteralNode, 
+    context: ContextInterface): void {
+
+      // emit our constructor type which is at the end.
+      const savePrefixInterface = context.genOptions.isPrefixInterface;
+      const saveCaseChangeInterfaces = context.genOptions.isCaseChangeInterfaces;
+      context.genOptions.isPrefixInterface = false;
+      context.genOptions.isCaseChangeInterfaces = false;
+    
+      const parent = node.getParent();
+      if (TypeGuards.isVariableDeclaration(parent))
+      {
+        const parenta = emitClassName(parent.getNameNode(), context, false);
+        // the constructors in this case do not allow modifiers so we will make it public by default
+        source.push("public ", parenta, "  (int handle) : base (handle) {}", os.EOL);
+        
+    
+      }
+      
+      context.genOptions.isCaseChangeInterfaces = saveCaseChangeInterfaces;
+      context.genOptions.isPrefixInterface = savePrefixInterface;
+    
   }
 
   export function emitStringLiteral(node: sast.StringLiteral, context: ContextInterface): string {
@@ -598,7 +624,20 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     {
       if (context.emitImplementation)
       {
-        source.push(" => throw new NotImplementedException();");
+        pushContext(context);
+        const caseChange = context.genOptions.isCaseChange;
+        const prefix = context.genOptions.isPrefixInterface;
+        context.genOptions.isCaseChange = false;
+        context.genOptions.isPrefixInterface = false;
+        
+        const nodeType = emitTypeNode(node.getTypeNode(), context);
+        const propertyName = emitPropertyName(node.getNameNode(), context);
+    
+        context.genOptions.isCaseChange = caseChange;
+        context.genOptions.isPrefixInterface = prefix;
+
+        source.push(" => GetProperty<" + nodeType + ">(\"" + propertyName + "\");");
+        popContext(context);
       }
       else
         source.push(" { get; }");
@@ -607,7 +646,22 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     {
       if (context.emitImplementation)
       {
-        source.push(" { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }");
+
+        pushContext(context);
+        const caseChange = context.genOptions.isCaseChange;
+        const prefix = context.genOptions.isPrefixInterface;
+        context.genOptions.isCaseChange = false;
+        context.genOptions.isPrefixInterface = false;
+        
+        const nodeType = emitTypeNode(node.getTypeNode(), context);
+        const propertyName = emitPropertyName(node.getNameNode(), context);
+    
+        source.push(" { get => GetProperty<" + nodeType + ">(\"" + propertyName + "\"); set => throw new NotImplementedException(); }");
+
+        context.genOptions.isCaseChange = caseChange;
+        context.genOptions.isPrefixInterface = prefix;
+
+        popContext(context);
       }
       else
         source.push(" { get; set; }");
