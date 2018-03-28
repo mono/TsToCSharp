@@ -656,7 +656,7 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
         const nodeType = emitTypeNode(node.getTypeNode(), context);
         const propertyName = emitPropertyName(node.getNameNode(), context);
     
-        source.push(" { get => GetProperty<" + nodeType + ">(\"" + propertyName + "\"); set => throw new NotImplementedException(); }");
+        source.push(" { get => GetProperty<" + nodeType + ">(\"" + propertyName + "\"); set => SetProperty<" + nodeType + ">(\"" + propertyName + "\", value); }");
 
         context.genOptions.isCaseChange = caseChange;
         context.genOptions.isPrefixInterface = prefix;
