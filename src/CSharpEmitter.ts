@@ -681,10 +681,77 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
       const ws = getWhitespace(node, context, true); 
       
       source.push(os.EOL, ws);
-      // addWhitespace(source, node, context);
+      addWhitespace(source, node, context);
       source.push("{");
       source.push(os.EOL, ws);
-      source.push("\t", "throw new NotImplementedException();");
+
+      const caseChange = context.genOptions.isCaseChange;
+      const prefix = context.genOptions.isPrefixInterface;
+      context.genOptions.isCaseChange = false;
+      context.genOptions.isPrefixInterface = false;
+    
+      const returnType = emitTypeNode(node.getReturnTypeNode(), context);
+      const name = emitMethodName(node.getNameNode(), context);
+      // source.push("\t", "throw new NotImplementedException();");
+      if (returnType !== "void")
+      {
+        source.push("\t", "return InvokeMethod<" + returnType + ">(\"" + name + "\"");
+      }
+      else
+      {
+        source.push("\t", "InvokeMethod<object>(\"" + name + "\"");
+      }
+
+      const parmList = node.getParameters();
+
+      let n = node.getParameters().length;
+  
+      if (n > 0)
+      {
+        source.push(", ");
+        for (let p = 0; p < n; p++)
+        {
+          const parmDecl = parmList[p];
+          // We have to take into account that the type follows the name
+          // let's push the parameter name node offset so spacing will be ok.
+          // The comma separator will mess the spacing up with whitespace
+          context.offset = parmDecl.getStart();
+          pushContext(context);
+
+    // // First check if it is a rest parameter
+    // if (parmDecl.isRestParameter())
+    // {
+    //   // emit our parameter type which is at the end.
+    //   source.push(emitRestParameter(parmDecl.getTypeNode(), context));
+
+    // }
+    // else
+    // {
+    //   // emit our parameter type which is at the end.
+    //   source.push(visitTypeNode(node.getTypeNode(), context));
+    // }
+    // // let's also put a spacer in there
+    // source.push(" ");
+
+    // // now reposition back to the start
+    // swapContext(context);
+
+        source.push(emitParameterName(parmDecl.getNameNode(), context));
+
+        // now reposition back to the start
+        popContext(context);
+
+            if (p < n - 1)
+            {
+              source.push(", ");
+            }
+        }
+      }
+  
+      source.push(");")
+      context.genOptions.isCaseChange = caseChange;
+      context.genOptions.isPrefixInterface = prefix;
+
       source.push(os.EOL, ws);
       source.push("}");
       popContext(context);
