@@ -497,7 +497,6 @@ export function emitUsings(source: string[], context: ContextInterface): void {
   if (context.genOptions.isEmitUsings)
   {
       source.push("using System;",os.EOL);
-      source.push("using System.ComponentModel.Composition;",os.EOL);
       source.push("using Mono.WebAssembly;",os.EOL, os.EOL);
   }
 
