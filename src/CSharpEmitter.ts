@@ -348,8 +348,8 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
       if (TypeGuards.isVariableDeclaration(parent))
       {
         const parenta = emitClassName(parent.getNameNode(), context, false);
-        // the constructors in this case do not allow modifiers so we will make it public by default
-        source.push("public ", parenta, "  (int handle) : base (handle) {}", os.EOL);
+        // the constructors in this case do not allow modifiers so we will make this internal by default
+        source.push("internal ", parenta, "  (int handle) : base (handle) {}", os.EOL);
         
     
       }
