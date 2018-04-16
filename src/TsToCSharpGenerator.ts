@@ -597,6 +597,8 @@ function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface)
   // Emit the constructors of the anonymous symbol
   visitConstructors(source, node, context);
   
+  addTrailingComment(source, context.offset, node, context);
+
   // Tell the emitter that we will be emitting implementations
   context.emitImplementation = true;
 
@@ -672,7 +674,6 @@ function visitTypeLiteral(node: sast.TypeLiteralNode, context: ContextInterface)
   for (const method of methodsBag.values()) {
 
     pushContext(context);
-    
     context.offset = method.getPos();
     source.push(visit(method, context));
     addTrailingComment(source, context.offset, node, context);

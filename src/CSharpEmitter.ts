@@ -69,6 +69,8 @@ const ValueTypeTextMap = [
         return emitTypeQuery(node, context); 
       case SyntaxKind.LastTypeNode:
         return emitLastTypeNodeAsType(node, context); 
+      case SyntaxKind.TypeLiteral:
+        return emitTypeLiteral(node, context);        
       default:
         throw new Error(`Unknown TypeNode kind ${SyntaxKind[node.getKind()]}`);
     }
@@ -90,6 +92,34 @@ const ValueTypeTextMap = [
     // return source.join('');
     return _emitType("string", node, context);
   }
+
+  // This needs some more analysis but for now we will just output an object type
+  export function emitTypeLiteral(node: sast.Node, context: ContextInterface): string {
+    const source: string[] = [];
+    // addTrailingComment(source, context.offset, node, context);
+    // addWhitespace(source, context.offset, node, context);
+
+    // if (TypeGuards.isTypeLiteralNode(node))
+    // {
+    //   emitStatic(source, "{", node, context);
+
+    //   const members = node.getMembers();
+    //   for (let i = 0, n = members.length; i < n; i++) {
+    //     addWhitespace(source, node, context);
+    //     source.push(emit(members[i],context));
+    //     addLeadingComment(source, context.offset, node, context);
+    //   }
+
+    //   emitStatic(source, "}", node, context);
+
+    // }
+    
+    //endNode(node, context);
+    //source.push("object");
+    return _emitType("object", node, context);
+    //return source.join('');
+
+  }  
 
   export function emitTypeQuery(node: sast.Node, context: ContextInterface): string {
     const source: string[] = [];
