@@ -8,22 +8,23 @@ interface EventTarget {
 }
 
 [Export("EventTarget", typeof(Mono.WebAssembly.JSObject))]
-public sealed class EventTarget {
-    
+public sealed class EventTarget : JSObject {
+    internal EventTarget  (int handle) : base (handle) {}
+
     public EventTarget () { }
     [Export("addEventListener")]
      void addEventListener(string type, DOMEventHandler listener, object options)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("addEventListener", type, listener, options);
     }
     [Export("dispatchEvent")]
      bool dispatchEvent(Event evt)
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<bool>("dispatchEvent", evt);
     }
     [Export("removeEventListener")]
      void removeEventListener(string type, DOMEventHandler listener, object options)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("removeEventListener", type, listener, options);
     }
 }

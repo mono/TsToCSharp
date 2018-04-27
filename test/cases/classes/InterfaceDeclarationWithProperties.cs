@@ -2,15 +2,16 @@ public interface IPerformanceNavigation {
 }
 
 [Export("PerformanceNavigation", typeof(Mono.WebAssembly.JSObject))]
-public sealed class PerformanceNavigation {
-    
+public sealed class PerformanceNavigation : JSObject {
+    internal PerformanceNavigation  (int handle) : base (handle) {}
+
     public PerformanceNavigation () { }
     [Export("TYPE_BACK_FORWARD")]
-    public double TypeBackForward => throw new NotImplementedException();
+    public double TypeBackForward => GetProperty<double>("TYPE_BACK_FORWARD");
     [Export("TYPE_NAVIGATE")]
-    public double TypeNavigate => throw new NotImplementedException();
+    public double TypeNavigate => GetProperty<double>("TYPE_NAVIGATE");
     [Export("TYPE_RELOAD")]
-    public double TypeReload => throw new NotImplementedException();
+    public double TypeReload => GetProperty<double>("TYPE_RELOAD");
     [Export("TYPE_RESERVED")]
-    public double TypeReserved => throw new NotImplementedException();
+    public double TypeReserved => GetProperty<double>("TYPE_RESERVED");
 }

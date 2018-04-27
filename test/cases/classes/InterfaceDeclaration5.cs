@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel.Composition;
 using Mono.WebAssembly;
 
 namespace Hello.World 
@@ -35,47 +34,48 @@ public interface IURL {
 }
 
 [Export("URL", typeof(Mono.WebAssembly.JSObject))]
-public sealed class Url {
-    
+public sealed class Url : JSObject {
+    internal URL  (int handle) : base (handle) {}
+
     public URL (string url, object base) { }
     [Export("hash")]
-    public string Hash { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Hash { get => GetProperty<string>("hash"); set => SetProperty<string>("hash", value); }
     [Export("host")]
-    public string Host { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Host { get => GetProperty<string>("host"); set => SetProperty<string>("host", value); }
     [Export("hostname")]
-    public string Hostname { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Hostname { get => GetProperty<string>("hostname"); set => SetProperty<string>("hostname", value); }
     [Export("href")]
-    public string Href { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Href { get => GetProperty<string>("href"); set => SetProperty<string>("href", value); }
     [Export("origin")]
-    public string Origin => throw new NotImplementedException();
+    public string Origin => GetProperty<string>("origin");
     [Export("password")]
-    public string Password { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Password { get => GetProperty<string>("password"); set => SetProperty<string>("password", value); }
     [Export("pathname")]
-    public string Pathname { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Pathname { get => GetProperty<string>("pathname"); set => SetProperty<string>("pathname", value); }
     [Export("port")]
-    public string Port { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Port { get => GetProperty<string>("port"); set => SetProperty<string>("port", value); }
     [Export("protocol")]
-    public string Protocol { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Protocol { get => GetProperty<string>("protocol"); set => SetProperty<string>("protocol", value); }
     [Export("search")]
-    public string Search { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Search { get => GetProperty<string>("search"); set => SetProperty<string>("search", value); }
     [Export("username")]
-    public string Username { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public string Username { get => GetProperty<string>("username"); set => SetProperty<string>("username", value); }
     [Export("searchParams")]
-    public IURLSearchParams SearchParams => throw new NotImplementedException();
+    public IURLSearchParams SearchParams => GetProperty<URLSearchParams>("searchParams");
     [Export("createObjectURL")]
     public string CreateObjectUrl(Object object, ObjectURLOptions options)
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<string>("createObjectURL", object, options);
     }
     [Export("revokeObjectURL")]
     public void RevokeObjectUrl(string url)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("revokeObjectURL", url);
     }
     [Export("toString")]
     public string ToString()
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<string>("toString");
     }
 }
 
@@ -113,8 +113,9 @@ public interface IURLSearchParams {
 }
 
 [Export("URLSearchParams", typeof(Mono.WebAssembly.JSObject))]
-public sealed class UrlSearchParams {
-    
+public sealed class UrlSearchParams : JSObject {
+    internal URLSearchParams  (int handle) : base (handle) {}
+
     /**
      * Constructor returning a URLSearchParams object.
      */
@@ -125,7 +126,7 @@ public sealed class UrlSearchParams {
     [Export("append")]
     public void Append(string name, string value)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("append", name, value);
     }
     /**
      * Deletes the given search parameter, and its associated value, from the list of all search parameters.
@@ -133,7 +134,7 @@ public sealed class UrlSearchParams {
     [Export("delete")]
     public void Delete(string name)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("delete", name);
     }
     /**
      * Returns the first value associated to the given search parameter.
@@ -141,7 +142,10 @@ public sealed class UrlSearchParams {
     [Export("get")]
     public string Get(string name)
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod</**
+     * Returns the first value associated to the given search parameter.
+     */
+    string>("get", name);
     }
     /**
      * Returns all the values association with a given search parameter.
@@ -149,7 +153,7 @@ public sealed class UrlSearchParams {
     [Export("getAll")]
     public string[] GetAll(string name)
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<string[]>("getAll", name);
     }
     /**
      * Returns a Boolean indicating if such a search parameter exists.
@@ -157,7 +161,7 @@ public sealed class UrlSearchParams {
     [Export("has")]
     public bool Has(string name)
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<bool>("has", name);
     }
     /**
      * Sets the value associated to a given search parameter to the given value. If there were several values, delete the others.
@@ -165,7 +169,7 @@ public sealed class UrlSearchParams {
     [Export("set")]
     public void Set(string name, string value)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("set", name, value);
     }
 }
 
@@ -183,27 +187,28 @@ public interface IBlob {
 }
 
 [Export("Blob", typeof(Mono.WebAssembly.JSObject))]
-public sealed class Blob {
-    
+public sealed class Blob : JSObject {
+    internal Blob  (int handle) : base (handle) {}
+
     public Blob (Object[] blobParts, IBlobPropertyBag options) { }
     [Export("size")]
-    public double Size => throw new NotImplementedException();
+    public double Size => GetProperty<double>("size");
     [Export("type")]
-    public string Type => throw new NotImplementedException();
+    public string Type => GetProperty<string>("type");
     [Export("msClose")]
     public void MsClose()
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("msClose");
     }
     [Export("msDetachStream")]
     public Object MsDetachStream()
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<Object>("msDetachStream");
     }
     [Export("slice")]
     public IBlob Slice(double start, double end, string contentType)
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<Blob>("slice", start, end, contentType);
     }
 }
 
@@ -225,15 +230,16 @@ public interface IWindow
 }
 
 [Export("Window", typeof(Mono.WebAssembly.JSObject))]
-public sealed class Window {
-    
+public sealed class Window : JSObject {
+    internal Window  (int handle) : base (handle) {}
+
     public Window () { }
     [Export("IURL")]
-    public   IURL Url { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public   IURL Url { get => GetProperty<  URL>("URL"); set => SetProperty<  URL>("URL", value); }
     [Export("IURLSearchParams")]
-    public   IURLSearchParams UrlSearchParams { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public   IURLSearchParams UrlSearchParams { get => GetProperty<  URLSearchParams>("URLSearchParams"); set => SetProperty<  URLSearchParams>("URLSearchParams", value); }
     [Export("IBlob")]
-    public   IBlob IBlob { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public   IBlob IBlob { get => GetProperty<  Blob>("Blob"); set => SetProperty<  Blob>("Blob", value); }
 }
 
 }

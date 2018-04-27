@@ -7,15 +7,16 @@ public interface IFileList {
 }
 
 [Export("FileList", typeof(Mono.WebAssembly.JSObject))]
-public sealed class FileList {
-    
+public sealed class FileList : JSObject {
+    internal FileList  (int handle) : base (handle) {}
+
     public FileList () { }
     [Export("length")]
-    public double Length => throw new NotImplementedException();
+    public double Length => GetProperty<double>("length");
     [Export("item")]
     public File Item(double index)
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<File>("item", index);
     }
     public File this[double index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 }

@@ -12,27 +12,28 @@ public interface IAudioListener {
 }
 
 [Export("AudioListener", typeof(Mono.WebAssembly.JSObject))]
-public sealed class AudioListener
+public sealed class AudioListener : JSObject
 {
-    
+    internal AudioListener  (int handle) : base (handle) {}
+
     public AudioListener () { }
     [Export("dopplerFactor")]
-    public double DopplerFactor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public double DopplerFactor { get => GetProperty<double>("dopplerFactor"); set => SetProperty<double>("dopplerFactor", value); }
     [Export("speedOfSound")]
-    public double SpeedOfSound { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public double SpeedOfSound { get => GetProperty<double>("speedOfSound"); set => SetProperty<double>("speedOfSound", value); }
     [Export("setOrientation")]
     public void SetOrientation(double x, double y, double z, double xUp, double yUp, double zUp)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("setOrientation", x, y, z, xUp, yUp, zUp);
     }
     [Export("setPosition")]
     public void SetPosition(double x, double y, double z)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("setPosition", x, y, z);
     }
     [Export("setVelocity")]
     public void SetVelocity(double x, double y, double z)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("setVelocity", x, y, z);
     }
 }

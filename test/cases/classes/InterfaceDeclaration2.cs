@@ -14,80 +14,81 @@ public interface IErrorEvent :  IEvent {
 }
 
 [Export("ErrorEvent", typeof(Mono.WebAssembly.JSObject))]
-public sealed class ErrorEvent {
-    
+public sealed class ErrorEvent : JSObject {
+    internal ErrorEvent  (int handle) : base (handle) {}
+
     public ErrorEvent (string type, ErrorEventInit errorEventInitDict) { }
     [Export("colno")]
-    public double Colno => throw new NotImplementedException();
+    public double Colno => GetProperty<double>("colno");
     [Export("error")]
-    public Object Error => throw new NotImplementedException();
+    public Object Error => GetProperty<Object>("error");
     [Export("filename")]
-    public string Filename => throw new NotImplementedException();
+    public string Filename => GetProperty<string>("filename");
     [Export("lineno")]
-    public double Lineno => throw new NotImplementedException();
+    public double Lineno => GetProperty<double>("lineno");
     [Export("message")]
-    public string Message => throw new NotImplementedException();
+    public string Message => GetProperty<string>("message");
     [Export("bubbles")]
-    public bool Bubbles => throw new NotImplementedException();
+    public bool Bubbles => GetProperty<bool>("bubbles");
     [Export("cancelable")]
-    public bool Cancelable => throw new NotImplementedException();
+    public bool Cancelable => GetProperty<bool>("cancelable");
     [Export("cancelBubble")]
-    public bool CancelBubble { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public bool CancelBubble { get => GetProperty<bool>("cancelBubble"); set => SetProperty<bool>("cancelBubble", value); }
     [Export("currentTarget")]
-    public EventTarget CurrentTarget => throw new NotImplementedException();
+    public EventTarget CurrentTarget => GetProperty<EventTarget>("currentTarget");
     [Export("defaultPrevented")]
-    public bool DefaultPrevented => throw new NotImplementedException();
+    public bool DefaultPrevented => GetProperty<bool>("defaultPrevented");
     [Export("eventPhase")]
-    public double EventPhase => throw new NotImplementedException();
+    public double EventPhase => GetProperty<double>("eventPhase");
     [Export("isTrusted")]
-    public bool IsTrusted => throw new NotImplementedException();
+    public bool IsTrusted => GetProperty<bool>("isTrusted");
     [Export("returnValue")]
-    public bool ReturnValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public bool ReturnValue { get => GetProperty<bool>("returnValue"); set => SetProperty<bool>("returnValue", value); }
     [Export("srcElement")]
-    public Element SrcElement => throw new NotImplementedException();
+    public Element SrcElement => GetProperty<Element>("srcElement");
     [Export("target")]
-    public EventTarget Target => throw new NotImplementedException();
+    public EventTarget Target => GetProperty<EventTarget>("target");
     [Export("timeStamp")]
-    public double TimeStamp => throw new NotImplementedException();
+    public double TimeStamp => GetProperty<double>("timeStamp");
     [Export("type")]
-    public string Type => throw new NotImplementedException();
+    public string Type => GetProperty<string>("type");
     [Export("scoped")]
-    public bool Scoped => throw new NotImplementedException();
+    public bool Scoped => GetProperty<bool>("scoped");
     [Export("AT_TARGET")]
-    public double AtTarget => throw new NotImplementedException();
+    public double AtTarget => GetProperty<double>("AT_TARGET");
     [Export("BUBBLING_PHASE")]
-    public double BubblingPhase => throw new NotImplementedException();
+    public double BubblingPhase => GetProperty<double>("BUBBLING_PHASE");
     [Export("CAPTURING_PHASE")]
-    public double CapturingPhase => throw new NotImplementedException();
+    public double CapturingPhase => GetProperty<double>("CAPTURING_PHASE");
     [Export("initErrorEvent")]
     public void InitErrorEvent(string typeArg, bool canBubbleArg, bool cancelableArg, string messageArg, string filenameArg, double linenoArg)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("initErrorEvent", typeArg, canBubbleArg, cancelableArg, messageArg, filenameArg, linenoArg);
     }
     [Export("initEvent")]
     public void InitEvent(string eventTypeArg, bool canBubbleArg, bool cancelableArg)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("initEvent", eventTypeArg, canBubbleArg, cancelableArg);
     }
     [Export("preventDefault")]
     public void PreventDefault()
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("preventDefault");
     }
     [Export("stopImmediatePropagation")]
     public void StopImmediatePropagation()
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("stopImmediatePropagation");
     }
     [Export("stopPropagation")]
     public void StopPropagation()
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("stopPropagation");
     }
     [Export("deepPath")]
     public EventTarget[] DeepPath()
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<EventTarget[]>("deepPath");
     }
 }
 
@@ -137,64 +138,65 @@ public interface IEvent {
 }
 
 [Export("Event", typeof(Mono.WebAssembly.JSObject))]
-public sealed class Event {
-    
+public sealed class Event : JSObject {
+    internal Event  (int handle) : base (handle) {}
+
     public Event (string typeArg, EventInit eventInitDict) { }
     [Export("AT_TARGET")]
-    public double AtTarget => throw new NotImplementedException();
+    public double AtTarget => GetProperty<double>("AT_TARGET");
     [Export("BUBBLING_PHASE")]
-    public double BubblingPhase => throw new NotImplementedException();
+    public double BubblingPhase => GetProperty<double>("BUBBLING_PHASE");
     [Export("CAPTURING_PHASE")]
-    public double CapturingPhase => throw new NotImplementedException();
+    public double CapturingPhase => GetProperty<double>("CAPTURING_PHASE");
     [Export("bubbles")]
-    public bool Bubbles => throw new NotImplementedException();
+    public bool Bubbles => GetProperty<bool>("bubbles");
     [Export("cancelable")]
-    public bool Cancelable => throw new NotImplementedException();
+    public bool Cancelable => GetProperty<bool>("cancelable");
     [Export("cancelBubble")]
-    public bool CancelBubble { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public bool CancelBubble { get => GetProperty<bool>("cancelBubble"); set => SetProperty<bool>("cancelBubble", value); }
     [Export("currentTarget")]
-    public EventTarget CurrentTarget => throw new NotImplementedException();
+    public EventTarget CurrentTarget => GetProperty<EventTarget>("currentTarget");
     [Export("defaultPrevented")]
-    public bool DefaultPrevented => throw new NotImplementedException();
+    public bool DefaultPrevented => GetProperty<bool>("defaultPrevented");
     [Export("eventPhase")]
-    public double EventPhase => throw new NotImplementedException();
+    public double EventPhase => GetProperty<double>("eventPhase");
     [Export("isTrusted")]
-    public bool IsTrusted => throw new NotImplementedException();
+    public bool IsTrusted => GetProperty<bool>("isTrusted");
     [Export("returnValue")]
-    public bool ReturnValue { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public bool ReturnValue { get => GetProperty<bool>("returnValue"); set => SetProperty<bool>("returnValue", value); }
     [Export("srcElement")]
-    public Element SrcElement => throw new NotImplementedException();
+    public Element SrcElement => GetProperty<Element>("srcElement");
     [Export("target")]
-    public EventTarget Target => throw new NotImplementedException();
+    public EventTarget Target => GetProperty<EventTarget>("target");
     [Export("timeStamp")]
-    public double TimeStamp => throw new NotImplementedException();
+    public double TimeStamp => GetProperty<double>("timeStamp");
     [Export("type")]
-    public string Type => throw new NotImplementedException();
+    public string Type => GetProperty<string>("type");
     [Export("scoped")]
-    public bool Scoped => throw new NotImplementedException();
+    public bool Scoped => GetProperty<bool>("scoped");
     [Export("initEvent")]
     public void InitEvent(string eventTypeArg, bool canBubbleArg, bool cancelableArg)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("initEvent", eventTypeArg, canBubbleArg, cancelableArg);
     }
     [Export("preventDefault")]
     public void PreventDefault()
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("preventDefault");
     }
     [Export("stopImmediatePropagation")]
     public void StopImmediatePropagation()
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("stopImmediatePropagation");
     }
     [Export("stopPropagation")]
     public void StopPropagation()
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("stopPropagation");
     }
     [Export("deepPath")]
     public EventTarget[] DeepPath()
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<EventTarget[]>("deepPath");
     }
 }

@@ -25,23 +25,24 @@ public interface IEventTarget {
 }
 
 [Export("EventTarget", typeof(Mono.WebAssembly.JSObject))]
-public sealed class EventTarget {
-    
+public sealed class EventTarget : JSObject {
+    internal EventTarget  (int handle) : base (handle) {}
+
     public EventTarget () { }
     [Export("addEventListener")]
     public void AddEventListener(string type, DOMEventHandler listener, object options)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("addEventListener", type, listener, options);
     }
     [Export("dispatchEvent")]
     public bool DispatchEvent(Event evt)
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<bool>("dispatchEvent", evt);
     }
     [Export("removeEventListener")]
     public void RemoveEventListener(string type, DOMEventHandler listener, object options)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("removeEventListener", type, listener, options);
     }
 }
 
@@ -137,8 +138,9 @@ public interface IWindow :  IEventTarget,  IGlobalEventHandlers {
 }
 
 [Export("Window", typeof(Mono.WebAssembly.JSObject))]
-public sealed class Window {
-    
+public sealed class Window : JSObject {
+    internal Window  (int handle) : base (handle) {}
+
     public Window () { }
 
     public event DOMEventHandler OnAbort
@@ -619,16 +621,16 @@ public sealed class Window {
     [Export("addEventListener")]
     public void AddEventListener(string type, DOMEventHandler listener, object options)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("addEventListener", type, listener, options);
     }
     [Export("dispatchEvent")]
     public bool DispatchEvent(Event evt)
     {
-    	throw new NotImplementedException();
+    	return InvokeMethod<bool>("dispatchEvent", evt);
     }
     [Export("removeEventListener")]
     public void RemoveEventListener(string type, DOMEventHandler listener, object options)
     {
-    	throw new NotImplementedException();
+    	InvokeMethod<object>("removeEventListener", type, listener, options);
     }
 }
