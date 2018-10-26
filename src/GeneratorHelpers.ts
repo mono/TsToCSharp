@@ -185,7 +185,7 @@ export function generateExportForInterfaceDeclaration(node: sast.VariableDeclara
   const exportClass = node.getName();
   popContext(context);
 
-  source.push("[Export(\"",exportClass.trim(),"\", typeof(Mono.WebAssembly.JSObject))]",os.EOL);
+  source.push("[Export(\"",exportClass.trim(),"\", typeof(JSObject))]",os.EOL);
   
 
   var len = source.length;
@@ -497,7 +497,7 @@ export function emitUsings(source: string[], context: ContextInterface): void {
   if (context.genOptions.isEmitUsings)
   {
       source.push("using System;",os.EOL);
-      source.push("using Mono.WebAssembly;",os.EOL, os.EOL);
+      source.push("using WebAssembly;",os.EOL, os.EOL);
   }
 
 }
