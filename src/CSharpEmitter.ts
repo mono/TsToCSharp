@@ -473,9 +473,45 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
       }
     }
 
-    source.push(typeRefLiteral);
+    source.push(emitTypeRefLiteral(typeRefLiteral));
     endNode(node, context);
     return source.join('');
+  }
+
+
+// Int8Array 		| int8_t	| byte or SByte (signed byte)
+// Uint8Array		| uint8_t	| byte or Byte (unsigned byte)
+// Uint8ClampedArray| uint8_t	| byte or Byte (unsigned byte)
+// Int16Array		| int16_t	| short (signed short)
+// Uint16Array		| uint16_t	| ushort (unsigned short)
+// Int32Array		| int32_t	| int (signed integer)
+// Uint32Array		| uint32_t	| uint (unsigned integer)
+// Float32Array		| float		| float
+// Float64Array		| double	| double
+  function emitTypeRefLiteral(literal: string ): string
+  {
+      switch (literal)
+      {
+        case 'Int8Array':
+          return 'sbyte[]';
+        case 'Uint8Array':
+        case 'Uint8ClampedArray':
+          return 'byte[]';
+        case 'Int16Array':
+          return 'short[]';
+        case 'UInt16Array':
+          return 'ushort[]';
+        case 'Int32Array':
+          return 'int[]';
+        case 'UInt32Array':
+          return 'uint[]';
+        case 'Float32Array':
+          return 'float[]';
+        case 'Float64Array':
+          return 'double[]';
+        default:
+          return literal;
+      }
   }
 
   export function emitRestParameter(node: sast.Node, context: ContextInterface): string {
