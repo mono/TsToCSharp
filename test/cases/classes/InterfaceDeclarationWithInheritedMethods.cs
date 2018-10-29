@@ -7,7 +7,7 @@ public interface IAudioListener {
     void SetVelocity(double x, double y, double z);
 }
 
-[Export("AudioListener", typeof(Mono.WebAssembly.JSObject))]
+[Export("AudioListener", typeof(JSObject))]
 public sealed class AudioListener : JSObject
 {
     internal AudioListener  (int handle) : base (handle) {}

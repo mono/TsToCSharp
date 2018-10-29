@@ -1,7 +1,7 @@
 public interface IPerformanceNavigation {
 }
 
-[Export("PerformanceNavigation", typeof(Mono.WebAssembly.JSObject))]
+[Export("PerformanceNavigation", typeof(JSObject))]
 public sealed class PerformanceNavigation : JSObject {
     internal PerformanceNavigation  (int handle) : base (handle) {}
 

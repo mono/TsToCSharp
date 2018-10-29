@@ -7,7 +7,7 @@ interface EventTarget {
     void removeEventListener(string type, DOMEventHandler listener, object options);
 }
 
-[Export("EventTarget", typeof(Mono.WebAssembly.JSObject))]
+[Export("EventTarget", typeof(JSObject))]
 public sealed class EventTarget : JSObject {
     internal EventTarget  (int handle) : base (handle) {}
 

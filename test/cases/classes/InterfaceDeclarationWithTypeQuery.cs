@@ -28,7 +28,7 @@ public interface IURL {
     string ToString();
 }
 
-[Export("URL", typeof(Mono.WebAssembly.JSObject))]
+[Export("URL", typeof(JSObject))]
 public sealed class Url : JSObject {
     internal URL  (int handle) : base (handle) {}
 
@@ -107,7 +107,7 @@ public interface IURLSearchParams {
     void Set(string name, string value);
 }
 
-[Export("URLSearchParams", typeof(Mono.WebAssembly.JSObject))]
+[Export("URLSearchParams", typeof(JSObject))]
 public sealed class UrlSearchParams : JSObject {
     internal URLSearchParams  (int handle) : base (handle) {}
 
@@ -181,7 +181,7 @@ public interface IBlob {
     IBlob Slice(double start, double end, string contentType);
 }
 
-[Export("Blob", typeof(Mono.WebAssembly.JSObject))]
+[Export("Blob", typeof(JSObject))]
 public sealed class Blob : JSObject {
     internal Blob  (int handle) : base (handle) {}
 
@@ -224,7 +224,7 @@ public interface IWindow
       IBlob IBlob { get; set; }
 }
 
-[Export("Window", typeof(Mono.WebAssembly.JSObject))]
+[Export("Window", typeof(JSObject))]
 public sealed class Window : JSObject {
     internal Window  (int handle) : base (handle) {}
 

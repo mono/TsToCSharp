@@ -2,7 +2,7 @@
     }   // Trailing comment of interface defintion.
 
     // This is a leading comment
-    [Export("AudioListener", typeof(Mono.WebAssembly.JSObject))]
+    [Export("AudioListener", typeof(JSObject))]
     public sealed class AudioListener : JSObject
     { // Here is another comment
 

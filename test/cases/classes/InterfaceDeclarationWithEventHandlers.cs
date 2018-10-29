@@ -24,7 +24,7 @@ public interface IEventTarget {
     void RemoveEventListener(string type, DOMEventHandler listener, object options);
 }
 
-[Export("EventTarget", typeof(Mono.WebAssembly.JSObject))]
+[Export("EventTarget", typeof(JSObject))]
 public sealed class EventTarget : JSObject {
     internal EventTarget  (int handle) : base (handle) {}
 
@@ -137,7 +137,7 @@ public interface IWindow :  IEventTarget,  IGlobalEventHandlers {
 
 }
 
-[Export("Window", typeof(Mono.WebAssembly.JSObject))]
+[Export("Window", typeof(JSObject))]
 public sealed class Window : JSObject {
     internal Window  (int handle) : base (handle) {}
 

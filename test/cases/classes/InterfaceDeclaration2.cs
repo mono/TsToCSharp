@@ -13,7 +13,7 @@ public interface IErrorEvent :  IEvent {
     void InitErrorEvent(string typeArg, bool canBubbleArg, bool cancelableArg, string messageArg, string filenameArg, double linenoArg);
 }
 
-[Export("ErrorEvent", typeof(Mono.WebAssembly.JSObject))]
+[Export("ErrorEvent", typeof(JSObject))]
 public sealed class ErrorEvent : JSObject {
     internal ErrorEvent  (int handle) : base (handle) {}
 
@@ -137,7 +137,7 @@ public interface IEvent {
     double CapturingPhase { get; }
 }
 
-[Export("Event", typeof(Mono.WebAssembly.JSObject))]
+[Export("Event", typeof(JSObject))]
 public sealed class Event : JSObject {
     internal Event  (int handle) : base (handle) {}
 

@@ -6,7 +6,7 @@ public interface IFileList {
     File this[double index] { get; set; }
 }
 
-[Export("FileList", typeof(Mono.WebAssembly.JSObject))]
+[Export("FileList", typeof(JSObject))]
 public sealed class FileList : JSObject {
     internal FileList  (int handle) : base (handle) {}
 
