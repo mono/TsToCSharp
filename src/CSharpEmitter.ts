@@ -69,7 +69,7 @@ const ValueTypeTextMap = [
         return emitTypeQuery(node, context); 
       case SyntaxKind.LastTypeNode:
         return emitLastTypeNodeAsType(node, context); 
-      case SyntaxKind.TypeLiteral:
+      case SyntaxKind.LiteralType:
         return emitTypeLiteral(node, context);        
       default:
         throw new Error(`Unknown TypeNode kind ${SyntaxKind[node.getKind()]}`);
@@ -116,7 +116,7 @@ const ValueTypeTextMap = [
     
     //endNode(node, context);
     //source.push("object");
-    return _emitType("object", node, context);
+    return _emitType("string", node, context);
     //return source.join('');
 
   }  
