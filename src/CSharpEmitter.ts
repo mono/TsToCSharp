@@ -333,7 +333,7 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     return source.join('');
   }
 
-  export function emitClassName(node: sast.Identifier, context: ContextInterface, changeCase?: boolean): string {
+  export function emitClassName(node: sast.BindingName, context: ContextInterface, changeCase?: boolean): string {
 
     const source: string[] = [];
     addLeadingComment(source, node, context);
