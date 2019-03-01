@@ -513,13 +513,13 @@ function visitVariableStatement(node: sast.VariableStatement, context: ContextIn
 
 function visitVariableDeclarationList(source: string[], node: sast.VariableDeclarationList, context: ContextInterface) : void {
 
-  switch(node.getDeclarationTypeKeyword().getKind())
+  switch(node.getDeclarationKindKeyword().getKind())
   {
     case SyntaxKind.VarKeyword:
       visitVariableDeclarations(source, node, context);
       break;
     default:
-      context.diagnostics.pushErrorAtLoc("Declaration type " + node.getDeclarationTypeKeyword().getKindName() + " is not yet supported", node);
+      context.diagnostics.pushErrorAtLoc("Declaration type " + node.getDeclarationKindKeyword().getKindName() + " is not yet supported", node);
 
   }
 }

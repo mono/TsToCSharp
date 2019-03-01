@@ -43,7 +43,7 @@ class Startup {
                 const ast = CreateAST();
                 
                 console.log('Resolving File: ' + fileName + ' => ' + path.resolve(fileName));
-                const sf = ast.addSourceFileIfExists(path.resolve(fileName));
+                const sf = ast.addExistingSourceFileIfExists(path.resolve(fileName));
                 const sfs = ast.getSourceFiles();
                 const context = new Context(genOptions);
                 
@@ -95,7 +95,7 @@ class Startup {
             console.log('Combining files: ' + virtualFile);
             vfs.writeFileSync(virtualFile, virtualSource);
             
-            ast.addSourceFileIfExists(virtualFile);
+            ast.addExistingSourceFileIfExists(virtualFile);
 
             const sfs = ast.getSourceFiles();
             const context = new Context(genOptions);

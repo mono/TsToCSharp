@@ -135,7 +135,7 @@ describe("TsToCSharpGenerator", () => {
                     const ast = CreateAST();
 
                     //console.log("Adding Source File: " + path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
-                    ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+                    ast.addExistingSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
                     const sourceFiles = ast.getSourceFiles();
                     const context = new Context(new TestGenOptions());
@@ -222,7 +222,7 @@ describe("TsToCSharpGenerator", function () {
                     const ast = CreateAST();
 
                     //console.log("Adding Source File: " + path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
-                    ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+                    ast.addExistingSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
                     const sourceFiles = ast.getSourceFiles();
                     const context = new Context(genOptions);
@@ -254,7 +254,7 @@ describe("TsToCSharpGenerator", () => {
             
             const ast = CreateAST();
 
-            ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+            ast.addExistingSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
 
             const sourceFiles = ast.getSourceFiles();
             const context = new Context(new TestGenOptions());
@@ -269,7 +269,7 @@ describe("TsToCSharpGenerator", () => {
 
             const ast = CreateAST();
 
-            ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+            ast.addExistingSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
 
             const sourceFiles = ast.getSourceFiles();
             const context = new Context(new TestClassGenOptions());

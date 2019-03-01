@@ -635,16 +635,16 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
       if (typeof typeParameters !== 'undefined' && typeParameters.length > 0)
       {
         for (let i = 0, n = typeParameters.length; i < n; i++) {
-          if (typeof typeParameters[i].getConstraintNode() !== 'undefined')
+          if (typeof typeParameters[i].getConstraint() !== 'undefined')
           {
             source.push(' where ');
             source.push(emit(typeParameters[i], context));
             source.push(' : ');
-            source.push(emitTypeNode(typeParameters[i].getConstraintNode(), context));
+            source.push(emitTypeNode(typeParameters[i].getConstraint(), context));
           }
-          if (typeof typeParameters[i].getDefaultNode() !== 'undefined')
+          if (typeof typeParameters[i].getDefault() !== 'undefined')
           {
-            context.diagnostics.pushWarningAtLoc("C# does not support default generic types", typeParameters[i].getDefaultNode() );
+            context.diagnostics.pushWarningAtLoc("C# does not support default generic types", typeParameters[i].getDefault() );
           }
         }        
 
