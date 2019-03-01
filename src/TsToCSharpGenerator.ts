@@ -158,7 +158,7 @@ function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: Cont
 
   source.push(visitTypeNode(node.getKeyTypeNode(), context));
   source.push(" ");
-  source.push(emitter.emitParameterName(node.getKeyNameNode(), context));
+  source.push(emitter.emitParameterName(node.getKeyNameNode() as sast.Identifier, context));
 
   emitStatic(source, ']', node, context);
 
