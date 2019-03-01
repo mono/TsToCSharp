@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import * as fs from "fs";
-import Ast, {ts, ScriptTarget, getCompilerOptionsFromTsConfig, ModuleResolutionKind, ModuleKind} from "ts-morph";
+import Ast, {ts, ScriptTarget, getCompilerOptionsFromTsConfig, ModuleResolutionKind} from "ts-morph";
 import * as path from "path";
 import * as os from "os";
 
@@ -19,7 +19,7 @@ function CreateAST(useVirtualFileSystem? : boolean) : Ast
     const ast = new Ast({
         compilerOptions: {
             target: ScriptTarget.ESNext,
-            module: ModuleKind.CommonJS,
+            module: ts.ModuleKind.CommonJS,
             moduleResolution: ModuleResolutionKind.NodeJs,
             noLib: true 
         },

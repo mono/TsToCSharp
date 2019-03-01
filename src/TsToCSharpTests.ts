@@ -1,7 +1,7 @@
 import * as path from "path";
 import {expect} from "chai";
 import * as fs from "fs";
-import Ast, {ts, ScriptTarget, ModuleResolutionKind, ModuleKind} from "ts-morph";
+import Ast, {ts, ScriptTarget, ModuleResolutionKind} from "ts-morph";
 import {TsToCSharpGenerator} from "./TStoCSharpGenerator";
 import {GenOptions} from "./GenerateOptions";
 import {Context} from "./Context";
@@ -28,7 +28,7 @@ function CreateAST() : Ast
     const ast = new Ast({
         compilerOptions: {
             target: ScriptTarget.ESNext,
-            module: ModuleKind.CommonJS,
+            module: ts.ModuleKind.CommonJS,
             moduleResolution: ModuleResolutionKind.NodeJs,
             noLib: true 
         }
