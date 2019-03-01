@@ -1,6 +1,6 @@
 
-import * as sast from "ts-simple-ast";
-import {ts, SyntaxKind, TypeGuards } from 'ts-simple-ast';
+import * as sast from "ts-morph";
+import {ts, SyntaxKind, TypeGuards } from 'ts-morph';
 import {ContextInterface} from "./Context";
 import * as cc from "change-case";
 import * as os from "os";
@@ -541,7 +541,7 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     return false;
   }
 
-  // at this time UnionTypeNode is not wrapped by ts-simple-ast
+  // at this time UnionTypeNode is not wrapped by ts-morph
   export function emitUnionType(node: sast.UnionTypeNode, context: ContextInterface): string {
     const source: string[] = [];
 

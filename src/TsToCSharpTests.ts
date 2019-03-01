@@ -1,7 +1,7 @@
 import * as path from "path";
 import {expect} from "chai";
 import * as fs from "fs";
-import Ast, {ts, ScriptTarget, ModuleResolutionKind, ModuleKind} from "ts-simple-ast";
+import Ast, {ts, ScriptTarget, ModuleResolutionKind, ModuleKind} from "ts-morph";
 import {TsToCSharpGenerator} from "./TStoCSharpGenerator";
 import {GenOptions} from "./GenerateOptions";
 import {Context} from "./Context";

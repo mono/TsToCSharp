@@ -1,7 +1,7 @@
 
-import * as sast from "ts-simple-ast"
+import * as sast from "ts-morph"
 
-import {SourceFile, SyntaxKind, TypeGuards, ts} from "ts-simple-ast";
+import {SourceFile, SyntaxKind, TypeGuards, ts} from "ts-morph";
 
 import * as emitter from "./CSharpEmitter";
 import {ContextInterface} from "./Context";
