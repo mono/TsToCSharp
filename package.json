@@ -12,8 +12,8 @@
   "dependencies": {
     "@types/yargs": "^10.0.2",
     "change-case": "^3.0.2",
-    "ts-simple-ast": "^9.5.0",
-    "typescript": "^2.9.2",
+    "ts-morph": "^1.2.0",
+    "typescript": "^3.3.1",
     "yargs": "^11.1.0"
   },
   "devDependencies": {

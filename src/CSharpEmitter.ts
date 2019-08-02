@@ -1,6 +1,6 @@
 
-import * as sast from "ts-simple-ast";
-import {ts, SyntaxKind, TypeGuards } from 'ts-simple-ast';
+import * as sast from "ts-morph";
+import {ts, SyntaxKind, TypeGuards } from 'ts-morph';
 import {ContextInterface} from "./Context";
 import * as cc from "change-case";
 import * as os from "os";
@@ -69,7 +69,7 @@ const ValueTypeTextMap = [
         return emitTypeQuery(node, context); 
       case SyntaxKind.LastTypeNode:
         return emitLastTypeNodeAsType(node, context); 
-      case SyntaxKind.TypeLiteral:
+      case SyntaxKind.LiteralType:
         return emitTypeLiteral(node, context);        
       default:
         throw new Error(`Unknown TypeNode kind ${SyntaxKind[node.getKind()]}`);
@@ -116,7 +116,7 @@ const ValueTypeTextMap = [
     
     //endNode(node, context);
     //source.push("object");
-    return _emitType("object", node, context);
+    return _emitType("string", node, context);
     //return source.join('');
 
   }  
@@ -333,7 +333,7 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     return source.join('');
   }
 
-  export function emitClassName(node: sast.Identifier, context: ContextInterface, changeCase?: boolean): string {
+  export function emitClassName(node: sast.BindingName, context: ContextInterface, changeCase?: boolean): string {
 
     const source: string[] = [];
     addLeadingComment(source, node, context);
@@ -541,7 +541,7 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
     return false;
   }
 
-  // at this time UnionTypeNode is not wrapped by ts-simple-ast
+  // at this time UnionTypeNode is not wrapped by ts-morph
   export function emitUnionType(node: sast.UnionTypeNode, context: ContextInterface): string {
     const source: string[] = [];
 
@@ -635,16 +635,16 @@ export function emitComputedPropertyName(node: sast.ComputedPropertyName,
       if (typeof typeParameters !== 'undefined' && typeParameters.length > 0)
       {
         for (let i = 0, n = typeParameters.length; i < n; i++) {
-          if (typeof typeParameters[i].getConstraintNode() !== 'undefined')
+          if (typeof typeParameters[i].getConstraint() !== 'undefined')
           {
             source.push(' where ');
             source.push(emit(typeParameters[i], context));
             source.push(' : ');
-            source.push(emitTypeNode(typeParameters[i].getConstraintNode(), context));
+            source.push(emitTypeNode(typeParameters[i].getConstraint(), context));
           }
-          if (typeof typeParameters[i].getDefaultNode() !== 'undefined')
+          if (typeof typeParameters[i].getDefault() !== 'undefined')
           {
-            context.diagnostics.pushWarningAtLoc("C# does not support default generic types", typeParameters[i].getDefaultNode() );
+            context.diagnostics.pushWarningAtLoc("C# does not support default generic types", typeParameters[i].getDefault() );
           }
         }        
 

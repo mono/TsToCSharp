@@ -1,6 +1,6 @@
 
-import * as sast from "ts-simple-ast";
-import {ts, SyntaxKind, TypeGuards, Node} from "ts-simple-ast"
+import * as sast from "ts-morph";
+import {ts, SyntaxKind, TypeGuards, Node} from "ts-morph"
 import {ContextInterface} from "./Context";
 import {Stack} from "./DataStructures";
 import {emitPropertyName, emitMethodName, emitClassName} from "./CSharpEmitter";

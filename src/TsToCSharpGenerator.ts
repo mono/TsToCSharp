@@ -1,7 +1,7 @@
 
-import * as sast from "ts-simple-ast"
+import * as sast from "ts-morph"
 
-import {SourceFile, SyntaxKind, TypeGuards, ts} from "ts-simple-ast";
+import {SourceFile, SyntaxKind, TypeGuards, ts} from "ts-morph";
 
 import * as emitter from "./CSharpEmitter";
 import {ContextInterface} from "./Context";
@@ -158,7 +158,7 @@ function visitIndexSignature(node: sast.IndexSignatureDeclaration, context: Cont
 
   source.push(visitTypeNode(node.getKeyTypeNode(), context));
   source.push(" ");
-  source.push(emitter.emitParameterName(node.getKeyNameNode(), context));
+  source.push(emitter.emitParameterName(node.getKeyNameNode() as sast.Identifier, context));
 
   emitStatic(source, ']', node, context);
 
@@ -513,13 +513,13 @@ function visitVariableStatement(node: sast.VariableStatement, context: ContextIn
 
 function visitVariableDeclarationList(source: string[], node: sast.VariableDeclarationList, context: ContextInterface) : void {
 
-  switch(node.getDeclarationTypeKeyword().getKind())
+  switch(node.getDeclarationKindKeyword().getKind())
   {
     case SyntaxKind.VarKeyword:
       visitVariableDeclarations(source, node, context);
       break;
     default:
-      context.diagnostics.pushErrorAtLoc("Declaration type " + node.getDeclarationTypeKeyword().getKindName() + " is not yet supported", node);
+      context.diagnostics.pushErrorAtLoc("Declaration type " + node.getDeclarationKindKeyword().getKindName() + " is not yet supported", node);
 
   }
 }

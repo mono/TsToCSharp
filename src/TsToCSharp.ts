@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import * as fs from "fs";
-import Ast, {ts, ScriptTarget, getCompilerOptionsFromTsConfig, ModuleResolutionKind, ModuleKind} from "ts-simple-ast";
+import Ast, {ts, ScriptTarget, getCompilerOptionsFromTsConfig, ModuleResolutionKind} from "ts-morph";
 import * as path from "path";
 import * as os from "os";
 
@@ -19,7 +19,7 @@ function CreateAST(useVirtualFileSystem? : boolean) : Ast
     const ast = new Ast({
         compilerOptions: {
             target: ScriptTarget.ESNext,
-            module: ModuleKind.CommonJS,
+            module: ts.ModuleKind.CommonJS,
             moduleResolution: ModuleResolutionKind.NodeJs,
             noLib: true 
         },
@@ -43,7 +43,7 @@ class Startup {
                 const ast = CreateAST();
                 
                 console.log('Resolving File: ' + fileName + ' => ' + path.resolve(fileName));
-                const sf = ast.addSourceFileIfExists(path.resolve(fileName));
+                const sf = ast.addExistingSourceFileIfExists(path.resolve(fileName));
                 const sfs = ast.getSourceFiles();
                 const context = new Context(genOptions);
                 
@@ -95,7 +95,7 @@ class Startup {
             console.log('Combining files: ' + virtualFile);
             vfs.writeFileSync(virtualFile, virtualSource);
             
-            ast.addSourceFileIfExists(virtualFile);
+            ast.addExistingSourceFileIfExists(virtualFile);
 
             const sfs = ast.getSourceFiles();
             const context = new Context(genOptions);

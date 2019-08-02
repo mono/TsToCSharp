@@ -1,7 +1,7 @@
 import * as path from "path";
 import {expect} from "chai";
 import * as fs from "fs";
-import Ast, {ts, ScriptTarget, ModuleResolutionKind, ModuleKind} from "ts-simple-ast";
+import Ast, {ts, ScriptTarget, ModuleResolutionKind} from "ts-morph";
 import {TsToCSharpGenerator} from "./TStoCSharpGenerator";
 import {GenOptions} from "./GenerateOptions";
 import {Context} from "./Context";
@@ -28,7 +28,7 @@ function CreateAST() : Ast
     const ast = new Ast({
         compilerOptions: {
             target: ScriptTarget.ESNext,
-            module: ModuleKind.CommonJS,
+            module: ts.ModuleKind.CommonJS,
             moduleResolution: ModuleResolutionKind.NodeJs,
             noLib: true 
         }
@@ -135,7 +135,7 @@ describe("TsToCSharpGenerator", () => {
                     const ast = CreateAST();
 
                     //console.log("Adding Source File: " + path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
-                    ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+                    ast.addExistingSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
                     const sourceFiles = ast.getSourceFiles();
                     const context = new Context(new TestGenOptions());
@@ -222,7 +222,7 @@ describe("TsToCSharpGenerator", function () {
                     const ast = CreateAST();
 
                     //console.log("Adding Source File: " + path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
-                    ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+                    ast.addExistingSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
         
                     const sourceFiles = ast.getSourceFiles();
                     const context = new Context(genOptions);
@@ -254,7 +254,7 @@ describe("TsToCSharpGenerator", () => {
             
             const ast = CreateAST();
 
-            ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+            ast.addExistingSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
 
             const sourceFiles = ast.getSourceFiles();
             const context = new Context(new TestGenOptions());
@@ -269,7 +269,7 @@ describe("TsToCSharpGenerator", () => {
 
             const ast = CreateAST();
 
-            ast.addSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
+            ast.addExistingSourceFileIfExists(path.resolve(path.join(definitionsPath,testPath,testFile + ".d.ts")));
 
             const sourceFiles = ast.getSourceFiles();
             const context = new Context(new TestClassGenOptions());
